@@ -7,6 +7,32 @@ noted.
 Reference code lives in `../vial-gui/src/main/python`. Paths below are relative
 to that folder.
 
+## Open issues
+
+Things that are known and not done yet, across phases. Remove an item when it is
+done, and add new ones as they come up.
+
+- [ ] **Test Phase 2 on real hardware.** Lighting (survives a replug after "Save
+  lighting"), the key tester, and saving macros were only tested against the demo
+  keyboard before being merged. Ideally test lighting on more than one lighting type
+  (backlight, RGB light strip, VialRGB).
+- [ ] **Flash the kb8knob firmware with lighting turned on.** `kb8knob/midi`'s
+  `vial.json` now declares `"lighting": "qmk_rgblight"`, and the firmware is built
+  (`fjgh_kb8knob_midi_vial.uf2` in vial-qmk), but not yet flashed and tried.
+- [ ] **kb16knob lighting.** rev1, rev2 and rev3 build RGB in (`RGBLIGHT_ENABLE = yes`)
+  but their `vial.json` says `"lighting": "none"`, so no Lighting section appears.
+  Decide whether to change them to `"qmk_rgblight"`.
+- [ ] **Keyboard firmware isn't backed up.** `keyboards/fjgh` in vial-qmk is untracked,
+  and the vial-qmk checkout points at the upstream repo. Consider a fork of
+  vial-kb/vial-qmk (needs `git config --global --add safe.directory
+  C:/Users/fjgar/vial-qmk` first).
+- [ ] **Twinkle effect missing from the light strip list.** vial-gui's rgblight effect
+  list (and so vial-web's) ends at "Alternating"; kb8knob builds Twinkle too.
+- [ ] **Deploy to Netlify.** Left for the end on purpose. `netlify.toml` is ready.
+- [ ] **GitHub CLI for PRs from Claude Code.** Without `gh` (or a stored GitHub login),
+  pushes and pull requests need a manual sign-in.
+- [ ] **Phase 3** (below) not started.
+
 ## Phase 0: Foundation (done)
 
 - Vite + React + TypeScript, Tailwind, shadcn/ui, Zustand.
@@ -20,9 +46,8 @@ to that folder.
 
 The one job most people have: "make this key do something else".
 
-Status: built and tested against the demo keyboard. Still to do before release: test on
-real keyboards, and deploy to Netlify (`netlify.toml` is ready). Combined keys such as
-LSFT(kc) and LT1(kc) are left out of the picker; their builders are in Phase 2.
+Status: done, tested on a real keyboard and merged to `main`. Deploying to Netlify is
+left for the end (see Open issues).
 
 Scope:
 
@@ -59,9 +84,9 @@ see it work in a text editor, and restore a backup, without reading any docs.
 
 Features that non-experts ask for after remapping.
 
-Status: built and tested against the demo keyboard, on branch `feature/phase-2`; what
-changed is described in [PHASE-2.md](PHASE-2.md). Still to do: test lighting, the key
-tester and macros on real keyboards with different lighting systems.
+Status: built, tested against the demo keyboard and merged to `main` (PR #1); what
+changed is described in [PHASE-2.md](PHASE-2.md). Still to do: hardware testing (see
+Open issues).
 
 - **Layer keys made understandable.** Friendly builders for the layer and
   modifier keycodes (MO, TG, TO, LT, mod-tap) with one-sentence explanations,
