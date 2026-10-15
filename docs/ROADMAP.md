@@ -59,9 +59,9 @@ see it work in a text editor, and restore a backup, without reading any docs.
 
 Features that non-experts ask for after remapping.
 
-Status: built and tested against the demo keyboard, on branch `feature/phase-2`. Still to
-do: test lighting, the key tester and macros on real keyboards with different lighting
-systems.
+Status: built and tested against the demo keyboard, on branch `feature/phase-2`; what
+changed is described in [PHASE-2.md](PHASE-2.md). Still to do: test lighting, the key
+tester and macros on real keyboards with different lighting systems.
 
 - **Layer keys made understandable.** Friendly builders for the layer and
   modifier keycodes (MO, TG, TO, LT, mod-tap) with one-sentence explanations,

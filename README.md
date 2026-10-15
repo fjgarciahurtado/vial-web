@@ -7,8 +7,9 @@ It is a port of [vial-gui](https://github.com/vial-kb/vial-gui).
 
 ## Status
 
-Phase 1 (remap keys) is built; see [docs/ROADMAP.md](docs/ROADMAP.md). It has only been
-tested against the built-in demo keyboard so far, not real hardware.
+Phase 1 (remap keys) is done and tested on a real keyboard. Phase 2 (everyday extras) is
+built and tested against the demo keyboard; see [docs/PHASE-2.md](docs/PHASE-2.md). The
+full plan is in [docs/ROADMAP.md](docs/ROADMAP.md).
 
 - Connect a Vial keyboard over WebHID (Chrome or Edge), and reopen it with one click later.
 - Change any key or knob from a searchable picker, on any layer. Undo and redo.
