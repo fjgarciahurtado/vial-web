@@ -10,7 +10,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:csp": "vite build && playwright test -c playwright.csp.config.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

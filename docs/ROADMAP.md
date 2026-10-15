@@ -28,7 +28,8 @@ done, and add new ones as they come up.
   C:/Users/fjgar/vial-qmk` first).
 - [ ] **Twinkle effect missing from the light strip list.** vial-gui's rgblight effect
   list (and so vial-web's) ends at "Alternating"; kb8knob builds Twinkle too.
-- [ ] **Deploy to Netlify.** Left for the end on purpose. `netlify.toml` is ready.
+- [ ] **Deploy to Netlify.** Left for the end on purpose. Settings are complete in
+  `netlify.toml`; connecting the repository in Netlify is described in [DEPLOY.md](DEPLOY.md).
 - [ ] **GitHub CLI for PRs from Claude Code.** Without `gh` (or a stored GitHub login),
   pushes and pull requests need a manual sign-in.
 - [ ] **Phase 3** (below) not started.
