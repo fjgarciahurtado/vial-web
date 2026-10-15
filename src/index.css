@@ -140,6 +140,8 @@
   --color-mod-skirt: #74828f;
   --color-pick: #2f5bd3;
   --color-pick-skirt: #1f3f99;
+  --color-ok: #cdeed8; /* keycap that passed the key test */
+  --color-ok-skirt: #8fc6a1;
   --color-alert: #b3261e;
   --color-legend: #1d2731; /* printing on light keycaps, same in dark mode */
   --color-panel: rgb(255 255 255 / 0.55);

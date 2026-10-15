@@ -23,7 +23,9 @@ tested against the built-in demo keyboard so far, not real hardware.
 
 - Lighting: backlight, RGB underglow and per-key VialRGB, with a live colour preview.
 
-Not yet: macros, key tester, tap dance, combos, firmware flashing, and the desktop app.
+- Key tester: press each key and see which ones work. In the demo, your own keyboard drives it.
+
+Not yet: macros, tap dance, combos, firmware flashing, and the desktop app.
 
 ## Development
 

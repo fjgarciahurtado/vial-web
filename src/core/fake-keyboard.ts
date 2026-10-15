@@ -34,6 +34,8 @@ export class FakeKeyboard {
   readonly lighting: Record<number, number[]> = {}
   vialrgb = { maxBrightness: 255, effects: [] as number[], mode: 0, speed: 0, hsv: [0, 0, 0] }
   lightingSaved = false
+  /** Switches held down right now, as "row,col". */
+  readonly pressed = new Set<string>()
   readonly transport: FakeTransport
   private readonly definition: Uint8Array
   private readonly options: FakeKeyboardOptions
@@ -58,8 +60,8 @@ export class FakeKeyboard {
     switch (req[0]) {
       case 0x01: // CMD_VIA_GET_PROTOCOL_VERSION
         return [0x01, 0x00, 0x09]
-      case 0x02: // CMD_VIA_GET_KEYBOARD_VALUE, only VIA_LAYOUT_OPTIONS
-        return [0x02, 0x02, ...u32be(this.layoutOptions)]
+      case 0x02: // CMD_VIA_GET_KEYBOARD_VALUE: layout options or switch matrix
+        return req[1] === 0x03 ? [0x02, 0x03, ...this.matrixBits()] : [0x02, 0x02, ...u32be(this.layoutOptions)]
       case 0x03: // CMD_VIA_SET_KEYBOARD_VALUE, only VIA_LAYOUT_OPTIONS
         this.layoutOptions = ((req[2] << 24) | (req[3] << 16) | (req[4] << 8) | req[5]) >>> 0
         return [...req]
@@ -158,6 +160,19 @@ export class FakeKeyboard {
       }
     }
     return []
+  }
+
+  /** VIA_SWITCH_MATRIX_STATE: big-endian bit rows. Vial firmware reports nothing while locked. */
+  private matrixBits(): number[] {
+    const { rows, cols } = this.matrix
+    const rowSize = Math.ceil(cols / 8)
+    const bytes = new Array(rows * rowSize).fill(0)
+    if (!this.unlocked) return bytes
+    for (const key of this.pressed) {
+      const [r, c] = key.split(',').map(Number)
+      bytes[r * rowSize + rowSize - 1 - Math.floor(c / 8)] |= 1 << (c % 8)
+    }
+    return bytes
   }
 
   private lightingValue(req: Uint8Array): number[] {

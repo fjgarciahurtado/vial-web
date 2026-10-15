@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 import { create } from 'zustand'
 import { createBackup, parseBackup, planRestore, type RestorePlan } from './core/backup'
-import { openDemoKeyboard } from './core/demo'
+import { openDemoKeyboard, pressDemoKey } from './core/demo'
+import type { FakeKeyboard } from './core/fake-keyboard'
 import { loadKeyboard, type LoadedKeyboard } from './core/keyboard'
 import { KeymapEditor, type Target } from './core/keymap-editor'
 import { packLayoutChoices, unpackLayoutChoices } from './core/layout'
@@ -14,7 +15,7 @@ import { isWebHidSupported, WebHidTransport } from './core/webhid-transport'
 type Status = 'idle' | 'connecting' | 'ready' | 'error'
 
 /** The main areas of the app once a keyboard is open. */
-export type View = 'keys' | 'lighting'
+export type View = 'keys' | 'lighting' | 'tester'
 
 /** The key or knob direction being edited, on the current layer. */
 export type Selection = { kind: 'key'; row: number; col: number } | { kind: 'encoder'; index: number; direction: number }
@@ -23,6 +24,7 @@ const KNOB_TURNS = ['Turn left', 'Turn right']
 
 /** State with no keyboard open. */
 const CLOSED = {
+  demo: null,
   view: 'keys' as View,
   lights: null,
   keyboard: null,
@@ -83,6 +85,12 @@ interface AppState {
   lock(): Promise<void>
   view: View
   setView(view: View): void
+  /** The simulated keyboard behind demo mode. */
+  demo: FakeKeyboard | null
+  /** Demo mode only: holds or releases the demo key that types this KeyboardEvent.code. */
+  pressDemoKey(code: string, down: boolean): void
+  /** Shows the unlock wizard if needed. Resolves to whether the keyboard is unlocked. */
+  unlock(): Promise<boolean>
   lights: LightingController | null
   /** Shows a lighting change on the keyboard right away. Fast slider moves send only the latest value. */
   setLighting(next: LightingState): void
@@ -229,6 +237,7 @@ export const useApp = create<AppState>((set, get) => {
     error: null,
     view: 'keys',
     lights: null,
+    demo: null,
     keyboard: null,
     isDemo: false,
     layer: 0,
@@ -278,9 +287,17 @@ export const useApp = create<AppState>((set, get) => {
     },
 
     async openDemo() {
-      const { transport, keyboard } = await openDemoKeyboard()
+      const { transport, keyboard, fake } = await openDemoKeyboard()
       opened(transport, keyboard, true)
+      set({ demo: fake })
     },
+
+    pressDemoKey(code, down) {
+      const { demo, keyboard } = get()
+      if (demo && keyboard) pressDemoKey(demo, keyboard.keymap, code, down)
+    },
+
+    unlock: () => ensureUnlocked(),
 
     async disconnect() {
       await get().transport?.close()

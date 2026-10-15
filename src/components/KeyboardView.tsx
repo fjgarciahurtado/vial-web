@@ -20,6 +20,8 @@ interface Props {
   selected?: Selection | null
   /** Keys drawn in the accent colour, such as the keys to hold for unlocking. */
   highlighted?: { row: number; col: number }[]
+  /** Keys drawn green, such as keys that passed the key test. */
+  passed?: { row: number; col: number }[]
   /** Leave out to draw a decorative, non-interactive keyboard. */
   onSelect?(selection: Selection): void
   /** Size classes for the drawing; it keeps its shape and centres inside them. */
@@ -32,6 +34,7 @@ const TONES = {
   cap: { top: 'fill-cap', skirt: 'fill-cap-skirt', text: 'fill-legend' },
   mod: { top: 'fill-mod', skirt: 'fill-mod-skirt', text: 'fill-white' },
   pick: { top: 'fill-pick', skirt: 'fill-pick-skirt', text: 'fill-white' },
+  ok: { top: 'fill-ok', skirt: 'fill-ok-skirt', text: 'fill-legend' },
 }
 
 /** Keys that type characters get light caps; everything else gets darker caps, like a real board. */
@@ -53,6 +56,7 @@ export function KeyboardView({
   catalog,
   selected,
   highlighted = [],
+  passed = [],
   onSelect,
   className = 'w-full max-w-5xl',
   glow,
@@ -80,7 +84,8 @@ export function KeyboardView({
         const isSelected =
           sameSelection(selected, selection) || (isKey && highlighted.some((h) => h.row === item.row && h.col === item.col))
         const isTyping = TYPING_GROUPS.has(group) && !DARK_BASIC_KEYS.has(code)
-        const tone = TONES[isSelected ? 'pick' : isTyping ? 'cap' : 'mod']
+        const hasPassed = isKey && passed.some((p) => p.row === item.row && p.col === item.col)
+        const tone = TONES[isSelected ? 'pick' : hasPassed ? 'ok' : isTyping ? 'cap' : 'mod']
         const turn = isKey ? null : TURNS[item.direction]
         const label = turn ? `Knob ${turn.name.toLowerCase()}: ${name}` : `Key ${name}`
 

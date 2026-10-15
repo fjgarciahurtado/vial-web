@@ -32,6 +32,7 @@ const FEATURE_BITS: [number, string][] = [
 ]
 
 const VIA_LAYOUT_OPTIONS = 0x02
+const VIA_SWITCH_MATRIX_STATE = 0x03
 
 /** Max keymap bytes per request: 32 minus the 4-byte header. */
 const BUFFER_FETCH_CHUNK = 28
@@ -178,6 +179,12 @@ export class VialClient {
 
   async setEncoder(layer: number, index: number, direction: number, code: number): Promise<void> {
     await this.request([CMD_VIA_VIAL_PREFIX, CMD_VIAL_SET_ENCODER, layer, index, direction, (code >> 8) & 0xff, code & 0xff])
+  }
+
+  /** Which switches are down right now (VIA_SWITCH_MATRIX_STATE); the reply after its 2-byte header. */
+  async getSwitchMatrix(): Promise<Uint8Array> {
+    const data = await this.request([CMD_VIA_GET_KEYBOARD_VALUE, VIA_SWITCH_MATRIX_STATE])
+    return new Uint8Array(data.buffer, data.byteOffset + 2, MSG_LEN - 2)
   }
 
   /** Reads a lighting value; returns the reply after the command and id bytes. */
