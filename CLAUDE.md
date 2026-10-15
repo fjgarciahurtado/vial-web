@@ -12,6 +12,7 @@ Desktop wrapper (Tauri 2 + Rust `hidapi`) is planned, not started.
 - Dev server: `npm run dev`
 - Unit tests: `npm test` (Vitest, `src/**/*.test.ts`)
 - End-to-end tests: `npm run test:e2e` (Playwright, uses the demo keyboard)
+- Content-Security-Policy check: `npm run test:csp` (production build under the policy in `netlify.toml`)
 - Lint: `npm run lint` (oxlint; warnings in `src/components/ui` are generated shadcn code)
 - Build: `npm run build`
 
