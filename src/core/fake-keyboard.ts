@@ -10,6 +10,8 @@ export interface FakeKeyboardOptions {
   featureFlags?: number
   altRepeatKeyCount?: number
   layoutOptions?: number
+  /** Bytes of macro memory. */
+  macroMemory?: number
   /** Number of rotary encoders. */
   encoders?: number
   unlocked?: boolean
@@ -30,6 +32,14 @@ export class FakeKeyboard {
   unlocked: boolean
   unlockInProgress = false
   private unlockCounter = 0
+  /** QMK lighting values by VIA id, e.g. 0x09 backlight brightness. */
+  readonly lighting: Record<number, number[]> = {}
+  vialrgb = { maxBrightness: 255, effects: [] as number[], mode: 0, speed: 0, hsv: [0, 0, 0] }
+  lightingSaved = false
+  /** Macro memory: macros separated by zero bytes. */
+  readonly macroBuffer: Uint8Array
+  /** Switches held down right now, as "row,col". */
+  readonly pressed = new Set<string>()
   readonly transport: FakeTransport
   private readonly definition: Uint8Array
   private readonly options: FakeKeyboardOptions
@@ -45,6 +55,7 @@ export class FakeKeyboard {
       Array.from({ length: options.encoders ?? 0 }, (): [number, number] => [0, 0]),
     )
     this.layoutOptions = options.layoutOptions ?? 0
+    this.macroBuffer = new Uint8Array(options.macroMemory ?? 0)
     this.unlocked = options.unlocked ?? false
     this.transport = new FakeTransport((req) => this.handle(req))
   }
@@ -54,8 +65,8 @@ export class FakeKeyboard {
     switch (req[0]) {
       case 0x01: // CMD_VIA_GET_PROTOCOL_VERSION
         return [0x01, 0x00, 0x09]
-      case 0x02: // CMD_VIA_GET_KEYBOARD_VALUE, only VIA_LAYOUT_OPTIONS
-        return [0x02, 0x02, ...u32be(this.layoutOptions)]
+      case 0x02: // CMD_VIA_GET_KEYBOARD_VALUE: layout options or switch matrix
+        return req[1] === 0x03 ? [0x02, 0x03, ...this.matrixBits()] : [0x02, 0x02, ...u32be(this.layoutOptions)]
       case 0x03: // CMD_VIA_SET_KEYBOARD_VALUE, only VIA_LAYOUT_OPTIONS
         this.layoutOptions = ((req[2] << 24) | (req[3] << 16) | (req[4] << 8) | req[5]) >>> 0
         return [...req]
@@ -65,8 +76,35 @@ export class FakeKeyboard {
         this.keymap.set([req[4], req[5]], ((req[1] * rows + req[2]) * cols + req[3]) * 2)
         return [...req]
       }
+      case 0x07: // CMD_VIA_LIGHTING_SET_VALUE
+        if (req[1] === 0x41) {
+          this.vialrgb.mode = req[2] | (req[3] << 8)
+          this.vialrgb.speed = req[4]
+          this.vialrgb.hsv = [req[5], req[6], req[7]]
+        } else {
+          this.lighting[req[1]] = req[1] === 0x83 ? [req[2], req[3]] : [req[2]]
+        }
+        return [...req]
+      case 0x08: // CMD_VIA_LIGHTING_GET_VALUE
+        return [0x08, req[1], ...this.lightingValue(req)]
+      case 0x09: // CMD_VIA_LIGHTING_SAVE
+        this.lightingSaved = true
+        return [...req]
       case 0x0c: // CMD_VIA_MACRO_GET_COUNT
         return [0x0c, options.macroCount ?? 0]
+      case 0x0d: // CMD_VIA_MACRO_GET_BUFFER_SIZE
+        return [0x0d, this.macroBuffer.length >> 8, this.macroBuffer.length & 0xff]
+      case 0x0e: {
+        // CMD_VIA_MACRO_GET_BUFFER: offset (big-endian), size
+        const offset = (req[1] << 8) | req[2]
+        return [...req.slice(0, 4), ...this.macroBuffer.slice(offset, offset + req[3])]
+      }
+      case 0x0f: {
+        // CMD_VIA_MACRO_SET_BUFFER: offset (big-endian), size, data
+        const offset = (req[1] << 8) | req[2]
+        this.macroBuffer.set(req.slice(4, 4 + req[3]), offset)
+        return [...req]
+      }
       case 0x11: // CMD_VIA_GET_LAYER_COUNT
         return [0x11, options.layers]
       case 0x12: {
@@ -140,6 +178,37 @@ export class FakeKeyboard {
       }
     }
     return []
+  }
+
+  /** VIA_SWITCH_MATRIX_STATE: big-endian bit rows. Vial firmware reports nothing while locked. */
+  private matrixBits(): number[] {
+    const { rows, cols } = this.matrix
+    const rowSize = Math.ceil(cols / 8)
+    const bytes = new Array(rows * rowSize).fill(0)
+    if (!this.unlocked) return bytes
+    for (const key of this.pressed) {
+      const [r, c] = key.split(',').map(Number)
+      bytes[r * rowSize + rowSize - 1 - Math.floor(c / 8)] |= 1 << (c % 8)
+    }
+    return bytes
+  }
+
+  private lightingValue(req: Uint8Array): number[] {
+    const rgb = this.vialrgb
+    switch (req[1]) {
+      case 0x40: // VIALRGB_GET_INFO: protocol version 1, max brightness
+        return [1, 0, rgb.maxBrightness]
+      case 0x41: // VIALRGB_GET_MODE
+        return [rgb.mode & 0xff, rgb.mode >> 8, rgb.speed, ...rgb.hsv]
+      case 0x42: {
+        // VIALRGB_GET_SUPPORTED: up to 15 effects above the given one, then 0xFFFF
+        const after = req[2] | (req[3] << 8)
+        const next = rgb.effects.filter((e) => e > after).slice(0, 15)
+        while (next.length < 15) next.push(0xffff)
+        return next.flatMap((e) => [e & 0xff, e >> 8])
+      }
+    }
+    return this.lighting[req[1]] ?? [0, 0]
   }
 
   /** Reads a keycode straight from the fake EEPROM. */

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 import { FakeKeyboard } from './fake-keyboard'
 import { loadKeyboard, type LoadedKeyboard } from './keyboard'
+import { serializeMacros } from './macros'
 import type { HidTransport } from './transport'
 
 // 60% ANSI: [width, base-layer keycode, function-layer keycode]
@@ -37,16 +38,22 @@ function kleRows(): unknown[][] {
  * A pretend keyboard so people can explore the app before plugging one in.
  * It speaks the real protocol, so the demo uses exactly the same code as hardware.
  */
-export async function openDemoKeyboard(): Promise<{ transport: HidTransport; keyboard: LoadedKeyboard }> {
+export async function openDemoKeyboard(): Promise<{
+  transport: HidTransport
+  keyboard: LoadedKeyboard
+  fake: FakeKeyboard
+}> {
   const fake = new FakeKeyboard({
     definition: {
       name: 'Demo 60% keyboard',
       matrix: { rows: ROWS.length, cols: COLS },
       layouts: { labels: ['Split Backspace'], keymap: kleRows() },
+      lighting: 'vialrgb',
     },
     layers: 2,
     vialProtocol: 6,
     macroCount: 4,
+    macroMemory: 512,
     featureFlags: 0b11,
     encoders: 1,
     // Unlock by holding Esc and Enter. The demo holds them for you.
@@ -69,7 +76,52 @@ export async function openDemoKeyboard(): Promise<{ transport: HidTransport; key
   put(1, 0, SPLIT_COL, ___)
   fake.encoders[0][0] = [0xaa, 0xa9] // Volume Down / Up
   fake.encoders[1][0] = [0xac, 0xab] // Previous / Next Track
+  // Macro 1 signs off an email: types a greeting, presses Enter, types a name.
+  fake.macroBuffer.set(
+    serializeMacros(
+      [
+        [
+          { type: 'text', text: 'Best regards,' },
+          { type: 'tap', keys: [0x28] },
+          { type: 'text', text: 'Alex' },
+        ],
+        [],
+        [],
+        [],
+      ],
+      6,
+    ),
+  )
+  fake.vialrgb = { maxBrightness: 200, effects: [1, 2, 6, 13, 24, 29, 39], mode: 6, speed: 128, hsv: [150, 220, 160] }
 
   const keyboard = await loadKeyboard(fake.transport, 'Demo keyboard', { decompress: async (bytes) => bytes })
-  return { transport: fake.transport, keyboard }
+  return { transport: fake.transport, keyboard, fake }
+}
+
+/** HID usage codes for KeyboardEvent.code, enough to press every key on the demo board. */
+const HID_USAGE: Record<string, number> = {
+  Enter: 0x28, Escape: 0x29, Backspace: 0x2a, Tab: 0x2b, Space: 0x2c, Minus: 0x2d, Equal: 0x2e,
+  BracketLeft: 0x2f, BracketRight: 0x30, Backslash: 0x31, Semicolon: 0x33, Quote: 0x34, Backquote: 0x35,
+  Comma: 0x36, Period: 0x37, Slash: 0x38, CapsLock: 0x39, Delete: 0x4c, ContextMenu: 0x65,
+  ControlLeft: 0xe0, ShiftLeft: 0xe1, AltLeft: 0xe2, MetaLeft: 0xe3,
+  ControlRight: 0xe4, ShiftRight: 0xe5, AltRight: 0xe6, MetaRight: 0xe7,
+}
+for (let i = 0; i < 26; i++) HID_USAGE[`Key${String.fromCharCode(65 + i)}`] = 0x04 + i
+for (let i = 1; i <= 9; i++) HID_USAGE[`Digit${i}`] = 0x1d + i
+HID_USAGE.Digit0 = 0x27
+
+/**
+ * Presses or releases the demo switch that types this key on the main layer, so
+ * the key tester can be tried with the computer's own keyboard.
+ */
+export function pressDemoKey(fake: FakeKeyboard, keymap: number[][][], code: string, down: boolean): void {
+  const usage = HID_USAGE[code]
+  if (usage === undefined) return
+  keymap[0].forEach((row, r) =>
+    row.forEach((keycode, c) => {
+      if (keycode !== usage) return
+      if (down) fake.pressed.add(`${r},${c}`)
+      else fake.pressed.delete(`${r},${c}`)
+    }),
+  )
 }

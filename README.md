@@ -7,8 +7,9 @@ It is a port of [vial-gui](https://github.com/vial-kb/vial-gui).
 
 ## Status
 
-Phase 1 (remap keys) is built; see [docs/ROADMAP.md](docs/ROADMAP.md). It has only been
-tested against the built-in demo keyboard so far, not real hardware.
+Phase 1 (remap keys) is done and tested on a real keyboard. Phase 2 (everyday extras) is
+built and tested against the demo keyboard; see [docs/PHASE-2.md](docs/PHASE-2.md). The
+full plan is in [docs/ROADMAP.md](docs/ROADMAP.md).
 
 - Connect a Vial keyboard over WebHID (Chrome or Edge), and reopen it with one click later.
 - Change any key or knob from a searchable picker, on any layer. Undo and redo.
@@ -18,8 +19,16 @@ tested against the built-in demo keyboard so far, not real hardware.
 - Light and dark mode, following the system.
 - Try everything without hardware using the demo keyboard.
 
-Not yet: combined keys such as Shift + key or mod-tap, macros, lighting, tap dance, combos,
-firmware flashing, and the desktop app.
+- Build combined keys in plain words: shortcuts (Ctrl + C), tap for one key and hold for a
+  modifier, or tap for one key and hold for a layer.
+
+- Lighting: backlight, RGB light strips and per-key VialRGB, with a live colour preview.
+
+- Key tester: press each key and see which ones work. In the demo, your own keyboard drives it.
+
+- Macros: type text and press keys, built from plain steps, saved to the keyboard and in backups.
+
+Not yet: tap dance, combos, key overrides, QMK settings, firmware flashing, and the desktop app.
 
 ## Development
 

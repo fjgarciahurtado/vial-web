@@ -1,10 +1,16 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 import { Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import { CombinedBuilder } from '@/components/CombinedBuilder'
+import { parseCombined } from '@/core/keycodes/builders'
 import type { KeycodeCatalog, KeycodeEntry } from '@/core/keycodes/catalog'
 import { pickerCategories } from '@/core/keycodes/categories'
 
 const MAX_RESULTS = 60
+const BUILDER_TITLE = 'Shortcuts & holds'
+
+/** A picker tab: a list of keys, or the builder for combined keys. */
+type Tab = { title: string; entries: KeycodeEntry[]; builder?: boolean }
 
 interface Props {
   catalog: KeycodeCatalog
@@ -15,10 +21,25 @@ interface Props {
 
 /** Lets people choose what the selected key does, by browsing categories or searching in plain words. */
 export function KeyPicker({ catalog, current, onPick }: Props) {
-  const categories = useMemo(() => pickerCategories(catalog), [catalog])
+  const categories = useMemo<Tab[]>(() => {
+    const lists = pickerCategories(catalog)
+    const at = lists.findIndex((c) => c.title === 'Modifiers') + 1
+    return [...lists.slice(0, at), { title: BUILDER_TITLE, entries: [], builder: true }, ...lists.slice(at)]
+  }, [catalog])
+  const builderTab = categories.findIndex((c) => c.builder)
   const [tab, setTab] = useState(0)
   const [query, setQuery] = useState('')
+  const [lastCurrent, setLastCurrent] = useState(current)
   const disabled = current === null
+
+  // A key that already combines two things opens in the builder, ready to edit.
+  if (current !== lastCurrent) {
+    setLastCurrent(current)
+    if (current !== null && parseCombined(catalog, current)) {
+      setTab(builderTab)
+      setQuery('')
+    }
+  }
 
   const searching = query.trim() !== ''
   const entries = searching
@@ -75,7 +96,9 @@ export function KeyPicker({ catalog, current, onPick }: Props) {
         </div>
       </div>
 
-      {entries.length === 0 ? (
+      {!searching && categories[tab]?.builder ? (
+        <CombinedBuilder catalog={catalog} current={current} onPick={onPick} />
+      ) : entries.length === 0 ? (
         <p className="py-6 text-center text-ink-soft">No keys match “{query}”. Try a different word.</p>
       ) : (
         <ul

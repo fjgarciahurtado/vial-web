@@ -73,4 +73,13 @@ describe('loadKeyboard', () => {
     expect(kb.encoderKeymap).toEqual([[]])
     expect(fake.transport.sent.some((r) => r[0] === 0x02 || (r[0] === 0xfe && r[1] === 0x03))).toBe(false)
   })
+
+  it('reads macros from macro memory', async () => {
+    const fake = new FakeKeyboard({ definition, layers: 1, macroCount: 2, macroMemory: 64 })
+    fake.macroBuffer.set([0x68, 0x69, 0, 1, 1, 4, 0])
+    const kb = await loadKeyboard(fake.transport, 'fallback', { decompress: identity })
+    expect(kb.macroMemory).toBe(64)
+    expect(kb.macros).toEqual([[{ type: 'text', text: 'hi' }], [{ type: 'tap', keys: [0x04] }]])
+  })
 })
+

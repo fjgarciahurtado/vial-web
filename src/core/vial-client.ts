@@ -6,7 +6,13 @@ const CMD_VIA_GET_PROTOCOL_VERSION = 0x01
 const CMD_VIA_GET_KEYBOARD_VALUE = 0x02
 const CMD_VIA_SET_KEYBOARD_VALUE = 0x03
 const CMD_VIA_SET_KEYCODE = 0x05
+const CMD_VIA_LIGHTING_SET_VALUE = 0x07
+const CMD_VIA_LIGHTING_GET_VALUE = 0x08
+const CMD_VIA_LIGHTING_SAVE = 0x09
 const CMD_VIA_MACRO_GET_COUNT = 0x0c
+const CMD_VIA_MACRO_GET_BUFFER_SIZE = 0x0d
+const CMD_VIA_MACRO_GET_BUFFER = 0x0e
+const CMD_VIA_MACRO_SET_BUFFER = 0x0f
 const CMD_VIA_GET_LAYER_COUNT = 0x11
 const CMD_VIA_KEYMAP_GET_BUFFER = 0x12
 const CMD_VIA_VIAL_PREFIX = 0xfe
@@ -29,6 +35,7 @@ const FEATURE_BITS: [number, string][] = [
 ]
 
 const VIA_LAYOUT_OPTIONS = 0x02
+const VIA_SWITCH_MATRIX_STATE = 0x03
 
 /** Max keymap bytes per request: 32 minus the 4-byte header. */
 const BUFFER_FETCH_CHUNK = 28
@@ -89,6 +96,42 @@ export class VialClient {
   async getMacroCount(): Promise<number> {
     const data = await this.request([CMD_VIA_MACRO_GET_COUNT])
     return data.getUint8(1)
+  }
+
+  async getMacroBufferSize(): Promise<number> {
+    const data = await this.request([CMD_VIA_MACRO_GET_BUFFER_SIZE])
+    return data.getUint16(1, false)
+  }
+
+  /**
+   * Reads macro memory until all `count` macros have ended (reload_macros_late in
+   * protocol/macro.py). Returns the bytes up to and including the last macro's end.
+   */
+  async getMacroBuffer(size: number, count: number): Promise<Uint8Array> {
+    const buffer = new Uint8Array(size)
+    let read = 0
+    let ends = 0
+    while (read < size && ends < count) {
+      const sz = Math.min(BUFFER_FETCH_CHUNK, size - read)
+      const data = await this.request([CMD_VIA_MACRO_GET_BUFFER, (read >> 8) & 0xff, read & 0xff, sz])
+      const chunk = new Uint8Array(data.buffer, data.byteOffset + 4, sz)
+      buffer.set(chunk, read)
+      for (const b of chunk) if (b === 0) ends++
+      read += sz
+    }
+    let end = 0
+    for (let n = 0; n < count && end < read; n++) {
+      const next = buffer.indexOf(0, end)
+      end = next === -1 || next >= read ? read : next + 1
+    }
+    return buffer.slice(0, end)
+  }
+
+  async setMacroBuffer(data: Uint8Array): Promise<void> {
+    for (let offset = 0; offset < data.length; offset += BUFFER_FETCH_CHUNK) {
+      const chunk = data.subarray(offset, offset + BUFFER_FETCH_CHUNK)
+      await this.request([CMD_VIA_MACRO_SET_BUFFER, (offset >> 8) & 0xff, offset & 0xff, chunk.length, ...chunk])
+    }
   }
 
   /** Needs Vial protocol 4 or newer. Ported from reload_dynamic() in protocol/dynamic.py. */
@@ -175,6 +218,26 @@ export class VialClient {
 
   async setEncoder(layer: number, index: number, direction: number, code: number): Promise<void> {
     await this.request([CMD_VIA_VIAL_PREFIX, CMD_VIAL_SET_ENCODER, layer, index, direction, (code >> 8) & 0xff, code & 0xff])
+  }
+
+  /** Which switches are down right now (VIA_SWITCH_MATRIX_STATE); the reply after its 2-byte header. */
+  async getSwitchMatrix(): Promise<Uint8Array> {
+    const data = await this.request([CMD_VIA_GET_KEYBOARD_VALUE, VIA_SWITCH_MATRIX_STATE])
+    return new Uint8Array(data.buffer, data.byteOffset + 2, MSG_LEN - 2)
+  }
+
+  /** Reads a lighting value; returns the reply after the command and id bytes. */
+  async lightingGet(id: number, ...args: number[]): Promise<number[]> {
+    const data = await this.request([CMD_VIA_LIGHTING_GET_VALUE, id, ...args])
+    return [...new Uint8Array(data.buffer, data.byteOffset + 2, MSG_LEN - 2)]
+  }
+
+  async lightingSet(id: number, ...values: number[]): Promise<void> {
+    await this.request([CMD_VIA_LIGHTING_SET_VALUE, id, ...values])
+  }
+
+  async lightingSave(): Promise<void> {
+    await this.request([CMD_VIA_LIGHTING_SAVE])
   }
 
   async getKeymap(layers: number, rows: number, cols: number): Promise<Keymap> {

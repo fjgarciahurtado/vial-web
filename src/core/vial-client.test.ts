@@ -103,4 +103,42 @@ describe('VialClient', () => {
     await new VialClient(t).setEncoder(1, 2, 1, 0x00e9)
     expect([...t.sent[0].slice(0, 7)]).toEqual([0xfe, 0x04, 1, 2, 1, 0x00, 0xe9])
   })
+
+  it('reads the macro buffer in 28-byte chunks and stops once every macro has ended', async () => {
+    const buffer = [...'ab', 0, ...'c', 0, ...'zzzz'.repeat(20)].map((c) => (typeof c === 'string' ? c.charCodeAt(0) : c))
+    const t = new FakeTransport((req) => {
+      if (req[0] === 0x0d) return [0x0d, 0, 90]
+      const offset = (req[1] << 8) | req[2]
+      return [...req.slice(0, 4), ...buffer.slice(offset, offset + req[3])]
+    })
+    const client = new VialClient(t)
+    expect(await client.getMacroBufferSize()).toBe(90)
+    const data = await client.getMacroBuffer(90, 2)
+    expect([...data]).toEqual([97, 98, 0, 99, 0])
+    expect(t.sent.filter((r) => r[0] === 0x0e)).toHaveLength(1)
+  })
+
+  it('handles a macro that ends exactly at the end of a chunk, and empty memory', async () => {
+    const buffer = [...Array(27).fill(0x61), 0, 0x62, 0]
+    const t = new FakeTransport((req) => {
+      const offset = (req[1] << 8) | req[2]
+      return [...req.slice(0, 4), ...buffer.slice(offset, offset + req[3])]
+    })
+    const one = await new VialClient(t).getMacroBuffer(30, 1)
+    expect(one).toHaveLength(28)
+    expect(t.sent).toHaveLength(1)
+    const two = await new VialClient(t).getMacroBuffer(30, 2)
+    expect(two).toHaveLength(30)
+
+    const empty = new FakeTransport((req) => [...req.slice(0, 4)])
+    expect([...(await new VialClient(empty).getMacroBuffer(4, 3))]).toEqual([0, 0, 0])
+  })
+
+  it('writes the macro buffer in chunks (CMD_VIA_MACRO_SET_BUFFER)', async () => {
+    const t = new FakeTransport((req) => [...req])
+    await new VialClient(t).setMacroBuffer(Uint8Array.from({ length: 30 }, (_, i) => i + 1))
+    expect([...t.sent[0].slice(0, 5)]).toEqual([0x0f, 0, 0, 28, 1])
+    expect([...t.sent[1].slice(0, 6)]).toEqual([0x0f, 0, 28, 2, 29, 30])
+  })
 })
+
