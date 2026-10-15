@@ -19,7 +19,7 @@ const VIALRGB_GET_SUPPORTED = 0x42
 export interface LightingKind {
   /** Single-colour LEDs under the keys. */
   backlight: boolean
-  /** RGB underglow strip. */
+  /** RGB LED strip (QMK rgblight), often mounted as underglow. */
   rgblight: boolean
   /** Per-key RGB through Vial's own protocol. */
   vialrgb: boolean
@@ -40,7 +40,7 @@ export interface LightingState {
   }
 }
 
-/** QMK RGB underglow effects, by id. color: whether the effect uses the chosen colour. */
+/** QMK RGB light strip (rgblight) effects, by id. color: whether the effect uses the chosen colour. */
 export const RGBLIGHT_EFFECTS: { name: string; color: boolean }[] = (
   [
     ['All Off', false], ['Solid Color', true], ['Breathing 1', true], ['Breathing 2', true],

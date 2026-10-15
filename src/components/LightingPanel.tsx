@@ -67,7 +67,7 @@ export function LightingPanel() {
       )}
 
       {rgblight && (
-        <Group title="Underglow">
+        <Group title="RGB light strip">
           <Field label="Effect">
             <select
               value={rgblight.effect}

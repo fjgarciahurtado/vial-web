@@ -21,7 +21,7 @@ tested against the built-in demo keyboard so far, not real hardware.
 - Build combined keys in plain words: shortcuts (Ctrl + C), tap for one key and hold for a
   modifier, or tap for one key and hold for a layer.
 
-- Lighting: backlight, RGB underglow and per-key VialRGB, with a live colour preview.
+- Lighting: backlight, RGB light strips and per-key VialRGB, with a live colour preview.
 
 - Key tester: press each key and see which ones work. In the demo, your own keyboard drives it.
 
