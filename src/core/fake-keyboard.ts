@@ -10,6 +10,8 @@ export interface FakeKeyboardOptions {
   featureFlags?: number
   altRepeatKeyCount?: number
   layoutOptions?: number
+  /** Bytes of macro memory. */
+  macroMemory?: number
   /** Number of rotary encoders. */
   encoders?: number
   unlocked?: boolean
@@ -34,6 +36,8 @@ export class FakeKeyboard {
   readonly lighting: Record<number, number[]> = {}
   vialrgb = { maxBrightness: 255, effects: [] as number[], mode: 0, speed: 0, hsv: [0, 0, 0] }
   lightingSaved = false
+  /** Macro memory: macros separated by zero bytes. */
+  readonly macroBuffer: Uint8Array
   /** Switches held down right now, as "row,col". */
   readonly pressed = new Set<string>()
   readonly transport: FakeTransport
@@ -51,6 +55,7 @@ export class FakeKeyboard {
       Array.from({ length: options.encoders ?? 0 }, (): [number, number] => [0, 0]),
     )
     this.layoutOptions = options.layoutOptions ?? 0
+    this.macroBuffer = new Uint8Array(options.macroMemory ?? 0)
     this.unlocked = options.unlocked ?? false
     this.transport = new FakeTransport((req) => this.handle(req))
   }
@@ -87,6 +92,19 @@ export class FakeKeyboard {
         return [...req]
       case 0x0c: // CMD_VIA_MACRO_GET_COUNT
         return [0x0c, options.macroCount ?? 0]
+      case 0x0d: // CMD_VIA_MACRO_GET_BUFFER_SIZE
+        return [0x0d, this.macroBuffer.length >> 8, this.macroBuffer.length & 0xff]
+      case 0x0e: {
+        // CMD_VIA_MACRO_GET_BUFFER: offset (big-endian), size
+        const offset = (req[1] << 8) | req[2]
+        return [...req.slice(0, 4), ...this.macroBuffer.slice(offset, offset + req[3])]
+      }
+      case 0x0f: {
+        // CMD_VIA_MACRO_SET_BUFFER: offset (big-endian), size, data
+        const offset = (req[1] << 8) | req[2]
+        this.macroBuffer.set(req.slice(4, 4 + req[3]), offset)
+        return [...req]
+      }
       case 0x11: // CMD_VIA_GET_LAYER_COUNT
         return [0x11, options.layers]
       case 0x12: {

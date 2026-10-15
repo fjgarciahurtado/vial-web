@@ -10,6 +10,7 @@
 import type { KeycodeCatalog } from './keycodes/catalog'
 import type { EncoderKeymap, Target } from './keymap-editor'
 import type { LayoutEncoder, LayoutKey } from './layout'
+import { loadSavedMacro, saveMacro, type Macro } from './macros'
 import type { Keymap } from './vial-client'
 
 export interface BackupSource {
@@ -25,6 +26,7 @@ export interface BackupSource {
   encoderKeymap: EncoderKeymap
   /** Packed layout options, or -1 when the keyboard has none (as in vial-gui). */
   layoutOptionsValue: number
+  macros: Macro[]
   catalog: KeycodeCatalog
 }
 
@@ -35,6 +37,8 @@ export interface Backup {
   layout: SavedCode[][][]
   encoderLayout: SavedCode[][][]
   layoutOptions: number
+  /** The "macro" section, still in .vil form, or null when the file has none. */
+  macros: unknown[][] | null
   /** Saved sections this app can't restore yet, in plain words. */
   notRestored: string[]
 }
@@ -42,6 +46,8 @@ export interface Backup {
 export interface RestorePlan {
   changes: { target: Target; code: number }[]
   layoutOptions: number | null
+  /** Every macro, ready to write, or null when the backup has no macros to restore. */
+  macros: Macro[] | null
   /** Keycode names in the backup this app doesn't recognise. */
   unknownKeys: number
   sameKeyboard: boolean
@@ -52,7 +58,6 @@ const NOT_A_BACKUP = "This file isn't a Vial keymap backup."
 
 /** Sections vial-gui saves that later phases will restore, with names people understand. */
 const OTHER_SECTIONS: [string, string][] = [
-  ['macro', 'macros'],
   ['tap_dance', 'tap dance'],
   ['combo', 'combos'],
   ['key_override', 'key overrides'],
@@ -77,6 +82,7 @@ export function createBackup(kb: BackupSource): string {
       layout,
       encoder_layout: encoderLayout,
       layout_options: kb.layoutOptionsValue,
+      ...(kb.macros.length && { macro: kb.macros.map((m) => saveMacro(m, kb.catalog)) }),
       vial_protocol: kb.vialProtocol,
       via_protocol: kb.viaProtocol,
     },
@@ -101,6 +107,7 @@ export function parseBackup(text: string): Backup {
     layout: data.layout as SavedCode[][][],
     encoderLayout: Array.isArray(data.encoder_layout) ? (data.encoder_layout as SavedCode[][][]) : [],
     layoutOptions: typeof data.layout_options === 'number' ? data.layout_options : -1,
+    macros: Array.isArray(data.macro) ? (data.macro as unknown[]).map((m) => (Array.isArray(m) ? m : [])) : null,
     notRestored: OTHER_SECTIONS.filter(([key]) => hasContent(data[key])).map(([, name]) => name),
   }
 }
@@ -137,8 +144,15 @@ export function planRestore(backup: Backup, kb: BackupSource): RestorePlan {
     ),
   )
 
+  // Like restore_macros in vial-gui: fill missing macros with empty ones, drop extras.
+  const macros =
+    backup.macros && kb.macros.length
+      ? kb.macros.map((_, i) => loadSavedMacro(backup.macros![i] ?? [], kb.catalog))
+      : null
+
   return {
     changes,
+    macros,
     layoutOptions: backup.layoutOptions !== -1 && kb.layoutOptionsValue !== -1 ? backup.layoutOptions : null,
     unknownKeys,
     sameKeyboard: backup.uid === kb.keyboardId,

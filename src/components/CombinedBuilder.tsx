@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-import { Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import { KeyChoiceField } from '@/components/KeyChoiceField'
 import { Button } from '@/components/ui/button'
 import {
   availableModifierSets,
@@ -13,7 +13,6 @@ import {
 } from '@/core/keycodes/builders'
 import type { KeycodeCatalog } from '@/core/keycodes/catalog'
 
-const MAX_KEYS = 40
 
 const KINDS: { kind: CombinedKind; title: string; text: string }[] = [
   { kind: 'shortcut', title: 'Shortcut', text: 'Presses several keys at once, like Ctrl + C.' },
@@ -53,6 +52,7 @@ export function CombinedBuilder({ catalog, current, onPick }: Props) {
         .map((e) => e.index!),
     [catalog],
   )
+  const innerChoices = useMemo(() => innerKeyChoices(catalog), [catalog])
   const code = buildCombined(catalog, settings)
   const mods = settings.kind === 'layertap' ? 0 : settings.mods
   const right = (mods & MOD.right) !== 0
@@ -132,8 +132,9 @@ export function CombinedBuilder({ catalog, current, onPick }: Props) {
         </fieldset>
       )}
 
-      <InnerKeyField
+      <KeyChoiceField
         catalog={catalog}
+        choices={innerChoices}
         label={settings.kind === 'shortcut' ? 'And press' : 'Tap for'}
         value={settings.inner}
         onChange={(inner) => setSettings({ ...settings, inner })}
@@ -150,70 +151,6 @@ export function CombinedBuilder({ catalog, current, onPick }: Props) {
         </Button>
       </div>
     </div>
-  )
-}
-
-function InnerKeyField({
-  catalog,
-  label,
-  value,
-  onChange,
-}: {
-  catalog: KeycodeCatalog
-  label: string
-  value: number
-  onChange(code: number): void
-}) {
-  const [query, setQuery] = useState('')
-  const choices = useMemo(() => innerKeyChoices(catalog), [catalog])
-  const shown = useMemo(() => {
-    if (!query.trim()) return choices.slice(0, MAX_KEYS)
-    const allowed = new Set(choices.map((c) => c.code))
-    return catalog
-      .search(query)
-      .filter((e) => allowed.has(e.code))
-      .slice(0, MAX_KEYS)
-  }, [catalog, choices, query])
-
-  return (
-    <fieldset className="flex flex-col gap-2">
-      <legend className="mb-2 font-semibold">
-        {label}: <span className="font-normal">{value > 1 ? catalog.describe(value).name : 'choose a key'}</span>
-      </legend>
-      <label className="relative flex items-center sm:w-72">
-        <Search className="pointer-events-none absolute left-3 size-4 text-ink-soft" aria-hidden />
-        <span className="sr-only">Search for the key</span>
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search, like “escape”"
-          className="h-9 w-full rounded-lg border border-line bg-field pl-9 pr-3 text-ink placeholder:text-ink-soft focus-visible:outline-2 focus-visible:outline-pick"
-        />
-      </label>
-      <div role="radiogroup" aria-label={label} className="flex flex-wrap gap-1.5">
-        {shown.map((entry) => {
-          const { name, legend } = catalog.describe(entry.code)
-          const checked = entry.code === value
-          return (
-            <button
-              key={entry.id}
-              type="button"
-              role="radio"
-              aria-checked={checked}
-              aria-label={name}
-              title={name}
-              onClick={() => onChange(entry.code)}
-              className={`min-w-10 rounded-md border-b-[3px] px-2 py-1 text-xs font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pick ${
-                checked ? 'border-pick-skirt bg-pick text-white' : 'border-cap-skirt bg-cap text-legend'
-              }`}
-            >
-              {legend.at(-1) ?? name}
-            </button>
-          )
-        })}
-      </div>
-    </fieldset>
   )
 }
 

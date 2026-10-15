@@ -2,6 +2,7 @@
 import { create } from 'zustand'
 import { createBackup, parseBackup, planRestore, type RestorePlan } from './core/backup'
 import { openDemoKeyboard, pressDemoKey } from './core/demo'
+import { serializeMacros, type Macro } from './core/macros'
 import type { FakeKeyboard } from './core/fake-keyboard'
 import { loadKeyboard, type LoadedKeyboard } from './core/keyboard'
 import { KeymapEditor, type Target } from './core/keymap-editor'
@@ -15,7 +16,7 @@ import { isWebHidSupported, WebHidTransport } from './core/webhid-transport'
 type Status = 'idle' | 'connecting' | 'ready' | 'error'
 
 /** The main areas of the app once a keyboard is open. */
-export type View = 'keys' | 'lighting' | 'tester'
+export type View = 'keys' | 'lighting' | 'tester' | 'macros'
 
 /** The key or knob direction being edited, on the current layer. */
 export type Selection = { kind: 'key'; row: number; col: number } | { kind: 'encoder'; index: number; direction: number }
@@ -24,6 +25,7 @@ const KNOB_TURNS = ['Turn left', 'Turn right']
 
 /** State with no keyboard open. */
 const CLOSED = {
+  macroDrafts: [],
   demo: null,
   view: 'keys' as View,
   lights: null,
@@ -91,6 +93,12 @@ interface AppState {
   pressDemoKey(code: string, down: boolean): void
   /** Shows the unlock wizard if needed. Resolves to whether the keyboard is unlocked. */
   unlock(): Promise<boolean>
+  /** Macros as edited in the app, not yet saved to the keyboard. */
+  macroDrafts: Macro[]
+  setMacroDraft(index: number, macro: Macro): void
+  discardMacroDrafts(): void
+  /** Writes the drafts to the keyboard, unlocking it first if needed. */
+  saveMacros(): Promise<void>
   lights: LightingController | null
   /** Shows a lighting change on the keyboard right away. Fast slider moves send only the latest value. */
   setLighting(next: LightingState): void
@@ -155,6 +163,7 @@ export const useApp = create<AppState>((set, get) => {
       selected: null,
       editor: new KeymapEditor(client, keyboard.keymap, keyboard.encoderKeymap),
       lights: new LightingController(client, keyboard.lighting),
+      macroDrafts: keyboard.macros,
       view: 'keys',
       canUndo: false,
       canRedo: false,
@@ -208,6 +217,24 @@ export const useApp = create<AppState>((set, get) => {
     }
   }
 
+  /** Saves macros like vial-gui's macro recorder: unlock, then write the whole macro memory. */
+  async function writeMacros(macros: Macro[]): Promise<string | null> {
+    const { keyboard, client } = get()
+    if (!keyboard || !client) return null
+    const data = serializeMacros(macros, keyboard.vialProtocol)
+    if (data.length > keyboard.macroMemory) {
+      return `The macros need ${data.length} bytes, but the keyboard only has room for ${keyboard.macroMemory}. Make some shorter.`
+    }
+    if (!(await ensureUnlocked())) return null
+    try {
+      await client.setMacroBuffer(data)
+    } catch (err) {
+      return `The macros weren't saved: ${err instanceof Error ? err.message : 'the keyboard did not answer.'}`
+    }
+    set({ keyboard: { ...get().keyboard!, macros }, macroDrafts: macros })
+    return 'Macros saved.'
+  }
+
   async function restore(plan: RestorePlan) {
     const keyboard = get().keyboard!
     const boot = keyboard.catalog.deserialize('QK_BOOT')
@@ -230,6 +257,11 @@ export const useApp = create<AppState>((set, get) => {
       ].filter(Boolean)
       return ['Restored the backup. Use Undo change to go back.', ...notes].join(' ')
     })
+    // Macros aren't part of undo, as in vial-gui; they're written only when they differ.
+    if (plan.macros && JSON.stringify(plan.macros) !== JSON.stringify(get().keyboard?.macros)) {
+      const result = await writeMacros(plan.macros)
+      if (result && result !== 'Macros saved.') set((s) => ({ notice: `${s.notice ?? ''} ${result}`.trim() }))
+    }
   }
 
   return {
@@ -238,6 +270,7 @@ export const useApp = create<AppState>((set, get) => {
     view: 'keys',
     lights: null,
     demo: null,
+    macroDrafts: [],
     keyboard: null,
     isDemo: false,
     layer: 0,
@@ -298,6 +331,21 @@ export const useApp = create<AppState>((set, get) => {
     },
 
     unlock: () => ensureUnlocked(),
+
+    setMacroDraft(index, macro) {
+      set((s) => ({ macroDrafts: s.macroDrafts.map((m, i) => (i === index ? macro : m)), notice: null }))
+    },
+
+    discardMacroDrafts() {
+      set((s) => ({ macroDrafts: s.keyboard?.macros ?? [], notice: 'Changes to macros were discarded.' }))
+    },
+
+    async saveMacros() {
+      const { keyboard, macroDrafts } = get()
+      if (!keyboard) return
+      const notice = await writeMacros(macroDrafts)
+      if (notice) set({ notice })
+    },
 
     async disconnect() {
       await get().transport?.close()

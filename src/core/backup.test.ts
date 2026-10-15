@@ -25,6 +25,7 @@ const source: BackupSource = {
   keymap: [[[0x04, 0x0204, 0x00]], [[0x01, 0x5221, 0x00]]],
   encoderKeymap: [[[0xaa, 0xa9]], [[0x01, 0x01]]],
   layoutOptionsValue: -1,
+  macros: [[{ type: 'text', text: 'hi' }], []],
   catalog,
 }
 
@@ -47,8 +48,12 @@ describe('createBackup', () => {
     expect(text).toContain('"uid": 17434265340928784376')
   })
 
+  it('saves macros in vial-gui form', () => {
+    expect(json.macro).toEqual([[['text', 'hi']], []])
+  })
+
   it('leaves out sections it does not manage, so vial-gui keeps them on restore', () => {
-    for (const section of ['macro', 'tap_dance', 'combo', 'key_override', 'alt_repeat_key', 'settings']) {
+    for (const section of ['tap_dance', 'combo', 'key_override', 'alt_repeat_key', 'settings']) {
       expect(json).not.toHaveProperty(section)
     }
   })
@@ -70,7 +75,7 @@ describe('parseBackup', () => {
     const backup = parseBackup(
       JSON.stringify({ version: 1, uid: 1, layout: [], macro: [[['text', 'hi']]], tap_dance: [], settings: { 2: 1 } }),
     )
-    expect(backup.notRestored).toEqual(['macros', 'QMK settings'])
+    expect(backup.notRestored).toEqual(['QMK settings'])
   })
 
   it('rejects files that are not keymap backups', () => {
@@ -113,6 +118,12 @@ describe('planRestore', () => {
     const backup = parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [], layout_options: 3 }))
     expect(planRestore(backup, { ...source, layoutOptionsValue: 0 }).layoutOptions).toBe(3)
     expect(planRestore(backup, source).layoutOptions).toBeNull()
+  })
+
+  it('restores macros, sized to the keyboard’s macro count', () => {
+    const backup = parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [], macro: [[['tap', 'KC_A']], [], [['text', 'x']]] }))
+    expect(planRestore(backup, source).macros).toEqual([[{ type: 'tap', keys: [0x04] }], []])
+    expect(planRestore(parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [] })), source).macros).toBeNull()
   })
 
   it('notices backups from a different keyboard', () => {

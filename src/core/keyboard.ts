@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 import { loadKeycodeCatalog, type CustomKeycode, type KeyboardCapabilities, type KeycodeCatalog } from './keycodes/catalog'
 import type { EncoderKeymap } from './keymap-editor'
+import { deserializeMacros, type Macro } from './macros'
 import { lightingKind, readLighting, type LightingKind, type LightingState } from './lighting'
 import {
   parseLayout,
@@ -50,6 +51,9 @@ export interface LoadedKeyboard {
   capabilities: KeyboardCapabilities
   lightingKind: LightingKind
   lighting: LightingState
+  /** Bytes of macro memory, shared by all macros. */
+  macroMemory: number
+  macros: Macro[]
   catalog: KeycodeCatalog
 }
 
@@ -77,6 +81,10 @@ export async function loadKeyboard(
   const layers = await client.getLayerCount()
   const capabilities = await readCapabilities(client, vialProtocol, layers, definition)
   const catalog = await loadKeycodeCatalog(vialProtocol, capabilities)
+  const macroMemory = capabilities.macroCount ? await client.getMacroBufferSize() : 0
+  const macros = macroMemory
+    ? deserializeMacros(await client.getMacroBuffer(macroMemory, capabilities.macroCount), capabilities.macroCount, vialProtocol)
+    : Array.from({ length: capabilities.macroCount }, (): Macro => [])
   const kind = lightingKind(definition)
   const lighting = await readLighting(client, kind)
   const keymap = await client.getKeymap(layers, rows, cols)
@@ -110,6 +118,8 @@ export async function loadKeyboard(
     capabilities,
     lightingKind: kind,
     lighting,
+    macroMemory,
+    macros,
     catalog,
   }
 }

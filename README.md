@@ -25,7 +25,9 @@ tested against the built-in demo keyboard so far, not real hardware.
 
 - Key tester: press each key and see which ones work. In the demo, your own keyboard drives it.
 
-Not yet: macros, tap dance, combos, firmware flashing, and the desktop app.
+- Macros: type text and press keys, built from plain steps, saved to the keyboard and in backups.
+
+Not yet: tap dance, combos, key overrides, QMK settings, firmware flashing, and the desktop app.
 
 ## Development
 

@@ -6,6 +6,7 @@ import { KeyPicker } from '@/components/KeyPicker'
 import { KeyTester } from '@/components/KeyTester'
 import { KeyboardView } from '@/components/KeyboardView'
 import { LayoutOptions } from '@/components/LayoutOptions'
+import { MacroEditor } from '@/components/MacroEditor'
 import { LightingPanel, lightingGlow } from '@/components/LightingPanel'
 import { UnlockDialog } from '@/components/UnlockDialog'
 import { Button } from '@/components/ui/button'
@@ -32,7 +33,7 @@ export default function App() {
       </header>
       {keyboard ? (
         <main className="min-h-0 flex-1 overflow-y-auto">
-          <div className="mx-auto h-full max-w-6xl px-6">{view === 'lighting' ? <LightingView /> : view === 'tester' ? <KeyTester /> : <Editor />}</div>
+          <div className="mx-auto h-full max-w-6xl px-6">{view === 'lighting' ? <LightingView /> : view === 'tester' ? <KeyTester /> : view === 'macros' ? <MacroEditor /> : <Editor />}</div>
         </main>
       ) : (
         <main className="mx-auto max-w-6xl px-6 pb-16">
@@ -170,6 +171,7 @@ function ViewNav() {
   const views = [
     { id: 'keys' as const, title: 'Keys' },
     ...(backlight || rgblight || vialrgb ? [{ id: 'lighting' as const, title: 'Lighting' }] : []),
+    ...(keyboard.macros.length ? [{ id: 'macros' as const, title: 'Macros' }] : []),
     { id: 'tester' as const, title: 'Key tester' },
   ]
   if (views.length < 2) return null

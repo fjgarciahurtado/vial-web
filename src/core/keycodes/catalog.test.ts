@@ -125,6 +125,11 @@ describe('KeycodeCatalog.describe', () => {
     expect(catalog.describe(0x5221).name).toBe('Hold for layer 1')
   })
 
+  it('numbers macros from 1, as people count', () => {
+    const catalog = v6()
+    expect(catalog.describe(catalog.deserialize('M0')!)).toMatchObject({ name: 'Macro 1', legend: ['Macro', '1'] })
+  })
+
   it('gives layer keys short legends that say what they do', () => {
     const catalog = v6()
     expect(catalog.describe(0x5221).legend).toEqual(['L1', 'hold'])

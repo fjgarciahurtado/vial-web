@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 import { FakeKeyboard } from './fake-keyboard'
 import { loadKeyboard, type LoadedKeyboard } from './keyboard'
+import { serializeMacros } from './macros'
 import type { HidTransport } from './transport'
 
 // 60% ANSI: [width, base-layer keycode, function-layer keycode]
@@ -52,6 +53,7 @@ export async function openDemoKeyboard(): Promise<{
     layers: 2,
     vialProtocol: 6,
     macroCount: 4,
+    macroMemory: 512,
     featureFlags: 0b11,
     encoders: 1,
     // Unlock by holding Esc and Enter. The demo holds them for you.
@@ -74,6 +76,22 @@ export async function openDemoKeyboard(): Promise<{
   put(1, 0, SPLIT_COL, ___)
   fake.encoders[0][0] = [0xaa, 0xa9] // Volume Down / Up
   fake.encoders[1][0] = [0xac, 0xab] // Previous / Next Track
+  // Macro 1 signs off an email: types a greeting, presses Enter, types a name.
+  fake.macroBuffer.set(
+    serializeMacros(
+      [
+        [
+          { type: 'text', text: 'Best regards,' },
+          { type: 'tap', keys: [0x28] },
+          { type: 'text', text: 'Alex' },
+        ],
+        [],
+        [],
+        [],
+      ],
+      6,
+    ),
+  )
   fake.vialrgb = { maxBrightness: 200, effects: [1, 2, 6, 13, 24, 29, 39], mode: 6, speed: 128, hsv: [150, 220, 160] }
 
   const keyboard = await loadKeyboard(fake.transport, 'Demo keyboard', { decompress: async (bytes) => bytes })
