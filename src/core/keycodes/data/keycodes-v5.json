@@ -1,0 +1,10263 @@
+{
+ "protocol": 5,
+ "masked": [
+  256,
+  512,
+  768,
+  1024,
+  1280,
+  1536,
+  1792,
+  2048,
+  2304,
+  2560,
+  3072,
+  3328,
+  3840,
+  4352,
+  4608,
+  5120,
+  6144,
+  6400,
+  16384,
+  16640,
+  16896,
+  17152,
+  17408,
+  17664,
+  17920,
+  18176,
+  18432,
+  18688,
+  18944,
+  19200,
+  19456,
+  19712,
+  19968,
+  20224,
+  24832,
+  25088,
+  25344,
+  25600,
+  25856,
+  26112,
+  26368,
+  26624,
+  26880,
+  27136,
+  27648,
+  27904,
+  28416,
+  28928,
+  29184,
+  29696,
+  30720,
+  30976,
+  32000
+ ],
+ "keycodes": [
+  {
+   "id": "KC_NO",
+   "code": 0,
+   "label": "",
+   "group": "special"
+  },
+  {
+   "id": "KC_TRNS",
+   "code": 1,
+   "label": "▽",
+   "group": "special",
+   "alias": [
+    "KC_TRANSPARENT"
+   ]
+  },
+  {
+   "id": "KC_A",
+   "code": 4,
+   "label": "A",
+   "group": "basic",
+   "printable": "a"
+  },
+  {
+   "id": "KC_B",
+   "code": 5,
+   "label": "B",
+   "group": "basic",
+   "printable": "b"
+  },
+  {
+   "id": "KC_C",
+   "code": 6,
+   "label": "C",
+   "group": "basic",
+   "printable": "c"
+  },
+  {
+   "id": "KC_D",
+   "code": 7,
+   "label": "D",
+   "group": "basic",
+   "printable": "d"
+  },
+  {
+   "id": "KC_E",
+   "code": 8,
+   "label": "E",
+   "group": "basic",
+   "printable": "e"
+  },
+  {
+   "id": "KC_F",
+   "code": 9,
+   "label": "F",
+   "group": "basic",
+   "printable": "f"
+  },
+  {
+   "id": "KC_G",
+   "code": 10,
+   "label": "G",
+   "group": "basic",
+   "printable": "g"
+  },
+  {
+   "id": "KC_H",
+   "code": 11,
+   "label": "H",
+   "group": "basic",
+   "printable": "h"
+  },
+  {
+   "id": "KC_I",
+   "code": 12,
+   "label": "I",
+   "group": "basic",
+   "printable": "i"
+  },
+  {
+   "id": "KC_J",
+   "code": 13,
+   "label": "J",
+   "group": "basic",
+   "printable": "j"
+  },
+  {
+   "id": "KC_K",
+   "code": 14,
+   "label": "K",
+   "group": "basic",
+   "printable": "k"
+  },
+  {
+   "id": "KC_L",
+   "code": 15,
+   "label": "L",
+   "group": "basic",
+   "printable": "l"
+  },
+  {
+   "id": "KC_M",
+   "code": 16,
+   "label": "M",
+   "group": "basic",
+   "printable": "m"
+  },
+  {
+   "id": "KC_N",
+   "code": 17,
+   "label": "N",
+   "group": "basic",
+   "printable": "n"
+  },
+  {
+   "id": "KC_O",
+   "code": 18,
+   "label": "O",
+   "group": "basic",
+   "printable": "o"
+  },
+  {
+   "id": "KC_P",
+   "code": 19,
+   "label": "P",
+   "group": "basic",
+   "printable": "p"
+  },
+  {
+   "id": "KC_Q",
+   "code": 20,
+   "label": "Q",
+   "group": "basic",
+   "printable": "q"
+  },
+  {
+   "id": "KC_R",
+   "code": 21,
+   "label": "R",
+   "group": "basic",
+   "printable": "r"
+  },
+  {
+   "id": "KC_S",
+   "code": 22,
+   "label": "S",
+   "group": "basic",
+   "printable": "s"
+  },
+  {
+   "id": "KC_T",
+   "code": 23,
+   "label": "T",
+   "group": "basic",
+   "printable": "t"
+  },
+  {
+   "id": "KC_U",
+   "code": 24,
+   "label": "U",
+   "group": "basic",
+   "printable": "u"
+  },
+  {
+   "id": "KC_V",
+   "code": 25,
+   "label": "V",
+   "group": "basic",
+   "printable": "v"
+  },
+  {
+   "id": "KC_W",
+   "code": 26,
+   "label": "W",
+   "group": "basic",
+   "printable": "w"
+  },
+  {
+   "id": "KC_X",
+   "code": 27,
+   "label": "X",
+   "group": "basic",
+   "printable": "x"
+  },
+  {
+   "id": "KC_Y",
+   "code": 28,
+   "label": "Y",
+   "group": "basic",
+   "printable": "y"
+  },
+  {
+   "id": "KC_Z",
+   "code": 29,
+   "label": "Z",
+   "group": "basic",
+   "printable": "z"
+  },
+  {
+   "id": "KC_1",
+   "code": 30,
+   "label": "!\n1",
+   "group": "basic",
+   "printable": "1"
+  },
+  {
+   "id": "KC_2",
+   "code": 31,
+   "label": "@\n2",
+   "group": "basic",
+   "printable": "2"
+  },
+  {
+   "id": "KC_3",
+   "code": 32,
+   "label": "#\n3",
+   "group": "basic",
+   "printable": "3"
+  },
+  {
+   "id": "KC_4",
+   "code": 33,
+   "label": "$\n4",
+   "group": "basic",
+   "printable": "4"
+  },
+  {
+   "id": "KC_5",
+   "code": 34,
+   "label": "%\n5",
+   "group": "basic",
+   "printable": "5"
+  },
+  {
+   "id": "KC_6",
+   "code": 35,
+   "label": "^\n6",
+   "group": "basic",
+   "printable": "6"
+  },
+  {
+   "id": "KC_7",
+   "code": 36,
+   "label": "&\n7",
+   "group": "basic",
+   "printable": "7"
+  },
+  {
+   "id": "KC_8",
+   "code": 37,
+   "label": "*\n8",
+   "group": "basic",
+   "printable": "8"
+  },
+  {
+   "id": "KC_9",
+   "code": 38,
+   "label": "(\n9",
+   "group": "basic",
+   "printable": "9"
+  },
+  {
+   "id": "KC_0",
+   "code": 39,
+   "label": ")\n0",
+   "group": "basic",
+   "printable": "0"
+  },
+  {
+   "id": "KC_ENTER",
+   "code": 40,
+   "label": "Enter",
+   "group": "basic",
+   "alias": [
+    "KC_ENT"
+   ]
+  },
+  {
+   "id": "KC_ESCAPE",
+   "code": 41,
+   "label": "Esc",
+   "group": "basic",
+   "alias": [
+    "KC_ESC"
+   ]
+  },
+  {
+   "id": "KC_BSPACE",
+   "code": 42,
+   "label": "Bksp",
+   "group": "basic",
+   "alias": [
+    "KC_BSPC"
+   ]
+  },
+  {
+   "id": "KC_TAB",
+   "code": 43,
+   "label": "Tab",
+   "group": "basic"
+  },
+  {
+   "id": "KC_SPACE",
+   "code": 44,
+   "label": "Space",
+   "group": "basic",
+   "alias": [
+    "KC_SPC"
+   ]
+  },
+  {
+   "id": "KC_MINUS",
+   "code": 45,
+   "label": "_\n-",
+   "group": "basic",
+   "alias": [
+    "KC_MINS"
+   ],
+   "printable": "-"
+  },
+  {
+   "id": "KC_EQUAL",
+   "code": 46,
+   "label": "+\n=",
+   "group": "basic",
+   "alias": [
+    "KC_EQL"
+   ],
+   "printable": "="
+  },
+  {
+   "id": "KC_LBRACKET",
+   "code": 47,
+   "label": "{\n[",
+   "group": "basic",
+   "alias": [
+    "KC_LBRC"
+   ],
+   "printable": "["
+  },
+  {
+   "id": "KC_RBRACKET",
+   "code": 48,
+   "label": "}\n]",
+   "group": "basic",
+   "alias": [
+    "KC_RBRC"
+   ],
+   "printable": "]"
+  },
+  {
+   "id": "KC_BSLASH",
+   "code": 49,
+   "label": "|\n\\",
+   "group": "basic",
+   "alias": [
+    "KC_BSLS"
+   ],
+   "printable": "\\"
+  },
+  {
+   "id": "KC_SCOLON",
+   "code": 51,
+   "label": ":\n;",
+   "group": "basic",
+   "alias": [
+    "KC_SCLN"
+   ],
+   "printable": ";"
+  },
+  {
+   "id": "KC_QUOTE",
+   "code": 52,
+   "label": "\"\n'",
+   "group": "basic",
+   "alias": [
+    "KC_QUOT"
+   ],
+   "printable": "'"
+  },
+  {
+   "id": "KC_GRAVE",
+   "code": 53,
+   "label": "~\n`",
+   "group": "basic",
+   "alias": [
+    "KC_GRV",
+    "KC_ZKHK"
+   ],
+   "printable": "`"
+  },
+  {
+   "id": "KC_COMMA",
+   "code": 54,
+   "label": "<\n,",
+   "group": "basic",
+   "alias": [
+    "KC_COMM"
+   ],
+   "printable": ","
+  },
+  {
+   "id": "KC_DOT",
+   "code": 55,
+   "label": ">\n.",
+   "group": "basic",
+   "printable": "."
+  },
+  {
+   "id": "KC_SLASH",
+   "code": 56,
+   "label": "?\n/",
+   "group": "basic",
+   "alias": [
+    "KC_SLSH"
+   ],
+   "printable": "/"
+  },
+  {
+   "id": "KC_CAPSLOCK",
+   "code": 57,
+   "label": "Caps\nLock",
+   "group": "basic",
+   "alias": [
+    "KC_CLCK",
+    "KC_CAPS"
+   ]
+  },
+  {
+   "id": "KC_F1",
+   "code": 58,
+   "label": "F1",
+   "group": "basic"
+  },
+  {
+   "id": "KC_F2",
+   "code": 59,
+   "label": "F2",
+   "group": "basic"
+  },
+  {
+   "id": "KC_F3",
+   "code": 60,
+   "label": "F3",
+   "group": "basic"
+  },
+  {
+   "id": "KC_F4",
+   "code": 61,
+   "label": "F4",
+   "group": "basic"
+  },
+  {
+   "id": "KC_F5",
+   "code": 62,
+   "label": "F5",
+   "group": "basic"
+  },
+  {
+   "id": "KC_F6",
+   "code": 63,
+   "label": "F6",
+   "group": "basic"
+  },
+  {
+   "id": "KC_F7",
+   "code": 64,
+   "label": "F7",
+   "group": "basic"
+  },
+  {
+   "id": "KC_F8",
+   "code": 65,
+   "label": "F8",
+   "group": "basic"
+  },
+  {
+   "id": "KC_F9",
+   "code": 66,
+   "label": "F9",
+   "group": "basic"
+  },
+  {
+   "id": "KC_F10",
+   "code": 67,
+   "label": "F10",
+   "group": "basic"
+  },
+  {
+   "id": "KC_F11",
+   "code": 68,
+   "label": "F11",
+   "group": "basic"
+  },
+  {
+   "id": "KC_F12",
+   "code": 69,
+   "label": "F12",
+   "group": "basic"
+  },
+  {
+   "id": "KC_APPLICATION",
+   "code": 101,
+   "label": "Menu",
+   "group": "basic",
+   "alias": [
+    "KC_APP"
+   ]
+  },
+  {
+   "id": "KC_LCTRL",
+   "code": 224,
+   "label": "LCtrl",
+   "group": "basic",
+   "alias": [
+    "KC_LCTL"
+   ]
+  },
+  {
+   "id": "KC_LSHIFT",
+   "code": 225,
+   "label": "LShift",
+   "group": "basic",
+   "alias": [
+    "KC_LSFT"
+   ]
+  },
+  {
+   "id": "KC_LALT",
+   "code": 226,
+   "label": "LAlt",
+   "group": "basic",
+   "alias": [
+    "KC_LOPT"
+   ]
+  },
+  {
+   "id": "KC_LGUI",
+   "code": 227,
+   "label": "LGui",
+   "group": "basic",
+   "alias": [
+    "KC_LCMD",
+    "KC_LWIN"
+   ]
+  },
+  {
+   "id": "KC_RCTRL",
+   "code": 228,
+   "label": "RCtrl",
+   "group": "basic",
+   "alias": [
+    "KC_RCTL"
+   ]
+  },
+  {
+   "id": "KC_RSHIFT",
+   "code": 229,
+   "label": "RShift",
+   "group": "basic",
+   "alias": [
+    "KC_RSFT"
+   ]
+  },
+  {
+   "id": "KC_RALT",
+   "code": 230,
+   "label": "RAlt",
+   "group": "basic",
+   "alias": [
+    "KC_ALGR",
+    "KC_ROPT"
+   ]
+  },
+  {
+   "id": "KC_RGUI",
+   "code": 231,
+   "label": "RGui",
+   "group": "basic",
+   "alias": [
+    "KC_RCMD",
+    "KC_RWIN"
+   ]
+  },
+  {
+   "id": "KC_NUMLOCK",
+   "code": 83,
+   "label": "Num\nLock",
+   "group": "numpad",
+   "alias": [
+    "KC_NLCK"
+   ]
+  },
+  {
+   "id": "KC_KP_SLASH",
+   "code": 84,
+   "label": "/",
+   "group": "numpad",
+   "alias": [
+    "KC_PSLS"
+   ]
+  },
+  {
+   "id": "KC_KP_ASTERISK",
+   "code": 85,
+   "label": "*",
+   "group": "numpad",
+   "alias": [
+    "KC_PAST"
+   ]
+  },
+  {
+   "id": "KC_KP_MINUS",
+   "code": 86,
+   "label": "-",
+   "group": "numpad",
+   "alias": [
+    "KC_PMNS"
+   ]
+  },
+  {
+   "id": "KC_KP_PLUS",
+   "code": 87,
+   "label": "+",
+   "group": "numpad",
+   "alias": [
+    "KC_PPLS"
+   ]
+  },
+  {
+   "id": "KC_KP_ENTER",
+   "code": 88,
+   "label": "Num\nEnter",
+   "group": "numpad",
+   "alias": [
+    "KC_PENT"
+   ]
+  },
+  {
+   "id": "KC_KP_1",
+   "code": 89,
+   "label": "1",
+   "group": "numpad",
+   "alias": [
+    "KC_P1"
+   ]
+  },
+  {
+   "id": "KC_KP_2",
+   "code": 90,
+   "label": "2",
+   "group": "numpad",
+   "alias": [
+    "KC_P2"
+   ]
+  },
+  {
+   "id": "KC_KP_3",
+   "code": 91,
+   "label": "3",
+   "group": "numpad",
+   "alias": [
+    "KC_P3"
+   ]
+  },
+  {
+   "id": "KC_KP_4",
+   "code": 92,
+   "label": "4",
+   "group": "numpad",
+   "alias": [
+    "KC_P4"
+   ]
+  },
+  {
+   "id": "KC_KP_5",
+   "code": 93,
+   "label": "5",
+   "group": "numpad",
+   "alias": [
+    "KC_P5"
+   ]
+  },
+  {
+   "id": "KC_KP_6",
+   "code": 94,
+   "label": "6",
+   "group": "numpad",
+   "alias": [
+    "KC_P6"
+   ]
+  },
+  {
+   "id": "KC_KP_7",
+   "code": 95,
+   "label": "7",
+   "group": "numpad",
+   "alias": [
+    "KC_P7"
+   ]
+  },
+  {
+   "id": "KC_KP_8",
+   "code": 96,
+   "label": "8",
+   "group": "numpad",
+   "alias": [
+    "KC_P8"
+   ]
+  },
+  {
+   "id": "KC_KP_9",
+   "code": 97,
+   "label": "9",
+   "group": "numpad",
+   "alias": [
+    "KC_P9"
+   ]
+  },
+  {
+   "id": "KC_KP_0",
+   "code": 98,
+   "label": "0",
+   "group": "numpad",
+   "alias": [
+    "KC_P0"
+   ]
+  },
+  {
+   "id": "KC_KP_DOT",
+   "code": 99,
+   "label": ".",
+   "group": "numpad",
+   "alias": [
+    "KC_PDOT"
+   ]
+  },
+  {
+   "id": "KC_KP_EQUAL",
+   "code": 103,
+   "label": "=",
+   "group": "numpad",
+   "alias": [
+    "KC_PEQL"
+   ]
+  },
+  {
+   "id": "KC_KP_COMMA",
+   "code": 133,
+   "label": ",",
+   "group": "numpad",
+   "alias": [
+    "KC_PCMM"
+   ]
+  },
+  {
+   "id": "KC_PSCREEN",
+   "code": 70,
+   "label": "Print\nScreen",
+   "group": "navigation",
+   "alias": [
+    "KC_PSCR"
+   ]
+  },
+  {
+   "id": "KC_SCROLLLOCK",
+   "code": 71,
+   "label": "Scroll\nLock",
+   "group": "navigation",
+   "alias": [
+    "KC_SLCK",
+    "KC_BRMD"
+   ]
+  },
+  {
+   "id": "KC_PAUSE",
+   "code": 72,
+   "label": "Pause",
+   "group": "navigation",
+   "alias": [
+    "KC_PAUS",
+    "KC_BRK",
+    "KC_BRMU"
+   ]
+  },
+  {
+   "id": "KC_INSERT",
+   "code": 73,
+   "label": "Insert",
+   "group": "navigation",
+   "alias": [
+    "KC_INS"
+   ]
+  },
+  {
+   "id": "KC_HOME",
+   "code": 74,
+   "label": "Home",
+   "group": "navigation"
+  },
+  {
+   "id": "KC_PGUP",
+   "code": 75,
+   "label": "Page\nUp",
+   "group": "navigation"
+  },
+  {
+   "id": "KC_DELETE",
+   "code": 76,
+   "label": "Del",
+   "group": "navigation",
+   "alias": [
+    "KC_DEL"
+   ]
+  },
+  {
+   "id": "KC_END",
+   "code": 77,
+   "label": "End",
+   "group": "navigation"
+  },
+  {
+   "id": "KC_PGDOWN",
+   "code": 78,
+   "label": "Page\nDown",
+   "group": "navigation",
+   "alias": [
+    "KC_PGDN"
+   ]
+  },
+  {
+   "id": "KC_RIGHT",
+   "code": 79,
+   "label": "Right",
+   "group": "navigation",
+   "alias": [
+    "KC_RGHT"
+   ]
+  },
+  {
+   "id": "KC_LEFT",
+   "code": 80,
+   "label": "Left",
+   "group": "navigation"
+  },
+  {
+   "id": "KC_DOWN",
+   "code": 81,
+   "label": "Down",
+   "group": "navigation"
+  },
+  {
+   "id": "KC_UP",
+   "code": 82,
+   "label": "Up",
+   "group": "navigation"
+  },
+  {
+   "id": "KC_TILD",
+   "code": 565,
+   "label": "~",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_EXLM",
+   "code": 542,
+   "label": "!",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_AT",
+   "code": 543,
+   "label": "@",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_HASH",
+   "code": 544,
+   "label": "#",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_DLR",
+   "code": 545,
+   "label": "$",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_PERC",
+   "code": 546,
+   "label": "%",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_CIRC",
+   "code": 547,
+   "label": "^",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_AMPR",
+   "code": 548,
+   "label": "&",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_ASTR",
+   "code": 549,
+   "label": "*",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_LPRN",
+   "code": 550,
+   "label": "(",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_RPRN",
+   "code": 551,
+   "label": ")",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_UNDS",
+   "code": 557,
+   "label": "_",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_PLUS",
+   "code": 558,
+   "label": "+",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_LCBR",
+   "code": 559,
+   "label": "{",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_RCBR",
+   "code": 560,
+   "label": "}",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_LT",
+   "code": 566,
+   "label": "<",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_GT",
+   "code": 567,
+   "label": ">",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_COLN",
+   "code": 563,
+   "label": ":",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_PIPE",
+   "code": 561,
+   "label": "|",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_QUES",
+   "code": 568,
+   "label": "?",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_DQUO",
+   "code": 564,
+   "label": "\"",
+   "group": "shifted"
+  },
+  {
+   "id": "KC_NONUS_HASH",
+   "code": 50,
+   "label": "~\n#",
+   "group": "iso",
+   "tooltip": "Non-US # and ~",
+   "alias": [
+    "KC_NUHS"
+   ]
+  },
+  {
+   "id": "KC_NONUS_BSLASH",
+   "code": 100,
+   "label": "|\n\\",
+   "group": "iso",
+   "tooltip": "Non-US \\ and |",
+   "alias": [
+    "KC_NUBS"
+   ]
+  },
+  {
+   "id": "KC_RO",
+   "code": 135,
+   "label": "_\n\\",
+   "group": "iso",
+   "tooltip": "JIS \\ and _",
+   "alias": [
+    "KC_INT1"
+   ]
+  },
+  {
+   "id": "KC_KANA",
+   "code": 136,
+   "label": "カタカナ\nひらがな",
+   "group": "iso",
+   "tooltip": "JIS Katakana/Hiragana",
+   "alias": [
+    "KC_INT2"
+   ]
+  },
+  {
+   "id": "KC_JYEN",
+   "code": 137,
+   "label": "|\n¥",
+   "group": "iso",
+   "alias": [
+    "KC_INT3"
+   ]
+  },
+  {
+   "id": "KC_HENK",
+   "code": 138,
+   "label": "変換",
+   "group": "iso",
+   "tooltip": "JIS Henkan",
+   "alias": [
+    "KC_INT4"
+   ]
+  },
+  {
+   "id": "KC_MHEN",
+   "code": 139,
+   "label": "無変換",
+   "group": "iso",
+   "tooltip": "JIS Muhenkan",
+   "alias": [
+    "KC_INT5"
+   ]
+  },
+  {
+   "id": "KC_LANG1",
+   "code": 144,
+   "label": "한영\nかな",
+   "group": "iso",
+   "tooltip": "Korean Han/Yeong / JP Mac Kana",
+   "alias": [
+    "KC_HAEN"
+   ]
+  },
+  {
+   "id": "KC_LANG2",
+   "code": 145,
+   "label": "漢字\n英数",
+   "group": "iso",
+   "tooltip": "Korean Hanja / JP Mac Eisu",
+   "alias": [
+    "KC_HANJ"
+   ]
+  },
+  {
+   "id": "QK_LAYER_LOCK",
+   "code": 39327,
+   "label": "Layer\nLock",
+   "group": "layers",
+   "tooltip": "Locks the current layer",
+   "alias": [
+    "QK_LLCK"
+   ],
+   "feature": "layer_lock"
+  },
+  {
+   "id": "FN_MO13",
+   "code": 24336,
+   "label": "Fn1\n(Fn3)",
+   "group": "layers"
+  },
+  {
+   "id": "FN_MO23",
+   "code": 24337,
+   "label": "Fn2\n(Fn3)",
+   "group": "layers"
+  },
+  {
+   "id": "MO(0)",
+   "code": 20736,
+   "label": "MO(0)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 0
+  },
+  {
+   "id": "MO(1)",
+   "code": 20737,
+   "label": "MO(1)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 1
+  },
+  {
+   "id": "MO(2)",
+   "code": 20738,
+   "label": "MO(2)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 2
+  },
+  {
+   "id": "MO(3)",
+   "code": 20739,
+   "label": "MO(3)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 3
+  },
+  {
+   "id": "MO(4)",
+   "code": 20740,
+   "label": "MO(4)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 4
+  },
+  {
+   "id": "MO(5)",
+   "code": 20741,
+   "label": "MO(5)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 5
+  },
+  {
+   "id": "MO(6)",
+   "code": 20742,
+   "label": "MO(6)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 6
+  },
+  {
+   "id": "MO(7)",
+   "code": 20743,
+   "label": "MO(7)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 7
+  },
+  {
+   "id": "MO(8)",
+   "code": 20744,
+   "label": "MO(8)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 8
+  },
+  {
+   "id": "MO(9)",
+   "code": 20745,
+   "label": "MO(9)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 9
+  },
+  {
+   "id": "MO(10)",
+   "code": 20746,
+   "label": "MO(10)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 10
+  },
+  {
+   "id": "MO(11)",
+   "code": 20747,
+   "label": "MO(11)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 11
+  },
+  {
+   "id": "MO(12)",
+   "code": 20748,
+   "label": "MO(12)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 12
+  },
+  {
+   "id": "MO(13)",
+   "code": 20749,
+   "label": "MO(13)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 13
+  },
+  {
+   "id": "MO(14)",
+   "code": 20750,
+   "label": "MO(14)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 14
+  },
+  {
+   "id": "MO(15)",
+   "code": 20751,
+   "label": "MO(15)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 15
+  },
+  {
+   "id": "MO(16)",
+   "code": 20752,
+   "label": "MO(16)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 16
+  },
+  {
+   "id": "MO(17)",
+   "code": 20753,
+   "label": "MO(17)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 17
+  },
+  {
+   "id": "MO(18)",
+   "code": 20754,
+   "label": "MO(18)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 18
+  },
+  {
+   "id": "MO(19)",
+   "code": 20755,
+   "label": "MO(19)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 19
+  },
+  {
+   "id": "MO(20)",
+   "code": 20756,
+   "label": "MO(20)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 20
+  },
+  {
+   "id": "MO(21)",
+   "code": 20757,
+   "label": "MO(21)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 21
+  },
+  {
+   "id": "MO(22)",
+   "code": 20758,
+   "label": "MO(22)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 22
+  },
+  {
+   "id": "MO(23)",
+   "code": 20759,
+   "label": "MO(23)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 23
+  },
+  {
+   "id": "MO(24)",
+   "code": 20760,
+   "label": "MO(24)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 24
+  },
+  {
+   "id": "MO(25)",
+   "code": 20761,
+   "label": "MO(25)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 25
+  },
+  {
+   "id": "MO(26)",
+   "code": 20762,
+   "label": "MO(26)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 26
+  },
+  {
+   "id": "MO(27)",
+   "code": 20763,
+   "label": "MO(27)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 27
+  },
+  {
+   "id": "MO(28)",
+   "code": 20764,
+   "label": "MO(28)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 28
+  },
+  {
+   "id": "MO(29)",
+   "code": 20765,
+   "label": "MO(29)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 29
+  },
+  {
+   "id": "MO(30)",
+   "code": 20766,
+   "label": "MO(30)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 30
+  },
+  {
+   "id": "MO(31)",
+   "code": 20767,
+   "label": "MO(31)",
+   "group": "layers",
+   "tooltip": "Momentarily turn on layer when pressed (requires KC_TRNS on destination layer)",
+   "index": 31
+  },
+  {
+   "id": "DF(0)",
+   "code": 20992,
+   "label": "DF(0)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 0
+  },
+  {
+   "id": "DF(1)",
+   "code": 20993,
+   "label": "DF(1)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 1
+  },
+  {
+   "id": "DF(2)",
+   "code": 20994,
+   "label": "DF(2)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 2
+  },
+  {
+   "id": "DF(3)",
+   "code": 20995,
+   "label": "DF(3)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 3
+  },
+  {
+   "id": "DF(4)",
+   "code": 20996,
+   "label": "DF(4)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 4
+  },
+  {
+   "id": "DF(5)",
+   "code": 20997,
+   "label": "DF(5)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 5
+  },
+  {
+   "id": "DF(6)",
+   "code": 20998,
+   "label": "DF(6)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 6
+  },
+  {
+   "id": "DF(7)",
+   "code": 20999,
+   "label": "DF(7)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 7
+  },
+  {
+   "id": "DF(8)",
+   "code": 21000,
+   "label": "DF(8)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 8
+  },
+  {
+   "id": "DF(9)",
+   "code": 21001,
+   "label": "DF(9)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 9
+  },
+  {
+   "id": "DF(10)",
+   "code": 21002,
+   "label": "DF(10)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 10
+  },
+  {
+   "id": "DF(11)",
+   "code": 21003,
+   "label": "DF(11)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 11
+  },
+  {
+   "id": "DF(12)",
+   "code": 21004,
+   "label": "DF(12)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 12
+  },
+  {
+   "id": "DF(13)",
+   "code": 21005,
+   "label": "DF(13)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 13
+  },
+  {
+   "id": "DF(14)",
+   "code": 21006,
+   "label": "DF(14)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 14
+  },
+  {
+   "id": "DF(15)",
+   "code": 21007,
+   "label": "DF(15)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 15
+  },
+  {
+   "id": "DF(16)",
+   "code": 21008,
+   "label": "DF(16)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 16
+  },
+  {
+   "id": "DF(17)",
+   "code": 21009,
+   "label": "DF(17)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 17
+  },
+  {
+   "id": "DF(18)",
+   "code": 21010,
+   "label": "DF(18)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 18
+  },
+  {
+   "id": "DF(19)",
+   "code": 21011,
+   "label": "DF(19)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 19
+  },
+  {
+   "id": "DF(20)",
+   "code": 21012,
+   "label": "DF(20)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 20
+  },
+  {
+   "id": "DF(21)",
+   "code": 21013,
+   "label": "DF(21)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 21
+  },
+  {
+   "id": "DF(22)",
+   "code": 21014,
+   "label": "DF(22)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 22
+  },
+  {
+   "id": "DF(23)",
+   "code": 21015,
+   "label": "DF(23)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 23
+  },
+  {
+   "id": "DF(24)",
+   "code": 21016,
+   "label": "DF(24)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 24
+  },
+  {
+   "id": "DF(25)",
+   "code": 21017,
+   "label": "DF(25)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 25
+  },
+  {
+   "id": "DF(26)",
+   "code": 21018,
+   "label": "DF(26)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 26
+  },
+  {
+   "id": "DF(27)",
+   "code": 21019,
+   "label": "DF(27)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 27
+  },
+  {
+   "id": "DF(28)",
+   "code": 21020,
+   "label": "DF(28)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 28
+  },
+  {
+   "id": "DF(29)",
+   "code": 21021,
+   "label": "DF(29)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 29
+  },
+  {
+   "id": "DF(30)",
+   "code": 21022,
+   "label": "DF(30)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 30
+  },
+  {
+   "id": "DF(31)",
+   "code": 21023,
+   "label": "DF(31)",
+   "group": "layers",
+   "tooltip": "Set the base (default) layer",
+   "index": 31
+  },
+  {
+   "id": "PDF(0)",
+   "code": 629152,
+   "label": "PDF(0)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 0
+  },
+  {
+   "id": "PDF(1)",
+   "code": 629153,
+   "label": "PDF(1)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 1
+  },
+  {
+   "id": "PDF(2)",
+   "code": 629154,
+   "label": "PDF(2)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 2
+  },
+  {
+   "id": "PDF(3)",
+   "code": 629155,
+   "label": "PDF(3)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 3
+  },
+  {
+   "id": "PDF(4)",
+   "code": 629156,
+   "label": "PDF(4)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 4
+  },
+  {
+   "id": "PDF(5)",
+   "code": 629157,
+   "label": "PDF(5)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 5
+  },
+  {
+   "id": "PDF(6)",
+   "code": 629158,
+   "label": "PDF(6)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 6
+  },
+  {
+   "id": "PDF(7)",
+   "code": 629159,
+   "label": "PDF(7)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 7
+  },
+  {
+   "id": "PDF(8)",
+   "code": 629160,
+   "label": "PDF(8)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 8
+  },
+  {
+   "id": "PDF(9)",
+   "code": 629161,
+   "label": "PDF(9)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 9
+  },
+  {
+   "id": "PDF(10)",
+   "code": 629162,
+   "label": "PDF(10)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 10
+  },
+  {
+   "id": "PDF(11)",
+   "code": 629163,
+   "label": "PDF(11)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 11
+  },
+  {
+   "id": "PDF(12)",
+   "code": 629164,
+   "label": "PDF(12)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 12
+  },
+  {
+   "id": "PDF(13)",
+   "code": 629165,
+   "label": "PDF(13)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 13
+  },
+  {
+   "id": "PDF(14)",
+   "code": 629166,
+   "label": "PDF(14)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 14
+  },
+  {
+   "id": "PDF(15)",
+   "code": 629167,
+   "label": "PDF(15)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 15
+  },
+  {
+   "id": "PDF(16)",
+   "code": 629168,
+   "label": "PDF(16)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 16
+  },
+  {
+   "id": "PDF(17)",
+   "code": 629169,
+   "label": "PDF(17)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 17
+  },
+  {
+   "id": "PDF(18)",
+   "code": 629170,
+   "label": "PDF(18)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 18
+  },
+  {
+   "id": "PDF(19)",
+   "code": 629171,
+   "label": "PDF(19)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 19
+  },
+  {
+   "id": "PDF(20)",
+   "code": 629172,
+   "label": "PDF(20)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 20
+  },
+  {
+   "id": "PDF(21)",
+   "code": 629173,
+   "label": "PDF(21)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 21
+  },
+  {
+   "id": "PDF(22)",
+   "code": 629174,
+   "label": "PDF(22)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 22
+  },
+  {
+   "id": "PDF(23)",
+   "code": 629175,
+   "label": "PDF(23)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 23
+  },
+  {
+   "id": "PDF(24)",
+   "code": 629176,
+   "label": "PDF(24)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 24
+  },
+  {
+   "id": "PDF(25)",
+   "code": 629177,
+   "label": "PDF(25)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 25
+  },
+  {
+   "id": "PDF(26)",
+   "code": 629178,
+   "label": "PDF(26)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 26
+  },
+  {
+   "id": "PDF(27)",
+   "code": 629179,
+   "label": "PDF(27)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 27
+  },
+  {
+   "id": "PDF(28)",
+   "code": 629180,
+   "label": "PDF(28)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 28
+  },
+  {
+   "id": "PDF(29)",
+   "code": 629181,
+   "label": "PDF(29)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 29
+  },
+  {
+   "id": "PDF(30)",
+   "code": 629182,
+   "label": "PDF(30)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 30
+  },
+  {
+   "id": "PDF(31)",
+   "code": 629183,
+   "label": "PDF(31)",
+   "group": "layers",
+   "tooltip": "Persistently set the base (default) layer",
+   "feature": "persistent_default_layer",
+   "index": 31
+  },
+  {
+   "id": "TG(0)",
+   "code": 21248,
+   "label": "TG(0)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 0
+  },
+  {
+   "id": "TG(1)",
+   "code": 21249,
+   "label": "TG(1)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 1
+  },
+  {
+   "id": "TG(2)",
+   "code": 21250,
+   "label": "TG(2)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 2
+  },
+  {
+   "id": "TG(3)",
+   "code": 21251,
+   "label": "TG(3)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 3
+  },
+  {
+   "id": "TG(4)",
+   "code": 21252,
+   "label": "TG(4)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 4
+  },
+  {
+   "id": "TG(5)",
+   "code": 21253,
+   "label": "TG(5)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 5
+  },
+  {
+   "id": "TG(6)",
+   "code": 21254,
+   "label": "TG(6)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 6
+  },
+  {
+   "id": "TG(7)",
+   "code": 21255,
+   "label": "TG(7)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 7
+  },
+  {
+   "id": "TG(8)",
+   "code": 21256,
+   "label": "TG(8)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 8
+  },
+  {
+   "id": "TG(9)",
+   "code": 21257,
+   "label": "TG(9)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 9
+  },
+  {
+   "id": "TG(10)",
+   "code": 21258,
+   "label": "TG(10)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 10
+  },
+  {
+   "id": "TG(11)",
+   "code": 21259,
+   "label": "TG(11)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 11
+  },
+  {
+   "id": "TG(12)",
+   "code": 21260,
+   "label": "TG(12)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 12
+  },
+  {
+   "id": "TG(13)",
+   "code": 21261,
+   "label": "TG(13)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 13
+  },
+  {
+   "id": "TG(14)",
+   "code": 21262,
+   "label": "TG(14)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 14
+  },
+  {
+   "id": "TG(15)",
+   "code": 21263,
+   "label": "TG(15)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 15
+  },
+  {
+   "id": "TG(16)",
+   "code": 21264,
+   "label": "TG(16)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 16
+  },
+  {
+   "id": "TG(17)",
+   "code": 21265,
+   "label": "TG(17)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 17
+  },
+  {
+   "id": "TG(18)",
+   "code": 21266,
+   "label": "TG(18)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 18
+  },
+  {
+   "id": "TG(19)",
+   "code": 21267,
+   "label": "TG(19)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 19
+  },
+  {
+   "id": "TG(20)",
+   "code": 21268,
+   "label": "TG(20)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 20
+  },
+  {
+   "id": "TG(21)",
+   "code": 21269,
+   "label": "TG(21)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 21
+  },
+  {
+   "id": "TG(22)",
+   "code": 21270,
+   "label": "TG(22)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 22
+  },
+  {
+   "id": "TG(23)",
+   "code": 21271,
+   "label": "TG(23)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 23
+  },
+  {
+   "id": "TG(24)",
+   "code": 21272,
+   "label": "TG(24)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 24
+  },
+  {
+   "id": "TG(25)",
+   "code": 21273,
+   "label": "TG(25)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 25
+  },
+  {
+   "id": "TG(26)",
+   "code": 21274,
+   "label": "TG(26)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 26
+  },
+  {
+   "id": "TG(27)",
+   "code": 21275,
+   "label": "TG(27)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 27
+  },
+  {
+   "id": "TG(28)",
+   "code": 21276,
+   "label": "TG(28)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 28
+  },
+  {
+   "id": "TG(29)",
+   "code": 21277,
+   "label": "TG(29)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 29
+  },
+  {
+   "id": "TG(30)",
+   "code": 21278,
+   "label": "TG(30)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 30
+  },
+  {
+   "id": "TG(31)",
+   "code": 21279,
+   "label": "TG(31)",
+   "group": "layers",
+   "tooltip": "Toggle layer on or off",
+   "index": 31
+  },
+  {
+   "id": "TT(0)",
+   "code": 22528,
+   "label": "TT(0)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 0
+  },
+  {
+   "id": "TT(1)",
+   "code": 22529,
+   "label": "TT(1)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 1
+  },
+  {
+   "id": "TT(2)",
+   "code": 22530,
+   "label": "TT(2)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 2
+  },
+  {
+   "id": "TT(3)",
+   "code": 22531,
+   "label": "TT(3)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 3
+  },
+  {
+   "id": "TT(4)",
+   "code": 22532,
+   "label": "TT(4)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 4
+  },
+  {
+   "id": "TT(5)",
+   "code": 22533,
+   "label": "TT(5)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 5
+  },
+  {
+   "id": "TT(6)",
+   "code": 22534,
+   "label": "TT(6)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 6
+  },
+  {
+   "id": "TT(7)",
+   "code": 22535,
+   "label": "TT(7)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 7
+  },
+  {
+   "id": "TT(8)",
+   "code": 22536,
+   "label": "TT(8)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 8
+  },
+  {
+   "id": "TT(9)",
+   "code": 22537,
+   "label": "TT(9)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 9
+  },
+  {
+   "id": "TT(10)",
+   "code": 22538,
+   "label": "TT(10)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 10
+  },
+  {
+   "id": "TT(11)",
+   "code": 22539,
+   "label": "TT(11)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 11
+  },
+  {
+   "id": "TT(12)",
+   "code": 22540,
+   "label": "TT(12)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 12
+  },
+  {
+   "id": "TT(13)",
+   "code": 22541,
+   "label": "TT(13)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 13
+  },
+  {
+   "id": "TT(14)",
+   "code": 22542,
+   "label": "TT(14)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 14
+  },
+  {
+   "id": "TT(15)",
+   "code": 22543,
+   "label": "TT(15)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 15
+  },
+  {
+   "id": "TT(16)",
+   "code": 22544,
+   "label": "TT(16)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 16
+  },
+  {
+   "id": "TT(17)",
+   "code": 22545,
+   "label": "TT(17)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 17
+  },
+  {
+   "id": "TT(18)",
+   "code": 22546,
+   "label": "TT(18)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 18
+  },
+  {
+   "id": "TT(19)",
+   "code": 22547,
+   "label": "TT(19)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 19
+  },
+  {
+   "id": "TT(20)",
+   "code": 22548,
+   "label": "TT(20)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 20
+  },
+  {
+   "id": "TT(21)",
+   "code": 22549,
+   "label": "TT(21)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 21
+  },
+  {
+   "id": "TT(22)",
+   "code": 22550,
+   "label": "TT(22)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 22
+  },
+  {
+   "id": "TT(23)",
+   "code": 22551,
+   "label": "TT(23)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 23
+  },
+  {
+   "id": "TT(24)",
+   "code": 22552,
+   "label": "TT(24)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 24
+  },
+  {
+   "id": "TT(25)",
+   "code": 22553,
+   "label": "TT(25)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 25
+  },
+  {
+   "id": "TT(26)",
+   "code": 22554,
+   "label": "TT(26)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 26
+  },
+  {
+   "id": "TT(27)",
+   "code": 22555,
+   "label": "TT(27)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 27
+  },
+  {
+   "id": "TT(28)",
+   "code": 22556,
+   "label": "TT(28)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 28
+  },
+  {
+   "id": "TT(29)",
+   "code": 22557,
+   "label": "TT(29)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 29
+  },
+  {
+   "id": "TT(30)",
+   "code": 22558,
+   "label": "TT(30)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 30
+  },
+  {
+   "id": "TT(31)",
+   "code": 22559,
+   "label": "TT(31)",
+   "group": "layers",
+   "tooltip": "Normally acts like MO unless it's tapped multiple times, which toggles layer on",
+   "index": 31
+  },
+  {
+   "id": "OSL(0)",
+   "code": 21504,
+   "label": "OSL(0)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 0
+  },
+  {
+   "id": "OSL(1)",
+   "code": 21505,
+   "label": "OSL(1)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 1
+  },
+  {
+   "id": "OSL(2)",
+   "code": 21506,
+   "label": "OSL(2)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 2
+  },
+  {
+   "id": "OSL(3)",
+   "code": 21507,
+   "label": "OSL(3)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 3
+  },
+  {
+   "id": "OSL(4)",
+   "code": 21508,
+   "label": "OSL(4)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 4
+  },
+  {
+   "id": "OSL(5)",
+   "code": 21509,
+   "label": "OSL(5)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 5
+  },
+  {
+   "id": "OSL(6)",
+   "code": 21510,
+   "label": "OSL(6)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 6
+  },
+  {
+   "id": "OSL(7)",
+   "code": 21511,
+   "label": "OSL(7)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 7
+  },
+  {
+   "id": "OSL(8)",
+   "code": 21512,
+   "label": "OSL(8)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 8
+  },
+  {
+   "id": "OSL(9)",
+   "code": 21513,
+   "label": "OSL(9)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 9
+  },
+  {
+   "id": "OSL(10)",
+   "code": 21514,
+   "label": "OSL(10)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 10
+  },
+  {
+   "id": "OSL(11)",
+   "code": 21515,
+   "label": "OSL(11)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 11
+  },
+  {
+   "id": "OSL(12)",
+   "code": 21516,
+   "label": "OSL(12)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 12
+  },
+  {
+   "id": "OSL(13)",
+   "code": 21517,
+   "label": "OSL(13)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 13
+  },
+  {
+   "id": "OSL(14)",
+   "code": 21518,
+   "label": "OSL(14)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 14
+  },
+  {
+   "id": "OSL(15)",
+   "code": 21519,
+   "label": "OSL(15)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 15
+  },
+  {
+   "id": "OSL(16)",
+   "code": 21520,
+   "label": "OSL(16)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 16
+  },
+  {
+   "id": "OSL(17)",
+   "code": 21521,
+   "label": "OSL(17)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 17
+  },
+  {
+   "id": "OSL(18)",
+   "code": 21522,
+   "label": "OSL(18)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 18
+  },
+  {
+   "id": "OSL(19)",
+   "code": 21523,
+   "label": "OSL(19)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 19
+  },
+  {
+   "id": "OSL(20)",
+   "code": 21524,
+   "label": "OSL(20)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 20
+  },
+  {
+   "id": "OSL(21)",
+   "code": 21525,
+   "label": "OSL(21)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 21
+  },
+  {
+   "id": "OSL(22)",
+   "code": 21526,
+   "label": "OSL(22)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 22
+  },
+  {
+   "id": "OSL(23)",
+   "code": 21527,
+   "label": "OSL(23)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 23
+  },
+  {
+   "id": "OSL(24)",
+   "code": 21528,
+   "label": "OSL(24)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 24
+  },
+  {
+   "id": "OSL(25)",
+   "code": 21529,
+   "label": "OSL(25)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 25
+  },
+  {
+   "id": "OSL(26)",
+   "code": 21530,
+   "label": "OSL(26)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 26
+  },
+  {
+   "id": "OSL(27)",
+   "code": 21531,
+   "label": "OSL(27)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 27
+  },
+  {
+   "id": "OSL(28)",
+   "code": 21532,
+   "label": "OSL(28)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 28
+  },
+  {
+   "id": "OSL(29)",
+   "code": 21533,
+   "label": "OSL(29)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 29
+  },
+  {
+   "id": "OSL(30)",
+   "code": 21534,
+   "label": "OSL(30)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 30
+  },
+  {
+   "id": "OSL(31)",
+   "code": 21535,
+   "label": "OSL(31)",
+   "group": "layers",
+   "tooltip": "Momentarily activates layer until a key is pressed",
+   "index": 31
+  },
+  {
+   "id": "TO(0)",
+   "code": 20496,
+   "label": "TO(0)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 0
+  },
+  {
+   "id": "TO(1)",
+   "code": 20497,
+   "label": "TO(1)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 1
+  },
+  {
+   "id": "TO(2)",
+   "code": 20498,
+   "label": "TO(2)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 2
+  },
+  {
+   "id": "TO(3)",
+   "code": 20499,
+   "label": "TO(3)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 3
+  },
+  {
+   "id": "TO(4)",
+   "code": 20500,
+   "label": "TO(4)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 4
+  },
+  {
+   "id": "TO(5)",
+   "code": 20501,
+   "label": "TO(5)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 5
+  },
+  {
+   "id": "TO(6)",
+   "code": 20502,
+   "label": "TO(6)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 6
+  },
+  {
+   "id": "TO(7)",
+   "code": 20503,
+   "label": "TO(7)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 7
+  },
+  {
+   "id": "TO(8)",
+   "code": 20504,
+   "label": "TO(8)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 8
+  },
+  {
+   "id": "TO(9)",
+   "code": 20505,
+   "label": "TO(9)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 9
+  },
+  {
+   "id": "TO(10)",
+   "code": 20506,
+   "label": "TO(10)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 10
+  },
+  {
+   "id": "TO(11)",
+   "code": 20507,
+   "label": "TO(11)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 11
+  },
+  {
+   "id": "TO(12)",
+   "code": 20508,
+   "label": "TO(12)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 12
+  },
+  {
+   "id": "TO(13)",
+   "code": 20509,
+   "label": "TO(13)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 13
+  },
+  {
+   "id": "TO(14)",
+   "code": 20510,
+   "label": "TO(14)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 14
+  },
+  {
+   "id": "TO(15)",
+   "code": 20511,
+   "label": "TO(15)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 15
+  },
+  {
+   "id": "TO(16)",
+   "code": 20496,
+   "label": "TO(16)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 16
+  },
+  {
+   "id": "TO(17)",
+   "code": 20497,
+   "label": "TO(17)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 17
+  },
+  {
+   "id": "TO(18)",
+   "code": 20498,
+   "label": "TO(18)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 18
+  },
+  {
+   "id": "TO(19)",
+   "code": 20499,
+   "label": "TO(19)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 19
+  },
+  {
+   "id": "TO(20)",
+   "code": 20500,
+   "label": "TO(20)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 20
+  },
+  {
+   "id": "TO(21)",
+   "code": 20501,
+   "label": "TO(21)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 21
+  },
+  {
+   "id": "TO(22)",
+   "code": 20502,
+   "label": "TO(22)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 22
+  },
+  {
+   "id": "TO(23)",
+   "code": 20503,
+   "label": "TO(23)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 23
+  },
+  {
+   "id": "TO(24)",
+   "code": 20504,
+   "label": "TO(24)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 24
+  },
+  {
+   "id": "TO(25)",
+   "code": 20505,
+   "label": "TO(25)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 25
+  },
+  {
+   "id": "TO(26)",
+   "code": 20506,
+   "label": "TO(26)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 26
+  },
+  {
+   "id": "TO(27)",
+   "code": 20507,
+   "label": "TO(27)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 27
+  },
+  {
+   "id": "TO(28)",
+   "code": 20508,
+   "label": "TO(28)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 28
+  },
+  {
+   "id": "TO(29)",
+   "code": 20509,
+   "label": "TO(29)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 29
+  },
+  {
+   "id": "TO(30)",
+   "code": 20510,
+   "label": "TO(30)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 30
+  },
+  {
+   "id": "TO(31)",
+   "code": 20511,
+   "label": "TO(31)",
+   "group": "layers",
+   "tooltip": "Turns on layer and turns off all other layers, except the default layer",
+   "index": 31
+  },
+  {
+   "id": "LT0(kc)",
+   "code": 16384,
+   "label": "LT 0\n(kc)",
+   "group": "layers",
+   "tooltip": "kc on tap, switch to layer 0 while held",
+   "masked": true,
+   "index": 0
+  },
+  {
+   "id": "LT1(kc)",
+   "code": 16640,
+   "label": "LT 1\n(kc)",
+   "group": "layers",
+   "tooltip": "kc on tap, switch to layer 1 while held",
+   "masked": true,
+   "index": 1
+  },
+  {
+   "id": "LT2(kc)",
+   "code": 16896,
+   "label": "LT 2\n(kc)",
+   "group": "layers",
+   "tooltip": "kc on tap, switch to layer 2 while held",
+   "masked": true,
+   "index": 2
+  },
+  {
+   "id": "LT3(kc)",
+   "code": 17152,
+   "label": "LT 3\n(kc)",
+   "group": "layers",
+   "tooltip": "kc on tap, switch to layer 3 while held",
+   "masked": true,
+   "index": 3
+  },
+  {
+   "id": "LT4(kc)",
+   "code": 17408,
+   "label": "LT 4\n(kc)",
+   "group": "layers",
+   "tooltip": "kc on tap, switch to layer 4 while held",
+   "masked": true,
+   "index": 4
+  },
+  {
+   "id": "LT5(kc)",
+   "code": 17664,
+   "label": "LT 5\n(kc)",
+   "group": "layers",
+   "tooltip": "kc on tap, switch to layer 5 while held",
+   "masked": true,
+   "index": 5
+  },
+  {
+   "id": "LT6(kc)",
+   "code": 17920,
+   "label": "LT 6\n(kc)",
+   "group": "layers",
+   "tooltip": "kc on tap, switch to layer 6 while held",
+   "masked": true,
+   "index": 6
+  },
+  {
+   "id": "LT7(kc)",
+   "code": 18176,
+   "label": "LT 7\n(kc)",
+   "group": "layers",
+   "tooltip": "kc on tap, switch to layer 7 while held",
+   "masked": true,
+   "index": 7
+  },
+  {
+   "id": "LT8(kc)",
+   "code": 18432,
+   "label": "LT 8\n(kc)",
+   "group": "layers",
+   "tooltip": "kc on tap, switch to layer 8 while held",
+   "masked": true,
+   "index": 8
+  },
+  {
+   "id": "LT9(kc)",
+   "code": 18688,
+   "label": "LT 9\n(kc)",
+   "group": "layers",
+   "tooltip": "kc on tap, switch to layer 9 while held",
+   "masked": true,
+   "index": 9
+  },
+  {
+   "id": "LT10(kc)",
+   "code": 18944,
+   "label": "LT 10\n(kc)",
+   "group": "layers",
+   "tooltip": "kc on tap, switch to layer 10 while held",
+   "masked": true,
+   "index": 10
+  },
+  {
+   "id": "LT11(kc)",
+   "code": 19200,
+   "label": "LT 11\n(kc)",
+   "group": "layers",
+   "tooltip": "kc on tap, switch to layer 11 while held",
+   "masked": true,
+   "index": 11
+  },
+  {
+   "id": "LT12(kc)",
+   "code": 19456,
+   "label": "LT 12\n(kc)",
+   "group": "layers",
+   "tooltip": "kc on tap, switch to layer 12 while held",
+   "masked": true,
+   "index": 12
+  },
+  {
+   "id": "LT13(kc)",
+   "code": 19712,
+   "label": "LT 13\n(kc)",
+   "group": "layers",
+   "tooltip": "kc on tap, switch to layer 13 while held",
+   "masked": true,
+   "index": 13
+  },
+  {
+   "id": "LT14(kc)",
+   "code": 19968,
+   "label": "LT 14\n(kc)",
+   "group": "layers",
+   "tooltip": "kc on tap, switch to layer 14 while held",
+   "masked": true,
+   "index": 14
+  },
+  {
+   "id": "LT15(kc)",
+   "code": 20224,
+   "label": "LT 15\n(kc)",
+   "group": "layers",
+   "tooltip": "kc on tap, switch to layer 15 while held",
+   "masked": true,
+   "index": 15
+  },
+  {
+   "id": "QK_BOOT",
+   "code": 23552,
+   "label": "Boot-\nloader",
+   "group": "boot",
+   "tooltip": "Put the keyboard into bootloader mode for flashing",
+   "alias": [
+    "RESET"
+   ]
+  },
+  {
+   "id": "QK_REBOOT",
+   "code": 39325,
+   "label": "Reboot",
+   "group": "boot",
+   "tooltip": "Reboots the keyboard. Does not load the bootloader"
+  },
+  {
+   "id": "QK_CLEAR_EEPROM",
+   "code": 23775,
+   "label": "Clear\nEEPROM",
+   "group": "boot",
+   "tooltip": "Reinitializes the keyboard's EEPROM (persistent memory)",
+   "alias": [
+    "EE_CLR"
+   ]
+  },
+  {
+   "id": "OSM(MOD_LSFT)",
+   "code": 21762,
+   "label": "OSM\nLSft",
+   "group": "modifiers",
+   "tooltip": "Enable Left Shift for one keypress"
+  },
+  {
+   "id": "OSM(MOD_LCTL)",
+   "code": 21761,
+   "label": "OSM\nLCtl",
+   "group": "modifiers",
+   "tooltip": "Enable Left Control for one keypress"
+  },
+  {
+   "id": "OSM(MOD_LALT)",
+   "code": 21764,
+   "label": "OSM\nLAlt",
+   "group": "modifiers",
+   "tooltip": "Enable Left Alt for one keypress"
+  },
+  {
+   "id": "OSM(MOD_LGUI)",
+   "code": 21768,
+   "label": "OSM\nLGUI",
+   "group": "modifiers",
+   "tooltip": "Enable Left GUI for one keypress"
+  },
+  {
+   "id": "OSM(MOD_RSFT)",
+   "code": 21778,
+   "label": "OSM\nRSft",
+   "group": "modifiers",
+   "tooltip": "Enable Right Shift for one keypress"
+  },
+  {
+   "id": "OSM(MOD_RCTL)",
+   "code": 21777,
+   "label": "OSM\nRCtl",
+   "group": "modifiers",
+   "tooltip": "Enable Right Control for one keypress"
+  },
+  {
+   "id": "OSM(MOD_RALT)",
+   "code": 21780,
+   "label": "OSM\nRAlt",
+   "group": "modifiers",
+   "tooltip": "Enable Right Alt for one keypress"
+  },
+  {
+   "id": "OSM(MOD_RGUI)",
+   "code": 21784,
+   "label": "OSM\nRGUI",
+   "group": "modifiers",
+   "tooltip": "Enable Right GUI for one keypress"
+  },
+  {
+   "id": "OSM(MOD_LCTL|MOD_LSFT)",
+   "code": 21763,
+   "label": "OSM\nCS",
+   "group": "modifiers",
+   "tooltip": "Enable Left Control and Shift for one keypress"
+  },
+  {
+   "id": "OSM(MOD_LCTL|MOD_LALT)",
+   "code": 21765,
+   "label": "OSM\nCA",
+   "group": "modifiers",
+   "tooltip": "Enable Left Control and Alt for one keypress"
+  },
+  {
+   "id": "OSM(MOD_LCTL|MOD_LGUI)",
+   "code": 21769,
+   "label": "OSM\nCG",
+   "group": "modifiers",
+   "tooltip": "Enable Left Control and GUI for one keypress"
+  },
+  {
+   "id": "OSM(MOD_LSFT|MOD_LALT)",
+   "code": 21766,
+   "label": "OSM\nSA",
+   "group": "modifiers",
+   "tooltip": "Enable Left Shift and Alt for one keypress"
+  },
+  {
+   "id": "OSM(MOD_LSFT|MOD_LGUI)",
+   "code": 21770,
+   "label": "OSM\nSG",
+   "group": "modifiers",
+   "tooltip": "Enable Left Shift and GUI for one keypress"
+  },
+  {
+   "id": "OSM(MOD_LALT|MOD_LGUI)",
+   "code": 21772,
+   "label": "OSM\nAG",
+   "group": "modifiers",
+   "tooltip": "Enable Left Alt and GUI for one keypress"
+  },
+  {
+   "id": "OSM(MOD_RCTL|MOD_RSFT)",
+   "code": 21779,
+   "label": "OSM\nRCS",
+   "group": "modifiers",
+   "tooltip": "Enable Right Control and Shift for one keypress"
+  },
+  {
+   "id": "OSM(MOD_RCTL|MOD_RALT)",
+   "code": 21781,
+   "label": "OSM\nRCA",
+   "group": "modifiers",
+   "tooltip": "Enable Right Control and Alt for one keypress"
+  },
+  {
+   "id": "OSM(MOD_RCTL|MOD_RGUI)",
+   "code": 21785,
+   "label": "OSM\nRCG",
+   "group": "modifiers",
+   "tooltip": "Enable Right Control and GUI for one keypress"
+  },
+  {
+   "id": "OSM(MOD_RSFT|MOD_RALT)",
+   "code": 21782,
+   "label": "OSM\nRSA",
+   "group": "modifiers",
+   "tooltip": "Enable Right Shift and Alt for one keypress"
+  },
+  {
+   "id": "OSM(MOD_RSFT|MOD_RGUI)",
+   "code": 21786,
+   "label": "OSM\nRSG",
+   "group": "modifiers",
+   "tooltip": "Enable Right Shift and GUI for one keypress"
+  },
+  {
+   "id": "OSM(MOD_RALT|MOD_RGUI)",
+   "code": 21788,
+   "label": "OSM\nRAG",
+   "group": "modifiers",
+   "tooltip": "Enable Right Alt and GUI for one keypress"
+  },
+  {
+   "id": "OSM(MOD_LCTL|MOD_LSFT|MOD_LGUI)",
+   "code": 21771,
+   "label": "OSM\nCSG",
+   "group": "modifiers",
+   "tooltip": "Enable Left Control, Shift, and GUI for one keypress"
+  },
+  {
+   "id": "OSM(MOD_LCTL|MOD_LALT|MOD_LGUI)",
+   "code": 21773,
+   "label": "OSM\nCAG",
+   "group": "modifiers",
+   "tooltip": "Enable Left Control, Alt, and GUI for one keypress"
+  },
+  {
+   "id": "OSM(MOD_LSFT|MOD_LALT|MOD_LGUI)",
+   "code": 21774,
+   "label": "OSM\nSAG",
+   "group": "modifiers",
+   "tooltip": "Enable Left Shift, Alt, and GUI for one keypress"
+  },
+  {
+   "id": "OSM(MOD_RCTL|MOD_RSFT|MOD_RGUI)",
+   "code": 21787,
+   "label": "OSM\nRCSG",
+   "group": "modifiers",
+   "tooltip": "Enable Right Control, Shift, and GUI for one keypress"
+  },
+  {
+   "id": "OSM(MOD_RCTL|MOD_RALT|MOD_RGUI)",
+   "code": 21789,
+   "label": "OSM\nRCAG",
+   "group": "modifiers",
+   "tooltip": "Enable Right Control, Alt, and GUI for one keypress"
+  },
+  {
+   "id": "OSM(MOD_RSFT|MOD_RALT|MOD_RGUI)",
+   "code": 21790,
+   "label": "OSM\nRSAG",
+   "group": "modifiers",
+   "tooltip": "Enable Right Shift, Alt, and GUI for one keypress"
+  },
+  {
+   "id": "OSM(MOD_MEH)",
+   "code": 21767,
+   "label": "OSM\nMeh",
+   "group": "modifiers",
+   "tooltip": "Enable Left Control, Shift, and Alt for one keypress"
+  },
+  {
+   "id": "OSM(MOD_HYPR)",
+   "code": 21775,
+   "label": "OSM\nHyper",
+   "group": "modifiers",
+   "tooltip": "Enable Left Control, Shift, Alt, and GUI for one keypress"
+  },
+  {
+   "id": "OSM(MOD_RCTL|MOD_RSFT|MOD_RALT)",
+   "code": 21783,
+   "label": "OSM\nRMeh",
+   "group": "modifiers",
+   "tooltip": "Enable Right Control, Shift, and Alt for one keypress"
+  },
+  {
+   "id": "OSM(MOD_RCTL|MOD_RSFT|MOD_RALT|MOD_RGUI)",
+   "code": 21791,
+   "label": "OSM\nRHyp",
+   "group": "modifiers",
+   "tooltip": "Enable Right Control, Shift, Alt, and GUI for one keypress"
+  },
+  {
+   "id": "LSFT(kc)",
+   "code": 512,
+   "label": "LSft\n(kc)",
+   "group": "modifiers",
+   "masked": true
+  },
+  {
+   "id": "LCTL(kc)",
+   "code": 256,
+   "label": "LCtl\n(kc)",
+   "group": "modifiers",
+   "masked": true
+  },
+  {
+   "id": "LALT(kc)",
+   "code": 1024,
+   "label": "LAlt\n(kc)",
+   "group": "modifiers",
+   "masked": true
+  },
+  {
+   "id": "LGUI(kc)",
+   "code": 2048,
+   "label": "LGui\n(kc)",
+   "group": "modifiers",
+   "masked": true
+  },
+  {
+   "id": "RSFT(kc)",
+   "code": 4608,
+   "label": "RSft\n(kc)",
+   "group": "modifiers",
+   "masked": true
+  },
+  {
+   "id": "RCTL(kc)",
+   "code": 4352,
+   "label": "RCtl\n(kc)",
+   "group": "modifiers",
+   "masked": true
+  },
+  {
+   "id": "RALT(kc)",
+   "code": 5120,
+   "label": "RAlt\n(kc)",
+   "group": "modifiers",
+   "masked": true
+  },
+  {
+   "id": "RGUI(kc)",
+   "code": 6144,
+   "label": "RGui\n(kc)",
+   "group": "modifiers",
+   "masked": true
+  },
+  {
+   "id": "C_S(kc)",
+   "code": 768,
+   "label": "LCS\n(kc)",
+   "group": "modifiers",
+   "tooltip": "LCTL + LSFT",
+   "masked": true,
+   "alias": [
+    "LCS(kc)"
+   ]
+  },
+  {
+   "id": "LCA(kc)",
+   "code": 1280,
+   "label": "LCA\n(kc)",
+   "group": "modifiers",
+   "tooltip": "LCTL + LALT",
+   "masked": true
+  },
+  {
+   "id": "LCG(kc)",
+   "code": 2304,
+   "label": "LCG\n(kc)",
+   "group": "modifiers",
+   "tooltip": "LCTL + LGUI",
+   "masked": true
+  },
+  {
+   "id": "LSA(kc)",
+   "code": 1536,
+   "label": "LSA\n(kc)",
+   "group": "modifiers",
+   "tooltip": "LSFT + LALT",
+   "masked": true
+  },
+  {
+   "id": "LAG(kc)",
+   "code": 3072,
+   "label": "LAG\n(kc)",
+   "group": "modifiers",
+   "tooltip": "LALT + LGUI",
+   "masked": true
+  },
+  {
+   "id": "SGUI(kc)",
+   "code": 2560,
+   "label": "LSG\n(kc)",
+   "group": "modifiers",
+   "tooltip": "LGUI + LSFT",
+   "masked": true,
+   "alias": [
+    "LSG(kc)"
+   ]
+  },
+  {
+   "id": "LCAG(kc)",
+   "code": 3328,
+   "label": "LCAG\n(kc)",
+   "group": "modifiers",
+   "tooltip": "LCTL + LALT + LGUI",
+   "masked": true
+  },
+  {
+   "id": "RCG(kc)",
+   "code": 6400,
+   "label": "RCG\n(kc)",
+   "group": "modifiers",
+   "tooltip": "RCTL + RGUI",
+   "masked": true
+  },
+  {
+   "id": "MEH(kc)",
+   "code": 1792,
+   "label": "Meh\n(kc)",
+   "group": "modifiers",
+   "tooltip": "LCTL + LSFT + LALT",
+   "masked": true
+  },
+  {
+   "id": "HYPR(kc)",
+   "code": 3840,
+   "label": "Hyper\n(kc)",
+   "group": "modifiers",
+   "tooltip": "LCTL + LSFT + LALT + LGUI",
+   "masked": true
+  },
+  {
+   "id": "LSFT_T(kc)",
+   "code": 25088,
+   "label": "LSft_T\n(kc)",
+   "group": "modifiers",
+   "tooltip": "Left Shift when held, kc when tapped",
+   "masked": true
+  },
+  {
+   "id": "LCTL_T(kc)",
+   "code": 24832,
+   "label": "LCtl_T\n(kc)",
+   "group": "modifiers",
+   "tooltip": "Left Control when held, kc when tapped",
+   "masked": true
+  },
+  {
+   "id": "LALT_T(kc)",
+   "code": 25600,
+   "label": "LAlt_T\n(kc)",
+   "group": "modifiers",
+   "tooltip": "Left Alt when held, kc when tapped",
+   "masked": true
+  },
+  {
+   "id": "LGUI_T(kc)",
+   "code": 26624,
+   "label": "LGui_T\n(kc)",
+   "group": "modifiers",
+   "tooltip": "Left GUI when held, kc when tapped",
+   "masked": true
+  },
+  {
+   "id": "RSFT_T(kc)",
+   "code": 29184,
+   "label": "RSft_T\n(kc)",
+   "group": "modifiers",
+   "tooltip": "Right Shift when held, kc when tapped",
+   "masked": true
+  },
+  {
+   "id": "RCTL_T(kc)",
+   "code": 28928,
+   "label": "RCtl_T\n(kc)",
+   "group": "modifiers",
+   "tooltip": "Right Control when held, kc when tapped",
+   "masked": true
+  },
+  {
+   "id": "RALT_T(kc)",
+   "code": 29696,
+   "label": "RAlt_T\n(kc)",
+   "group": "modifiers",
+   "tooltip": "Right Alt when held, kc when tapped",
+   "masked": true
+  },
+  {
+   "id": "RGUI_T(kc)",
+   "code": 30720,
+   "label": "RGui_T\n(kc)",
+   "group": "modifiers",
+   "tooltip": "Right GUI when held, kc when tapped",
+   "masked": true
+  },
+  {
+   "id": "C_S_T(kc)",
+   "code": 25344,
+   "label": "LCS_T\n(kc)",
+   "group": "modifiers",
+   "tooltip": "Left Control + Left Shift when held, kc when tapped",
+   "masked": true,
+   "alias": [
+    "LCS_T(kc)"
+   ]
+  },
+  {
+   "id": "LCA_T(kc)",
+   "code": 25856,
+   "label": "LCA_T\n(kc)",
+   "group": "modifiers",
+   "tooltip": "LCTL + LALT when held, kc when tapped",
+   "masked": true
+  },
+  {
+   "id": "LCG_T(kc)",
+   "code": 26880,
+   "label": "LCG_T\n(kc)",
+   "group": "modifiers",
+   "tooltip": "LCTL + LGUI when held, kc when tapped",
+   "masked": true
+  },
+  {
+   "id": "LSA_T(kc)",
+   "code": 26112,
+   "label": "LSA_T\n(kc)",
+   "group": "modifiers",
+   "tooltip": "LSFT + LALT when held, kc when tapped",
+   "masked": true
+  },
+  {
+   "id": "LAG_T(kc)",
+   "code": 27648,
+   "label": "LAG_T\n(kc)",
+   "group": "modifiers",
+   "tooltip": "LALT + LGUI when held, kc when tapped",
+   "masked": true
+  },
+  {
+   "id": "SGUI_T(kc)",
+   "code": 27136,
+   "label": "LSG_T\n(kc)",
+   "group": "modifiers",
+   "tooltip": "LGUI + LSFT when held, kc when tapped",
+   "masked": true,
+   "alias": [
+    "LSG_T(kc)"
+   ]
+  },
+  {
+   "id": "LCAG_T(kc)",
+   "code": 27904,
+   "label": "LCAG_T\n(kc)",
+   "group": "modifiers",
+   "tooltip": "LCTL + LALT + LGUI when held, kc when tapped",
+   "masked": true
+  },
+  {
+   "id": "RCG_T(kc)",
+   "code": 30976,
+   "label": "RCG_T\n(kc)",
+   "group": "modifiers",
+   "tooltip": "RCTL + RGUI when held, kc when tapped",
+   "masked": true
+  },
+  {
+   "id": "RCAG_T(kc)",
+   "code": 32000,
+   "label": "RCAG_T\n(kc)",
+   "group": "modifiers",
+   "tooltip": "RCTL + RALT + RGUI when held, kc when tapped",
+   "masked": true
+  },
+  {
+   "id": "MEH_T(kc)",
+   "code": 26368,
+   "label": "Meh_T\n(kc)",
+   "group": "modifiers",
+   "tooltip": "LCTL + LSFT + LALT when held, kc when tapped",
+   "masked": true
+  },
+  {
+   "id": "ALL_T(kc)",
+   "code": 28416,
+   "label": "ALL_T\n(kc)",
+   "group": "modifiers",
+   "tooltip": "LCTL + LSFT + LALT + LGUI when held, kc when tapped",
+   "masked": true
+  },
+  {
+   "id": "KC_GESC",
+   "code": 23574,
+   "label": "~\nEsc",
+   "group": "modifiers",
+   "tooltip": "Esc normally, but ~ when Shift or GUI is pressed"
+  },
+  {
+   "id": "KC_LSPO",
+   "code": 23767,
+   "label": "LS\n(",
+   "group": "modifiers",
+   "tooltip": "Left Shift when held, ( when tapped"
+  },
+  {
+   "id": "KC_RSPC",
+   "code": 23768,
+   "label": "RS\n)",
+   "group": "modifiers",
+   "tooltip": "Right Shift when held, ) when tapped"
+  },
+  {
+   "id": "KC_LCPO",
+   "code": 23795,
+   "label": "LC\n(",
+   "group": "modifiers",
+   "tooltip": "Left Control when held, ( when tapped"
+  },
+  {
+   "id": "KC_RCPC",
+   "code": 23796,
+   "label": "RC\n)",
+   "group": "modifiers",
+   "tooltip": "Right Control when held, ) when tapped"
+  },
+  {
+   "id": "KC_LAPO",
+   "code": 23797,
+   "label": "LA\n(",
+   "group": "modifiers",
+   "tooltip": "Left Alt when held, ( when tapped"
+  },
+  {
+   "id": "KC_RAPC",
+   "code": 23798,
+   "label": "RA\n)",
+   "group": "modifiers",
+   "tooltip": "Right Alt when held, ) when tapped"
+  },
+  {
+   "id": "KC_SFTENT",
+   "code": 23769,
+   "label": "RS\nEnter",
+   "group": "modifiers",
+   "tooltip": "Right Shift when held, Enter when tapped"
+  },
+  {
+   "id": "MAGIC_SWAP_CONTROL_CAPSLOCK",
+   "code": 23554,
+   "label": "Swap\nCtrl\nCaps",
+   "group": "quantum",
+   "tooltip": "Swap Caps Lock and Left Control",
+   "alias": [
+    "CL_SWAP"
+   ]
+  },
+  {
+   "id": "MAGIC_UNSWAP_CONTROL_CAPSLOCK",
+   "code": 23563,
+   "label": "Unswap\nCtrl\nCaps",
+   "group": "quantum",
+   "tooltip": "Unswap Caps Lock and Left Control",
+   "alias": [
+    "CL_NORM"
+   ]
+  },
+  {
+   "id": "MAGIC_CAPSLOCK_TO_CONTROL",
+   "code": 23555,
+   "label": "Caps\nto\nCtrl",
+   "group": "quantum",
+   "tooltip": "Treat Caps Lock as Control",
+   "alias": [
+    "CL_CTRL"
+   ]
+  },
+  {
+   "id": "MAGIC_UNCAPSLOCK_TO_CONTROL",
+   "code": 23564,
+   "label": "Caps\nnot to\nCtrl",
+   "group": "quantum",
+   "tooltip": "Stop treating Caps Lock as Control",
+   "alias": [
+    "CL_CAPS"
+   ]
+  },
+  {
+   "id": "MAGIC_SWAP_LCTL_LGUI",
+   "code": 23802,
+   "label": "Swap\nLCtl\nLGui",
+   "group": "quantum",
+   "tooltip": "Swap Left Control and GUI",
+   "alias": [
+    "LCG_SWP"
+   ]
+  },
+  {
+   "id": "MAGIC_UNSWAP_LCTL_LGUI",
+   "code": 23804,
+   "label": "Unswap\nLCtl\nLGui",
+   "group": "quantum",
+   "tooltip": "Unswap Left Control and GUI",
+   "alias": [
+    "LCG_NRM"
+   ]
+  },
+  {
+   "id": "MAGIC_SWAP_RCTL_RGUI",
+   "code": 23803,
+   "label": "Swap\nRCtl\nRGui",
+   "group": "quantum",
+   "tooltip": "Swap Right Control and GUI",
+   "alias": [
+    "RCG_SWP"
+   ]
+  },
+  {
+   "id": "MAGIC_UNSWAP_RCTL_RGUI",
+   "code": 23805,
+   "label": "Unswap\nRCtl\nRGui",
+   "group": "quantum",
+   "tooltip": "Unswap Right Control and GUI",
+   "alias": [
+    "RCG_NRM"
+   ]
+  },
+  {
+   "id": "MAGIC_SWAP_CTL_GUI",
+   "code": 23806,
+   "label": "Swap\nCtl\nGui",
+   "group": "quantum",
+   "tooltip": "Swap Control and GUI on both sides",
+   "alias": [
+    "CG_SWAP"
+   ]
+  },
+  {
+   "id": "MAGIC_UNSWAP_CTL_GUI",
+   "code": 23807,
+   "label": "Unswap\nCtl\nGui",
+   "group": "quantum",
+   "tooltip": "Unswap Control and GUI on both sides",
+   "alias": [
+    "CG_NORM"
+   ]
+  },
+  {
+   "id": "MAGIC_TOGGLE_CTL_GUI",
+   "code": 23808,
+   "label": "Toggle\nCtl\nGui",
+   "group": "quantum",
+   "tooltip": "Toggle Control and GUI swap on both sides",
+   "alias": [
+    "CG_TOGG"
+   ]
+  },
+  {
+   "id": "MAGIC_SWAP_LALT_LGUI",
+   "code": 23556,
+   "label": "Swap\nLAlt\nLGui",
+   "group": "quantum",
+   "tooltip": "Swap Left Alt and GUI",
+   "alias": [
+    "LAG_SWP"
+   ]
+  },
+  {
+   "id": "MAGIC_UNSWAP_LALT_LGUI",
+   "code": 23565,
+   "label": "Unswap\nLAlt\nLGui",
+   "group": "quantum",
+   "tooltip": "Unswap Left Alt and GUI",
+   "alias": [
+    "LAG_NRM"
+   ]
+  },
+  {
+   "id": "MAGIC_SWAP_RALT_RGUI",
+   "code": 23557,
+   "label": "Swap\nRAlt\nRGui",
+   "group": "quantum",
+   "tooltip": "Swap Right Alt and GUI",
+   "alias": [
+    "RAG_SWP"
+   ]
+  },
+  {
+   "id": "MAGIC_UNSWAP_RALT_RGUI",
+   "code": 23566,
+   "label": "Unswap\nRAlt\nRGui",
+   "group": "quantum",
+   "tooltip": "Unswap Right Alt and GUI",
+   "alias": [
+    "RAG_NRM"
+   ]
+  },
+  {
+   "id": "MAGIC_SWAP_ALT_GUI",
+   "code": 23562,
+   "label": "Swap\nAlt\nGui",
+   "group": "quantum",
+   "tooltip": "Swap Alt and GUI on both sides",
+   "alias": [
+    "AG_SWAP"
+   ]
+  },
+  {
+   "id": "MAGIC_UNSWAP_ALT_GUI",
+   "code": 23571,
+   "label": "Unswap\nAlt\nGui",
+   "group": "quantum",
+   "tooltip": "Unswap Alt and GUI on both sides",
+   "alias": [
+    "AG_NORM"
+   ]
+  },
+  {
+   "id": "MAGIC_TOGGLE_ALT_GUI",
+   "code": 23573,
+   "label": "Toggle\nAlt\nGui",
+   "group": "quantum",
+   "tooltip": "Toggle Alt and GUI swap on both sides",
+   "alias": [
+    "AG_TOGG"
+   ]
+  },
+  {
+   "id": "MAGIC_NO_GUI",
+   "code": 23558,
+   "label": "GUI\nOff",
+   "group": "quantum",
+   "tooltip": "Disable the GUI keys",
+   "alias": [
+    "GUI_OFF"
+   ]
+  },
+  {
+   "id": "MAGIC_UNNO_GUI",
+   "code": 23567,
+   "label": "GUI\nOn",
+   "group": "quantum",
+   "tooltip": "Enable the GUI keys",
+   "alias": [
+    "GUI_ON"
+   ]
+  },
+  {
+   "id": "MAGIC_TOGGLE_GUI",
+   "code": 629186,
+   "label": "GUI\nToggle",
+   "group": "quantum",
+   "tooltip": "Toggle the GUI keys on and off",
+   "alias": [
+    "GUI_TOGG"
+   ]
+  },
+  {
+   "id": "MAGIC_SWAP_GRAVE_ESC",
+   "code": 23559,
+   "label": "Swap\n`\nEsc",
+   "group": "quantum",
+   "tooltip": "Swap ` and Escape",
+   "alias": [
+    "GE_SWAP"
+   ]
+  },
+  {
+   "id": "MAGIC_UNSWAP_GRAVE_ESC",
+   "code": 23568,
+   "label": "Unswap\n`\nEsc",
+   "group": "quantum",
+   "tooltip": "Unswap ` and Escape",
+   "alias": [
+    "GE_NORM"
+   ]
+  },
+  {
+   "id": "MAGIC_SWAP_BACKSLASH_BACKSPACE",
+   "code": 23560,
+   "label": "Swap\n\\\nBS",
+   "group": "quantum",
+   "tooltip": "Swap \\ and Backspace",
+   "alias": [
+    "BS_SWAP"
+   ]
+  },
+  {
+   "id": "MAGIC_UNSWAP_BACKSLASH_BACKSPACE",
+   "code": 23569,
+   "label": "Unswap\n\\\nBS",
+   "group": "quantum",
+   "tooltip": "Unswap \\ and Backspace",
+   "alias": [
+    "BS_NORM"
+   ]
+  },
+  {
+   "id": "MAGIC_HOST_NKRO",
+   "code": 23561,
+   "label": "NKRO\nOn",
+   "group": "quantum",
+   "tooltip": "Enable N-key rollover",
+   "alias": [
+    "NK_ON"
+   ]
+  },
+  {
+   "id": "MAGIC_UNHOST_NKRO",
+   "code": 23570,
+   "label": "NKRO\nOff",
+   "group": "quantum",
+   "tooltip": "Disable N-key rollover",
+   "alias": [
+    "NK_OFF"
+   ]
+  },
+  {
+   "id": "MAGIC_TOGGLE_NKRO",
+   "code": 23572,
+   "label": "NKRO\nToggle",
+   "group": "quantum",
+   "tooltip": "Toggle N-key rollover",
+   "alias": [
+    "NK_TOGG"
+   ]
+  },
+  {
+   "id": "MAGIC_EE_HANDS_LEFT",
+   "code": 23809,
+   "label": "EEH\nLeft",
+   "group": "quantum",
+   "tooltip": "Set the master half of a split keyboard as the left hand (for EE_HANDS)",
+   "alias": [
+    "EH_LEFT"
+   ]
+  },
+  {
+   "id": "MAGIC_EE_HANDS_RIGHT",
+   "code": 23810,
+   "label": "EEH\nRight",
+   "group": "quantum",
+   "tooltip": "Set the master half of a split keyboard as the right hand (for EE_HANDS)",
+   "alias": [
+    "EH_RGHT"
+   ]
+  },
+  {
+   "id": "AU_ON",
+   "code": 23581,
+   "label": "Audio\nON",
+   "group": "quantum",
+   "tooltip": "Audio mode on"
+  },
+  {
+   "id": "AU_OFF",
+   "code": 23582,
+   "label": "Audio\nOFF",
+   "group": "quantum",
+   "tooltip": "Audio mode off"
+  },
+  {
+   "id": "AU_TOG",
+   "code": 23583,
+   "label": "Audio\nToggle",
+   "group": "quantum",
+   "tooltip": "Toggles Audio mode"
+  },
+  {
+   "id": "CLICKY_TOGGLE",
+   "code": 23584,
+   "label": "Clicky\nToggle",
+   "group": "quantum",
+   "tooltip": "Toggles Audio clicky mode",
+   "alias": [
+    "CK_TOGG"
+   ]
+  },
+  {
+   "id": "CLICKY_UP",
+   "code": 23587,
+   "label": "Clicky\nUp",
+   "group": "quantum",
+   "tooltip": "Increases frequency of the clicks",
+   "alias": [
+    "CK_UP"
+   ]
+  },
+  {
+   "id": "CLICKY_DOWN",
+   "code": 23588,
+   "label": "Clicky\nDown",
+   "group": "quantum",
+   "tooltip": "Decreases frequency of the clicks",
+   "alias": [
+    "CK_DOWN"
+   ]
+  },
+  {
+   "id": "CLICKY_RESET",
+   "code": 23589,
+   "label": "Clicky\nReset",
+   "group": "quantum",
+   "tooltip": "Resets frequency to default",
+   "alias": [
+    "CK_RST"
+   ]
+  },
+  {
+   "id": "MU_ON",
+   "code": 23590,
+   "label": "Music\nOn",
+   "group": "quantum",
+   "tooltip": "Turns on Music Mode"
+  },
+  {
+   "id": "MU_OFF",
+   "code": 23591,
+   "label": "Music\nOff",
+   "group": "quantum",
+   "tooltip": "Turns off Music Mode"
+  },
+  {
+   "id": "MU_TOG",
+   "code": 23592,
+   "label": "Music\nToggle",
+   "group": "quantum",
+   "tooltip": "Toggles Music Mode"
+  },
+  {
+   "id": "MU_MOD",
+   "code": 23593,
+   "label": "Music\nCycle",
+   "group": "quantum",
+   "tooltip": "Cycles through the music modes"
+  },
+  {
+   "id": "HPT_ON",
+   "code": 23782,
+   "label": "Haptic\nOn",
+   "group": "quantum",
+   "tooltip": "Turn haptic feedback on"
+  },
+  {
+   "id": "HPT_OFF",
+   "code": 23783,
+   "label": "Haptic\nOff",
+   "group": "quantum",
+   "tooltip": "Turn haptic feedback off"
+  },
+  {
+   "id": "HPT_TOG",
+   "code": 23784,
+   "label": "Haptic\nToggle",
+   "group": "quantum",
+   "tooltip": "Toggle haptic feedback on/off"
+  },
+  {
+   "id": "HPT_RST",
+   "code": 23785,
+   "label": "Haptic\nReset",
+   "group": "quantum",
+   "tooltip": "Reset haptic feedback config to default"
+  },
+  {
+   "id": "HPT_FBK",
+   "code": 23786,
+   "label": "Haptic\nFeed\nback",
+   "group": "quantum",
+   "tooltip": "Toggle feedback to occur on keypress, release or both"
+  },
+  {
+   "id": "HPT_BUZ",
+   "code": 23787,
+   "label": "Haptic\nBuzz",
+   "group": "quantum",
+   "tooltip": "Toggle solenoid buzz on/off"
+  },
+  {
+   "id": "HPT_MODI",
+   "code": 23788,
+   "label": "Haptic\nNext",
+   "group": "quantum",
+   "tooltip": "Go to next DRV2605L waveform"
+  },
+  {
+   "id": "HPT_MODD",
+   "code": 23789,
+   "label": "Haptic\nPrev",
+   "group": "quantum",
+   "tooltip": "Go to previous DRV2605L waveform"
+  },
+  {
+   "id": "HPT_CONT",
+   "code": 23790,
+   "label": "Haptic\nCont.",
+   "group": "quantum",
+   "tooltip": "Toggle continuous haptic mode on/off"
+  },
+  {
+   "id": "HPT_CONI",
+   "code": 23791,
+   "label": "Haptic\n+",
+   "group": "quantum",
+   "tooltip": "Increase DRV2605L continous haptic strength"
+  },
+  {
+   "id": "HPT_COND",
+   "code": 23792,
+   "label": "Haptic\n-",
+   "group": "quantum",
+   "tooltip": "Decrease DRV2605L continous haptic strength"
+  },
+  {
+   "id": "HPT_DWLI",
+   "code": 23793,
+   "label": "Haptic\nDwell+",
+   "group": "quantum",
+   "tooltip": "Increase Solenoid dwell time"
+  },
+  {
+   "id": "HPT_DWLD",
+   "code": 23794,
+   "label": "Haptic\nDwell-",
+   "group": "quantum",
+   "tooltip": "Decrease Solenoid dwell time"
+  },
+  {
+   "id": "KC_ASDN",
+   "code": 23576,
+   "label": "Auto-\nshift\nDown",
+   "group": "quantum",
+   "tooltip": "Lower the Auto Shift timeout variable (down)"
+  },
+  {
+   "id": "KC_ASUP",
+   "code": 23575,
+   "label": "Auto-\nshift\nUp",
+   "group": "quantum",
+   "tooltip": "Raise the Auto Shift timeout variable (up)"
+  },
+  {
+   "id": "KC_ASRP",
+   "code": 23577,
+   "label": "Auto-\nshift\nReport",
+   "group": "quantum",
+   "tooltip": "Report your current Auto Shift timeout value"
+  },
+  {
+   "id": "KC_ASON",
+   "code": 23579,
+   "label": "Auto-\nshift\nOn",
+   "group": "quantum",
+   "tooltip": "Turns on the Auto Shift Function"
+  },
+  {
+   "id": "KC_ASOFF",
+   "code": 23580,
+   "label": "Auto-\nshift\nOff",
+   "group": "quantum",
+   "tooltip": "Turns off the Auto Shift Function"
+  },
+  {
+   "id": "KC_ASTG",
+   "code": 23578,
+   "label": "Auto-\nshift\nToggle",
+   "group": "quantum",
+   "tooltip": "Toggles the state of the Auto Shift feature"
+  },
+  {
+   "id": "CMB_ON",
+   "code": 23799,
+   "label": "Combo\nOn",
+   "group": "quantum",
+   "tooltip": "Turns on Combo feature"
+  },
+  {
+   "id": "CMB_OFF",
+   "code": 23800,
+   "label": "Combo\nOff",
+   "group": "quantum",
+   "tooltip": "Turns off Combo feature"
+  },
+  {
+   "id": "CMB_TOG",
+   "code": 23801,
+   "label": "Combo\nToggle",
+   "group": "quantum",
+   "tooltip": "Toggles Combo feature on and off"
+  },
+  {
+   "id": "QK_CAPS_WORD_TOGGLE",
+   "code": 39326,
+   "label": "Caps\nWord",
+   "group": "quantum",
+   "tooltip": "Capitalizes until end of current word",
+   "alias": [
+    "CW_TOGG"
+   ],
+   "feature": "caps_word"
+  },
+  {
+   "id": "QK_REPEAT_KEY",
+   "code": 629184,
+   "label": "Repeat",
+   "group": "quantum",
+   "tooltip": "Repeats the last pressed key",
+   "alias": [
+    "QK_REP"
+   ],
+   "feature": "repeat_key"
+  },
+  {
+   "id": "QK_ALT_REPEAT_KEY",
+   "code": 629185,
+   "label": "Alt\nRepeat",
+   "group": "quantum",
+   "tooltip": "Alt repeats the last pressed key",
+   "alias": [
+    "QK_AREP"
+   ],
+   "feature": "repeat_key"
+  },
+  {
+   "id": "BL_TOGG",
+   "code": 23743,
+   "label": "BL\nToggle",
+   "group": "backlight",
+   "tooltip": "Turn the backlight on or off"
+  },
+  {
+   "id": "BL_STEP",
+   "code": 23744,
+   "label": "BL\nCycle",
+   "group": "backlight",
+   "tooltip": "Cycle through backlight levels"
+  },
+  {
+   "id": "BL_BRTG",
+   "code": 23745,
+   "label": "BL\nBreath",
+   "group": "backlight",
+   "tooltip": "Toggle backlight breathing"
+  },
+  {
+   "id": "BL_ON",
+   "code": 23739,
+   "label": "BL On",
+   "group": "backlight",
+   "tooltip": "Set the backlight to max brightness"
+  },
+  {
+   "id": "BL_OFF",
+   "code": 23740,
+   "label": "BL Off",
+   "group": "backlight",
+   "tooltip": "Turn the backlight off"
+  },
+  {
+   "id": "BL_INC",
+   "code": 23742,
+   "label": "BL +",
+   "group": "backlight",
+   "tooltip": "Increase the backlight level"
+  },
+  {
+   "id": "BL_DEC",
+   "code": 23741,
+   "label": "BL - ",
+   "group": "backlight",
+   "tooltip": "Decrease the backlight level"
+  },
+  {
+   "id": "RGB_TOG",
+   "code": 23746,
+   "label": "RGB\nToggle",
+   "group": "backlight",
+   "tooltip": "Toggle RGB lighting on or off"
+  },
+  {
+   "id": "RGB_MOD",
+   "code": 23747,
+   "label": "RGB\nMode +",
+   "group": "backlight",
+   "tooltip": "Next RGB mode"
+  },
+  {
+   "id": "RGB_RMOD",
+   "code": 23748,
+   "label": "RGB\nMode -",
+   "group": "backlight",
+   "tooltip": "Previous RGB mode"
+  },
+  {
+   "id": "RGB_HUI",
+   "code": 23749,
+   "label": "Hue +",
+   "group": "backlight",
+   "tooltip": "Increase hue"
+  },
+  {
+   "id": "RGB_HUD",
+   "code": 23750,
+   "label": "Hue -",
+   "group": "backlight",
+   "tooltip": "Decrease hue"
+  },
+  {
+   "id": "RGB_SAI",
+   "code": 23751,
+   "label": "Sat +",
+   "group": "backlight",
+   "tooltip": "Increase saturation"
+  },
+  {
+   "id": "RGB_SAD",
+   "code": 23752,
+   "label": "Sat -",
+   "group": "backlight",
+   "tooltip": "Decrease saturation"
+  },
+  {
+   "id": "RGB_VAI",
+   "code": 23753,
+   "label": "Bright +",
+   "group": "backlight",
+   "tooltip": "Increase value"
+  },
+  {
+   "id": "RGB_VAD",
+   "code": 23754,
+   "label": "Bright -",
+   "group": "backlight",
+   "tooltip": "Decrease value"
+  },
+  {
+   "id": "RGB_SPI",
+   "code": 23755,
+   "label": "Effect +",
+   "group": "backlight",
+   "tooltip": "Increase RGB effect speed"
+  },
+  {
+   "id": "RGB_SPD",
+   "code": 23756,
+   "label": "Effect -",
+   "group": "backlight",
+   "tooltip": "Decrease RGB effect speed"
+  },
+  {
+   "id": "RGB_M_P",
+   "code": 23757,
+   "label": "RGB\nMode P",
+   "group": "backlight",
+   "tooltip": "RGB Mode: Plain"
+  },
+  {
+   "id": "RGB_M_B",
+   "code": 23758,
+   "label": "RGB\nMode B",
+   "group": "backlight",
+   "tooltip": "RGB Mode: Breathe"
+  },
+  {
+   "id": "RGB_M_R",
+   "code": 23759,
+   "label": "RGB\nMode R",
+   "group": "backlight",
+   "tooltip": "RGB Mode: Rainbow"
+  },
+  {
+   "id": "RGB_M_SW",
+   "code": 23760,
+   "label": "RGB\nMode SW",
+   "group": "backlight",
+   "tooltip": "RGB Mode: Swirl"
+  },
+  {
+   "id": "RGB_M_SN",
+   "code": 23761,
+   "label": "RGB\nMode SN",
+   "group": "backlight",
+   "tooltip": "RGB Mode: Snake"
+  },
+  {
+   "id": "RGB_M_K",
+   "code": 23762,
+   "label": "RGB\nMode K",
+   "group": "backlight",
+   "tooltip": "RGB Mode: Knight Rider"
+  },
+  {
+   "id": "RGB_M_X",
+   "code": 23763,
+   "label": "RGB\nMode X",
+   "group": "backlight",
+   "tooltip": "RGB Mode: Christmas"
+  },
+  {
+   "id": "RGB_M_G",
+   "code": 23764,
+   "label": "RGB\nMode G",
+   "group": "backlight",
+   "tooltip": "RGB Mode: Gradient"
+  },
+  {
+   "id": "RGB_M_T",
+   "code": 23765,
+   "label": "RGB\nMode T",
+   "group": "backlight",
+   "tooltip": "RGB Mode: Test"
+  },
+  {
+   "id": "RM_ON",
+   "code": 39312,
+   "label": "RGBM\nOn",
+   "group": "backlight",
+   "tooltip": "Turn on RGB Matrix"
+  },
+  {
+   "id": "RM_OFF",
+   "code": 39313,
+   "label": "RGBM\nOff",
+   "group": "backlight",
+   "tooltip": "Turn off RGB Matrix"
+  },
+  {
+   "id": "RM_TOGG",
+   "code": 39314,
+   "label": "RGBM\nTogg",
+   "group": "backlight",
+   "tooltip": "Toggle RGB Matrix on or off"
+  },
+  {
+   "id": "RM_NEXT",
+   "code": 39315,
+   "label": "RGBM\nNext",
+   "group": "backlight",
+   "tooltip": "Cycle through animations"
+  },
+  {
+   "id": "RM_PREV",
+   "code": 39316,
+   "label": "RGBM\nPrev",
+   "group": "backlight",
+   "tooltip": "Cycle through animations in reverse"
+  },
+  {
+   "id": "RM_HUEU",
+   "code": 39317,
+   "label": "RGBM\nHue +",
+   "group": "backlight",
+   "tooltip": "Cycle through hue"
+  },
+  {
+   "id": "RM_HUED",
+   "code": 39318,
+   "label": "RGBM\nHue -",
+   "group": "backlight",
+   "tooltip": "Cycle through hue in reverse"
+  },
+  {
+   "id": "RM_SATU",
+   "code": 39319,
+   "label": "RGBM\nSat +",
+   "group": "backlight",
+   "tooltip": "Increase the saturation"
+  },
+  {
+   "id": "RM_SATD",
+   "code": 39320,
+   "label": "RGBM\nSat -",
+   "group": "backlight",
+   "tooltip": "Decrease the saturation"
+  },
+  {
+   "id": "RM_VALU",
+   "code": 39321,
+   "label": "RGBM\nBright +",
+   "group": "backlight",
+   "tooltip": "Increase the brightness level"
+  },
+  {
+   "id": "RM_VALD",
+   "code": 39322,
+   "label": "RGBM\nBright -",
+   "group": "backlight",
+   "tooltip": "Decrease the brightness level"
+  },
+  {
+   "id": "RM_SPDU",
+   "code": 39323,
+   "label": "RGBM\nSpeed +",
+   "group": "backlight",
+   "tooltip": "Increase the animation speed"
+  },
+  {
+   "id": "RM_SPDD",
+   "code": 39324,
+   "label": "RGBM\nSpeed -",
+   "group": "backlight",
+   "tooltip": "Decrease the animation speed"
+  },
+  {
+   "id": "KC_F13",
+   "code": 104,
+   "label": "F13",
+   "group": "media"
+  },
+  {
+   "id": "KC_F14",
+   "code": 105,
+   "label": "F14",
+   "group": "media"
+  },
+  {
+   "id": "KC_F15",
+   "code": 106,
+   "label": "F15",
+   "group": "media"
+  },
+  {
+   "id": "KC_F16",
+   "code": 107,
+   "label": "F16",
+   "group": "media"
+  },
+  {
+   "id": "KC_F17",
+   "code": 108,
+   "label": "F17",
+   "group": "media"
+  },
+  {
+   "id": "KC_F18",
+   "code": 109,
+   "label": "F18",
+   "group": "media"
+  },
+  {
+   "id": "KC_F19",
+   "code": 110,
+   "label": "F19",
+   "group": "media"
+  },
+  {
+   "id": "KC_F20",
+   "code": 111,
+   "label": "F20",
+   "group": "media"
+  },
+  {
+   "id": "KC_F21",
+   "code": 112,
+   "label": "F21",
+   "group": "media"
+  },
+  {
+   "id": "KC_F22",
+   "code": 113,
+   "label": "F22",
+   "group": "media"
+  },
+  {
+   "id": "KC_F23",
+   "code": 114,
+   "label": "F23",
+   "group": "media"
+  },
+  {
+   "id": "KC_F24",
+   "code": 115,
+   "label": "F24",
+   "group": "media"
+  },
+  {
+   "id": "KC_PWR",
+   "code": 165,
+   "label": "Power",
+   "group": "media",
+   "tooltip": "System Power Down",
+   "alias": [
+    "KC_SYSTEM_POWER"
+   ]
+  },
+  {
+   "id": "KC_SLEP",
+   "code": 166,
+   "label": "Sleep",
+   "group": "media",
+   "tooltip": "System Sleep",
+   "alias": [
+    "KC_SYSTEM_SLEEP"
+   ]
+  },
+  {
+   "id": "KC_WAKE",
+   "code": 167,
+   "label": "Wake",
+   "group": "media",
+   "tooltip": "System Wake",
+   "alias": [
+    "KC_SYSTEM_WAKE"
+   ]
+  },
+  {
+   "id": "KC_EXEC",
+   "code": 116,
+   "label": "Exec",
+   "group": "media",
+   "tooltip": "Execute",
+   "alias": [
+    "KC_EXECUTE"
+   ]
+  },
+  {
+   "id": "KC_HELP",
+   "code": 117,
+   "label": "Help",
+   "group": "media"
+  },
+  {
+   "id": "KC_SLCT",
+   "code": 119,
+   "label": "Select",
+   "group": "media",
+   "alias": [
+    "KC_SELECT"
+   ]
+  },
+  {
+   "id": "KC_STOP",
+   "code": 120,
+   "label": "Stop",
+   "group": "media"
+  },
+  {
+   "id": "KC_AGIN",
+   "code": 121,
+   "label": "Again",
+   "group": "media",
+   "alias": [
+    "KC_AGAIN"
+   ]
+  },
+  {
+   "id": "KC_UNDO",
+   "code": 122,
+   "label": "Undo",
+   "group": "media"
+  },
+  {
+   "id": "KC_CUT",
+   "code": 123,
+   "label": "Cut",
+   "group": "media"
+  },
+  {
+   "id": "KC_COPY",
+   "code": 124,
+   "label": "Copy",
+   "group": "media"
+  },
+  {
+   "id": "KC_PSTE",
+   "code": 125,
+   "label": "Paste",
+   "group": "media",
+   "alias": [
+    "KC_PASTE"
+   ]
+  },
+  {
+   "id": "KC_FIND",
+   "code": 126,
+   "label": "Find",
+   "group": "media"
+  },
+  {
+   "id": "KC_CALC",
+   "code": 178,
+   "label": "Calc",
+   "group": "media",
+   "tooltip": "Launch Calculator (Windows)",
+   "alias": [
+    "KC_CALCULATOR"
+   ]
+  },
+  {
+   "id": "KC_MAIL",
+   "code": 177,
+   "label": "Mail",
+   "group": "media",
+   "tooltip": "Launch Mail (Windows)"
+  },
+  {
+   "id": "KC_MSEL",
+   "code": 175,
+   "label": "Media\nPlayer",
+   "group": "media",
+   "tooltip": "Launch Media Player (Windows)",
+   "alias": [
+    "KC_MEDIA_SELECT"
+   ]
+  },
+  {
+   "id": "KC_MYCM",
+   "code": 179,
+   "label": "My\nPC",
+   "group": "media",
+   "tooltip": "Launch My Computer (Windows)",
+   "alias": [
+    "KC_MY_COMPUTER"
+   ]
+  },
+  {
+   "id": "KC_WSCH",
+   "code": 180,
+   "label": "Browser\nSearch",
+   "group": "media",
+   "tooltip": "Browser Search (Windows)",
+   "alias": [
+    "KC_WWW_SEARCH"
+   ]
+  },
+  {
+   "id": "KC_WHOM",
+   "code": 181,
+   "label": "Browser\nHome",
+   "group": "media",
+   "tooltip": "Browser Home (Windows)",
+   "alias": [
+    "KC_WWW_HOME"
+   ]
+  },
+  {
+   "id": "KC_WBAK",
+   "code": 182,
+   "label": "Browser\nBack",
+   "group": "media",
+   "tooltip": "Browser Back (Windows)",
+   "alias": [
+    "KC_WWW_BACK"
+   ]
+  },
+  {
+   "id": "KC_WFWD",
+   "code": 183,
+   "label": "Browser\nForward",
+   "group": "media",
+   "tooltip": "Browser Forward (Windows)",
+   "alias": [
+    "KC_WWW_FORWARD"
+   ]
+  },
+  {
+   "id": "KC_WSTP",
+   "code": 184,
+   "label": "Browser\nStop",
+   "group": "media",
+   "tooltip": "Browser Stop (Windows)",
+   "alias": [
+    "KC_WWW_STOP"
+   ]
+  },
+  {
+   "id": "KC_WREF",
+   "code": 185,
+   "label": "Browser\nRefresh",
+   "group": "media",
+   "tooltip": "Browser Refresh (Windows)",
+   "alias": [
+    "KC_WWW_REFRESH"
+   ]
+  },
+  {
+   "id": "KC_WFAV",
+   "code": 186,
+   "label": "Browser\nFav.",
+   "group": "media",
+   "tooltip": "Browser Favorites (Windows)",
+   "alias": [
+    "KC_WWW_FAVORITES"
+   ]
+  },
+  {
+   "id": "KC_BRIU",
+   "code": 189,
+   "label": "Bright.\nUp",
+   "group": "media",
+   "tooltip": "Increase the brightness of screen (Laptop)",
+   "alias": [
+    "KC_BRIGHTNESS_UP"
+   ]
+  },
+  {
+   "id": "KC_BRID",
+   "code": 190,
+   "label": "Bright.\nDown",
+   "group": "media",
+   "tooltip": "Decrease the brightness of screen (Laptop)",
+   "alias": [
+    "KC_BRIGHTNESS_DOWN"
+   ]
+  },
+  {
+   "id": "KC_MPRV",
+   "code": 172,
+   "label": "Media\nPrev",
+   "group": "media",
+   "tooltip": "Previous Track",
+   "alias": [
+    "KC_MEDIA_PREV_TRACK"
+   ]
+  },
+  {
+   "id": "KC_MNXT",
+   "code": 171,
+   "label": "Media\nNext",
+   "group": "media",
+   "tooltip": "Next Track",
+   "alias": [
+    "KC_MEDIA_NEXT_TRACK"
+   ]
+  },
+  {
+   "id": "KC_MUTE",
+   "code": 168,
+   "label": "Mute",
+   "group": "media",
+   "tooltip": "Mute Audio",
+   "alias": [
+    "KC_AUDIO_MUTE"
+   ]
+  },
+  {
+   "id": "KC_VOLD",
+   "code": 170,
+   "label": "Vol -",
+   "group": "media",
+   "tooltip": "Volume Down",
+   "alias": [
+    "KC_AUDIO_VOL_DOWN"
+   ]
+  },
+  {
+   "id": "KC_VOLU",
+   "code": 169,
+   "label": "Vol +",
+   "group": "media",
+   "tooltip": "Volume Up",
+   "alias": [
+    "KC_AUDIO_VOL_UP"
+   ]
+  },
+  {
+   "id": "KC__VOLDOWN",
+   "code": 129,
+   "label": "Vol -\nAlt",
+   "group": "media",
+   "tooltip": "Volume Down Alternate"
+  },
+  {
+   "id": "KC__VOLUP",
+   "code": 128,
+   "label": "Vol +\nAlt",
+   "group": "media",
+   "tooltip": "Volume Up Alternate"
+  },
+  {
+   "id": "KC_MSTP",
+   "code": 173,
+   "label": "Media\nStop",
+   "group": "media",
+   "alias": [
+    "KC_MEDIA_STOP"
+   ]
+  },
+  {
+   "id": "KC_MPLY",
+   "code": 174,
+   "label": "Media\nPlay",
+   "group": "media",
+   "tooltip": "Play/Pause",
+   "alias": [
+    "KC_MEDIA_PLAY_PAUSE"
+   ]
+  },
+  {
+   "id": "KC_MRWD",
+   "code": 188,
+   "label": "Prev\nTrack\n(macOS)",
+   "group": "media",
+   "tooltip": "Previous Track / Rewind (macOS)",
+   "alias": [
+    "KC_MEDIA_REWIND"
+   ]
+  },
+  {
+   "id": "KC_MFFD",
+   "code": 187,
+   "label": "Next\nTrack\n(macOS)",
+   "group": "media",
+   "tooltip": "Next Track / Fast Forward (macOS)",
+   "alias": [
+    "KC_MEDIA_FAST_FORWARD"
+   ]
+  },
+  {
+   "id": "KC_EJCT",
+   "code": 176,
+   "label": "Eject",
+   "group": "media",
+   "tooltip": "Eject (macOS)",
+   "alias": [
+    "KC_MEDIA_EJECT"
+   ]
+  },
+  {
+   "id": "KC_MS_U",
+   "code": 240,
+   "label": "Mouse\nUp",
+   "group": "media",
+   "tooltip": "Mouse Cursor Up",
+   "alias": [
+    "KC_MS_UP"
+   ]
+  },
+  {
+   "id": "KC_MS_D",
+   "code": 241,
+   "label": "Mouse\nDown",
+   "group": "media",
+   "tooltip": "Mouse Cursor Down",
+   "alias": [
+    "KC_MS_DOWN"
+   ]
+  },
+  {
+   "id": "KC_MS_L",
+   "code": 242,
+   "label": "Mouse\nLeft",
+   "group": "media",
+   "tooltip": "Mouse Cursor Left",
+   "alias": [
+    "KC_MS_LEFT"
+   ]
+  },
+  {
+   "id": "KC_MS_R",
+   "code": 243,
+   "label": "Mouse\nRight",
+   "group": "media",
+   "tooltip": "Mouse Cursor Right",
+   "alias": [
+    "KC_MS_RIGHT"
+   ]
+  },
+  {
+   "id": "KC_BTN1",
+   "code": 244,
+   "label": "Mouse\n1",
+   "group": "media",
+   "tooltip": "Mouse Button 1",
+   "alias": [
+    "KC_MS_BTN1"
+   ]
+  },
+  {
+   "id": "KC_BTN2",
+   "code": 245,
+   "label": "Mouse\n2",
+   "group": "media",
+   "tooltip": "Mouse Button 2",
+   "alias": [
+    "KC_MS_BTN2"
+   ]
+  },
+  {
+   "id": "KC_BTN3",
+   "code": 246,
+   "label": "Mouse\n3",
+   "group": "media",
+   "tooltip": "Mouse Button 3",
+   "alias": [
+    "KC_MS_BTN3"
+   ]
+  },
+  {
+   "id": "KC_BTN4",
+   "code": 247,
+   "label": "Mouse\n4",
+   "group": "media",
+   "tooltip": "Mouse Button 4",
+   "alias": [
+    "KC_MS_BTN4"
+   ]
+  },
+  {
+   "id": "KC_BTN5",
+   "code": 248,
+   "label": "Mouse\n5",
+   "group": "media",
+   "tooltip": "Mouse Button 5",
+   "alias": [
+    "KC_MS_BTN5"
+   ]
+  },
+  {
+   "id": "KC_WH_U",
+   "code": 249,
+   "label": "Mouse\nWheel\nUp",
+   "group": "media",
+   "alias": [
+    "KC_MS_WH_UP"
+   ]
+  },
+  {
+   "id": "KC_WH_D",
+   "code": 250,
+   "label": "Mouse\nWheel\nDown",
+   "group": "media",
+   "alias": [
+    "KC_MS_WH_DOWN"
+   ]
+  },
+  {
+   "id": "KC_WH_L",
+   "code": 251,
+   "label": "Mouse\nWheel\nLeft",
+   "group": "media",
+   "alias": [
+    "KC_MS_WH_LEFT"
+   ]
+  },
+  {
+   "id": "KC_WH_R",
+   "code": 252,
+   "label": "Mouse\nWheel\nRight",
+   "group": "media",
+   "alias": [
+    "KC_MS_WH_RIGHT"
+   ]
+  },
+  {
+   "id": "KC_ACL0",
+   "code": 253,
+   "label": "Mouse\nAccel\n0",
+   "group": "media",
+   "tooltip": "Set mouse acceleration to 0",
+   "alias": [
+    "KC_MS_ACCEL0"
+   ]
+  },
+  {
+   "id": "KC_ACL1",
+   "code": 254,
+   "label": "Mouse\nAccel\n1",
+   "group": "media",
+   "tooltip": "Set mouse acceleration to 1",
+   "alias": [
+    "KC_MS_ACCEL1"
+   ]
+  },
+  {
+   "id": "KC_ACL2",
+   "code": 255,
+   "label": "Mouse\nAccel\n2",
+   "group": "media",
+   "tooltip": "Set mouse acceleration to 2",
+   "alias": [
+    "KC_MS_ACCEL2"
+   ]
+  },
+  {
+   "id": "KC_LCAP",
+   "code": 130,
+   "label": "Locking\nCaps",
+   "group": "media",
+   "tooltip": "Locking Caps Lock",
+   "alias": [
+    "KC_LOCKING_CAPS"
+   ]
+  },
+  {
+   "id": "KC_LNUM",
+   "code": 131,
+   "label": "Locking\nNum",
+   "group": "media",
+   "tooltip": "Locking Num Lock",
+   "alias": [
+    "KC_LOCKING_NUM"
+   ]
+  },
+  {
+   "id": "KC_LSCR",
+   "code": 132,
+   "label": "Locking\nScroll",
+   "group": "media",
+   "tooltip": "Locking Scroll Lock",
+   "alias": [
+    "KC_LOCKING_SCROLL"
+   ]
+  },
+  {
+   "id": "TD(0)",
+   "code": 22272,
+   "label": "TD(0)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 0
+  },
+  {
+   "id": "TD(1)",
+   "code": 22273,
+   "label": "TD(1)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 1
+  },
+  {
+   "id": "TD(2)",
+   "code": 22274,
+   "label": "TD(2)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 2
+  },
+  {
+   "id": "TD(3)",
+   "code": 22275,
+   "label": "TD(3)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 3
+  },
+  {
+   "id": "TD(4)",
+   "code": 22276,
+   "label": "TD(4)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 4
+  },
+  {
+   "id": "TD(5)",
+   "code": 22277,
+   "label": "TD(5)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 5
+  },
+  {
+   "id": "TD(6)",
+   "code": 22278,
+   "label": "TD(6)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 6
+  },
+  {
+   "id": "TD(7)",
+   "code": 22279,
+   "label": "TD(7)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 7
+  },
+  {
+   "id": "TD(8)",
+   "code": 22280,
+   "label": "TD(8)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 8
+  },
+  {
+   "id": "TD(9)",
+   "code": 22281,
+   "label": "TD(9)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 9
+  },
+  {
+   "id": "TD(10)",
+   "code": 22282,
+   "label": "TD(10)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 10
+  },
+  {
+   "id": "TD(11)",
+   "code": 22283,
+   "label": "TD(11)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 11
+  },
+  {
+   "id": "TD(12)",
+   "code": 22284,
+   "label": "TD(12)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 12
+  },
+  {
+   "id": "TD(13)",
+   "code": 22285,
+   "label": "TD(13)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 13
+  },
+  {
+   "id": "TD(14)",
+   "code": 22286,
+   "label": "TD(14)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 14
+  },
+  {
+   "id": "TD(15)",
+   "code": 22287,
+   "label": "TD(15)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 15
+  },
+  {
+   "id": "TD(16)",
+   "code": 22288,
+   "label": "TD(16)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 16
+  },
+  {
+   "id": "TD(17)",
+   "code": 22289,
+   "label": "TD(17)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 17
+  },
+  {
+   "id": "TD(18)",
+   "code": 22290,
+   "label": "TD(18)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 18
+  },
+  {
+   "id": "TD(19)",
+   "code": 22291,
+   "label": "TD(19)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 19
+  },
+  {
+   "id": "TD(20)",
+   "code": 22292,
+   "label": "TD(20)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 20
+  },
+  {
+   "id": "TD(21)",
+   "code": 22293,
+   "label": "TD(21)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 21
+  },
+  {
+   "id": "TD(22)",
+   "code": 22294,
+   "label": "TD(22)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 22
+  },
+  {
+   "id": "TD(23)",
+   "code": 22295,
+   "label": "TD(23)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 23
+  },
+  {
+   "id": "TD(24)",
+   "code": 22296,
+   "label": "TD(24)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 24
+  },
+  {
+   "id": "TD(25)",
+   "code": 22297,
+   "label": "TD(25)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 25
+  },
+  {
+   "id": "TD(26)",
+   "code": 22298,
+   "label": "TD(26)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 26
+  },
+  {
+   "id": "TD(27)",
+   "code": 22299,
+   "label": "TD(27)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 27
+  },
+  {
+   "id": "TD(28)",
+   "code": 22300,
+   "label": "TD(28)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 28
+  },
+  {
+   "id": "TD(29)",
+   "code": 22301,
+   "label": "TD(29)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 29
+  },
+  {
+   "id": "TD(30)",
+   "code": 22302,
+   "label": "TD(30)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 30
+  },
+  {
+   "id": "TD(31)",
+   "code": 22303,
+   "label": "TD(31)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 31
+  },
+  {
+   "id": "TD(32)",
+   "code": 22304,
+   "label": "TD(32)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 32
+  },
+  {
+   "id": "TD(33)",
+   "code": 22305,
+   "label": "TD(33)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 33
+  },
+  {
+   "id": "TD(34)",
+   "code": 22306,
+   "label": "TD(34)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 34
+  },
+  {
+   "id": "TD(35)",
+   "code": 22307,
+   "label": "TD(35)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 35
+  },
+  {
+   "id": "TD(36)",
+   "code": 22308,
+   "label": "TD(36)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 36
+  },
+  {
+   "id": "TD(37)",
+   "code": 22309,
+   "label": "TD(37)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 37
+  },
+  {
+   "id": "TD(38)",
+   "code": 22310,
+   "label": "TD(38)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 38
+  },
+  {
+   "id": "TD(39)",
+   "code": 22311,
+   "label": "TD(39)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 39
+  },
+  {
+   "id": "TD(40)",
+   "code": 22312,
+   "label": "TD(40)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 40
+  },
+  {
+   "id": "TD(41)",
+   "code": 22313,
+   "label": "TD(41)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 41
+  },
+  {
+   "id": "TD(42)",
+   "code": 22314,
+   "label": "TD(42)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 42
+  },
+  {
+   "id": "TD(43)",
+   "code": 22315,
+   "label": "TD(43)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 43
+  },
+  {
+   "id": "TD(44)",
+   "code": 22316,
+   "label": "TD(44)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 44
+  },
+  {
+   "id": "TD(45)",
+   "code": 22317,
+   "label": "TD(45)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 45
+  },
+  {
+   "id": "TD(46)",
+   "code": 22318,
+   "label": "TD(46)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 46
+  },
+  {
+   "id": "TD(47)",
+   "code": 22319,
+   "label": "TD(47)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 47
+  },
+  {
+   "id": "TD(48)",
+   "code": 22320,
+   "label": "TD(48)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 48
+  },
+  {
+   "id": "TD(49)",
+   "code": 22321,
+   "label": "TD(49)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 49
+  },
+  {
+   "id": "TD(50)",
+   "code": 22322,
+   "label": "TD(50)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 50
+  },
+  {
+   "id": "TD(51)",
+   "code": 22323,
+   "label": "TD(51)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 51
+  },
+  {
+   "id": "TD(52)",
+   "code": 22324,
+   "label": "TD(52)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 52
+  },
+  {
+   "id": "TD(53)",
+   "code": 22325,
+   "label": "TD(53)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 53
+  },
+  {
+   "id": "TD(54)",
+   "code": 22326,
+   "label": "TD(54)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 54
+  },
+  {
+   "id": "TD(55)",
+   "code": 22327,
+   "label": "TD(55)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 55
+  },
+  {
+   "id": "TD(56)",
+   "code": 22328,
+   "label": "TD(56)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 56
+  },
+  {
+   "id": "TD(57)",
+   "code": 22329,
+   "label": "TD(57)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 57
+  },
+  {
+   "id": "TD(58)",
+   "code": 22330,
+   "label": "TD(58)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 58
+  },
+  {
+   "id": "TD(59)",
+   "code": 22331,
+   "label": "TD(59)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 59
+  },
+  {
+   "id": "TD(60)",
+   "code": 22332,
+   "label": "TD(60)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 60
+  },
+  {
+   "id": "TD(61)",
+   "code": 22333,
+   "label": "TD(61)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 61
+  },
+  {
+   "id": "TD(62)",
+   "code": 22334,
+   "label": "TD(62)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 62
+  },
+  {
+   "id": "TD(63)",
+   "code": 22335,
+   "label": "TD(63)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 63
+  },
+  {
+   "id": "TD(64)",
+   "code": 22336,
+   "label": "TD(64)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 64
+  },
+  {
+   "id": "TD(65)",
+   "code": 22337,
+   "label": "TD(65)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 65
+  },
+  {
+   "id": "TD(66)",
+   "code": 22338,
+   "label": "TD(66)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 66
+  },
+  {
+   "id": "TD(67)",
+   "code": 22339,
+   "label": "TD(67)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 67
+  },
+  {
+   "id": "TD(68)",
+   "code": 22340,
+   "label": "TD(68)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 68
+  },
+  {
+   "id": "TD(69)",
+   "code": 22341,
+   "label": "TD(69)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 69
+  },
+  {
+   "id": "TD(70)",
+   "code": 22342,
+   "label": "TD(70)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 70
+  },
+  {
+   "id": "TD(71)",
+   "code": 22343,
+   "label": "TD(71)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 71
+  },
+  {
+   "id": "TD(72)",
+   "code": 22344,
+   "label": "TD(72)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 72
+  },
+  {
+   "id": "TD(73)",
+   "code": 22345,
+   "label": "TD(73)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 73
+  },
+  {
+   "id": "TD(74)",
+   "code": 22346,
+   "label": "TD(74)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 74
+  },
+  {
+   "id": "TD(75)",
+   "code": 22347,
+   "label": "TD(75)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 75
+  },
+  {
+   "id": "TD(76)",
+   "code": 22348,
+   "label": "TD(76)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 76
+  },
+  {
+   "id": "TD(77)",
+   "code": 22349,
+   "label": "TD(77)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 77
+  },
+  {
+   "id": "TD(78)",
+   "code": 22350,
+   "label": "TD(78)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 78
+  },
+  {
+   "id": "TD(79)",
+   "code": 22351,
+   "label": "TD(79)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 79
+  },
+  {
+   "id": "TD(80)",
+   "code": 22352,
+   "label": "TD(80)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 80
+  },
+  {
+   "id": "TD(81)",
+   "code": 22353,
+   "label": "TD(81)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 81
+  },
+  {
+   "id": "TD(82)",
+   "code": 22354,
+   "label": "TD(82)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 82
+  },
+  {
+   "id": "TD(83)",
+   "code": 22355,
+   "label": "TD(83)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 83
+  },
+  {
+   "id": "TD(84)",
+   "code": 22356,
+   "label": "TD(84)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 84
+  },
+  {
+   "id": "TD(85)",
+   "code": 22357,
+   "label": "TD(85)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 85
+  },
+  {
+   "id": "TD(86)",
+   "code": 22358,
+   "label": "TD(86)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 86
+  },
+  {
+   "id": "TD(87)",
+   "code": 22359,
+   "label": "TD(87)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 87
+  },
+  {
+   "id": "TD(88)",
+   "code": 22360,
+   "label": "TD(88)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 88
+  },
+  {
+   "id": "TD(89)",
+   "code": 22361,
+   "label": "TD(89)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 89
+  },
+  {
+   "id": "TD(90)",
+   "code": 22362,
+   "label": "TD(90)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 90
+  },
+  {
+   "id": "TD(91)",
+   "code": 22363,
+   "label": "TD(91)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 91
+  },
+  {
+   "id": "TD(92)",
+   "code": 22364,
+   "label": "TD(92)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 92
+  },
+  {
+   "id": "TD(93)",
+   "code": 22365,
+   "label": "TD(93)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 93
+  },
+  {
+   "id": "TD(94)",
+   "code": 22366,
+   "label": "TD(94)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 94
+  },
+  {
+   "id": "TD(95)",
+   "code": 22367,
+   "label": "TD(95)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 95
+  },
+  {
+   "id": "TD(96)",
+   "code": 22368,
+   "label": "TD(96)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 96
+  },
+  {
+   "id": "TD(97)",
+   "code": 22369,
+   "label": "TD(97)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 97
+  },
+  {
+   "id": "TD(98)",
+   "code": 22370,
+   "label": "TD(98)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 98
+  },
+  {
+   "id": "TD(99)",
+   "code": 22371,
+   "label": "TD(99)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 99
+  },
+  {
+   "id": "TD(100)",
+   "code": 22372,
+   "label": "TD(100)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 100
+  },
+  {
+   "id": "TD(101)",
+   "code": 22373,
+   "label": "TD(101)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 101
+  },
+  {
+   "id": "TD(102)",
+   "code": 22374,
+   "label": "TD(102)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 102
+  },
+  {
+   "id": "TD(103)",
+   "code": 22375,
+   "label": "TD(103)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 103
+  },
+  {
+   "id": "TD(104)",
+   "code": 22376,
+   "label": "TD(104)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 104
+  },
+  {
+   "id": "TD(105)",
+   "code": 22377,
+   "label": "TD(105)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 105
+  },
+  {
+   "id": "TD(106)",
+   "code": 22378,
+   "label": "TD(106)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 106
+  },
+  {
+   "id": "TD(107)",
+   "code": 22379,
+   "label": "TD(107)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 107
+  },
+  {
+   "id": "TD(108)",
+   "code": 22380,
+   "label": "TD(108)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 108
+  },
+  {
+   "id": "TD(109)",
+   "code": 22381,
+   "label": "TD(109)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 109
+  },
+  {
+   "id": "TD(110)",
+   "code": 22382,
+   "label": "TD(110)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 110
+  },
+  {
+   "id": "TD(111)",
+   "code": 22383,
+   "label": "TD(111)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 111
+  },
+  {
+   "id": "TD(112)",
+   "code": 22384,
+   "label": "TD(112)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 112
+  },
+  {
+   "id": "TD(113)",
+   "code": 22385,
+   "label": "TD(113)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 113
+  },
+  {
+   "id": "TD(114)",
+   "code": 22386,
+   "label": "TD(114)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 114
+  },
+  {
+   "id": "TD(115)",
+   "code": 22387,
+   "label": "TD(115)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 115
+  },
+  {
+   "id": "TD(116)",
+   "code": 22388,
+   "label": "TD(116)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 116
+  },
+  {
+   "id": "TD(117)",
+   "code": 22389,
+   "label": "TD(117)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 117
+  },
+  {
+   "id": "TD(118)",
+   "code": 22390,
+   "label": "TD(118)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 118
+  },
+  {
+   "id": "TD(119)",
+   "code": 22391,
+   "label": "TD(119)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 119
+  },
+  {
+   "id": "TD(120)",
+   "code": 22392,
+   "label": "TD(120)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 120
+  },
+  {
+   "id": "TD(121)",
+   "code": 22393,
+   "label": "TD(121)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 121
+  },
+  {
+   "id": "TD(122)",
+   "code": 22394,
+   "label": "TD(122)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 122
+  },
+  {
+   "id": "TD(123)",
+   "code": 22395,
+   "label": "TD(123)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 123
+  },
+  {
+   "id": "TD(124)",
+   "code": 22396,
+   "label": "TD(124)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 124
+  },
+  {
+   "id": "TD(125)",
+   "code": 22397,
+   "label": "TD(125)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 125
+  },
+  {
+   "id": "TD(126)",
+   "code": 22398,
+   "label": "TD(126)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 126
+  },
+  {
+   "id": "TD(127)",
+   "code": 22399,
+   "label": "TD(127)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 127
+  },
+  {
+   "id": "TD(128)",
+   "code": 22400,
+   "label": "TD(128)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 128
+  },
+  {
+   "id": "TD(129)",
+   "code": 22401,
+   "label": "TD(129)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 129
+  },
+  {
+   "id": "TD(130)",
+   "code": 22402,
+   "label": "TD(130)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 130
+  },
+  {
+   "id": "TD(131)",
+   "code": 22403,
+   "label": "TD(131)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 131
+  },
+  {
+   "id": "TD(132)",
+   "code": 22404,
+   "label": "TD(132)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 132
+  },
+  {
+   "id": "TD(133)",
+   "code": 22405,
+   "label": "TD(133)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 133
+  },
+  {
+   "id": "TD(134)",
+   "code": 22406,
+   "label": "TD(134)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 134
+  },
+  {
+   "id": "TD(135)",
+   "code": 22407,
+   "label": "TD(135)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 135
+  },
+  {
+   "id": "TD(136)",
+   "code": 22408,
+   "label": "TD(136)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 136
+  },
+  {
+   "id": "TD(137)",
+   "code": 22409,
+   "label": "TD(137)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 137
+  },
+  {
+   "id": "TD(138)",
+   "code": 22410,
+   "label": "TD(138)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 138
+  },
+  {
+   "id": "TD(139)",
+   "code": 22411,
+   "label": "TD(139)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 139
+  },
+  {
+   "id": "TD(140)",
+   "code": 22412,
+   "label": "TD(140)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 140
+  },
+  {
+   "id": "TD(141)",
+   "code": 22413,
+   "label": "TD(141)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 141
+  },
+  {
+   "id": "TD(142)",
+   "code": 22414,
+   "label": "TD(142)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 142
+  },
+  {
+   "id": "TD(143)",
+   "code": 22415,
+   "label": "TD(143)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 143
+  },
+  {
+   "id": "TD(144)",
+   "code": 22416,
+   "label": "TD(144)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 144
+  },
+  {
+   "id": "TD(145)",
+   "code": 22417,
+   "label": "TD(145)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 145
+  },
+  {
+   "id": "TD(146)",
+   "code": 22418,
+   "label": "TD(146)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 146
+  },
+  {
+   "id": "TD(147)",
+   "code": 22419,
+   "label": "TD(147)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 147
+  },
+  {
+   "id": "TD(148)",
+   "code": 22420,
+   "label": "TD(148)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 148
+  },
+  {
+   "id": "TD(149)",
+   "code": 22421,
+   "label": "TD(149)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 149
+  },
+  {
+   "id": "TD(150)",
+   "code": 22422,
+   "label": "TD(150)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 150
+  },
+  {
+   "id": "TD(151)",
+   "code": 22423,
+   "label": "TD(151)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 151
+  },
+  {
+   "id": "TD(152)",
+   "code": 22424,
+   "label": "TD(152)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 152
+  },
+  {
+   "id": "TD(153)",
+   "code": 22425,
+   "label": "TD(153)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 153
+  },
+  {
+   "id": "TD(154)",
+   "code": 22426,
+   "label": "TD(154)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 154
+  },
+  {
+   "id": "TD(155)",
+   "code": 22427,
+   "label": "TD(155)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 155
+  },
+  {
+   "id": "TD(156)",
+   "code": 22428,
+   "label": "TD(156)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 156
+  },
+  {
+   "id": "TD(157)",
+   "code": 22429,
+   "label": "TD(157)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 157
+  },
+  {
+   "id": "TD(158)",
+   "code": 22430,
+   "label": "TD(158)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 158
+  },
+  {
+   "id": "TD(159)",
+   "code": 22431,
+   "label": "TD(159)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 159
+  },
+  {
+   "id": "TD(160)",
+   "code": 22432,
+   "label": "TD(160)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 160
+  },
+  {
+   "id": "TD(161)",
+   "code": 22433,
+   "label": "TD(161)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 161
+  },
+  {
+   "id": "TD(162)",
+   "code": 22434,
+   "label": "TD(162)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 162
+  },
+  {
+   "id": "TD(163)",
+   "code": 22435,
+   "label": "TD(163)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 163
+  },
+  {
+   "id": "TD(164)",
+   "code": 22436,
+   "label": "TD(164)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 164
+  },
+  {
+   "id": "TD(165)",
+   "code": 22437,
+   "label": "TD(165)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 165
+  },
+  {
+   "id": "TD(166)",
+   "code": 22438,
+   "label": "TD(166)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 166
+  },
+  {
+   "id": "TD(167)",
+   "code": 22439,
+   "label": "TD(167)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 167
+  },
+  {
+   "id": "TD(168)",
+   "code": 22440,
+   "label": "TD(168)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 168
+  },
+  {
+   "id": "TD(169)",
+   "code": 22441,
+   "label": "TD(169)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 169
+  },
+  {
+   "id": "TD(170)",
+   "code": 22442,
+   "label": "TD(170)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 170
+  },
+  {
+   "id": "TD(171)",
+   "code": 22443,
+   "label": "TD(171)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 171
+  },
+  {
+   "id": "TD(172)",
+   "code": 22444,
+   "label": "TD(172)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 172
+  },
+  {
+   "id": "TD(173)",
+   "code": 22445,
+   "label": "TD(173)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 173
+  },
+  {
+   "id": "TD(174)",
+   "code": 22446,
+   "label": "TD(174)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 174
+  },
+  {
+   "id": "TD(175)",
+   "code": 22447,
+   "label": "TD(175)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 175
+  },
+  {
+   "id": "TD(176)",
+   "code": 22448,
+   "label": "TD(176)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 176
+  },
+  {
+   "id": "TD(177)",
+   "code": 22449,
+   "label": "TD(177)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 177
+  },
+  {
+   "id": "TD(178)",
+   "code": 22450,
+   "label": "TD(178)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 178
+  },
+  {
+   "id": "TD(179)",
+   "code": 22451,
+   "label": "TD(179)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 179
+  },
+  {
+   "id": "TD(180)",
+   "code": 22452,
+   "label": "TD(180)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 180
+  },
+  {
+   "id": "TD(181)",
+   "code": 22453,
+   "label": "TD(181)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 181
+  },
+  {
+   "id": "TD(182)",
+   "code": 22454,
+   "label": "TD(182)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 182
+  },
+  {
+   "id": "TD(183)",
+   "code": 22455,
+   "label": "TD(183)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 183
+  },
+  {
+   "id": "TD(184)",
+   "code": 22456,
+   "label": "TD(184)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 184
+  },
+  {
+   "id": "TD(185)",
+   "code": 22457,
+   "label": "TD(185)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 185
+  },
+  {
+   "id": "TD(186)",
+   "code": 22458,
+   "label": "TD(186)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 186
+  },
+  {
+   "id": "TD(187)",
+   "code": 22459,
+   "label": "TD(187)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 187
+  },
+  {
+   "id": "TD(188)",
+   "code": 22460,
+   "label": "TD(188)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 188
+  },
+  {
+   "id": "TD(189)",
+   "code": 22461,
+   "label": "TD(189)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 189
+  },
+  {
+   "id": "TD(190)",
+   "code": 22462,
+   "label": "TD(190)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 190
+  },
+  {
+   "id": "TD(191)",
+   "code": 22463,
+   "label": "TD(191)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 191
+  },
+  {
+   "id": "TD(192)",
+   "code": 22464,
+   "label": "TD(192)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 192
+  },
+  {
+   "id": "TD(193)",
+   "code": 22465,
+   "label": "TD(193)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 193
+  },
+  {
+   "id": "TD(194)",
+   "code": 22466,
+   "label": "TD(194)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 194
+  },
+  {
+   "id": "TD(195)",
+   "code": 22467,
+   "label": "TD(195)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 195
+  },
+  {
+   "id": "TD(196)",
+   "code": 22468,
+   "label": "TD(196)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 196
+  },
+  {
+   "id": "TD(197)",
+   "code": 22469,
+   "label": "TD(197)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 197
+  },
+  {
+   "id": "TD(198)",
+   "code": 22470,
+   "label": "TD(198)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 198
+  },
+  {
+   "id": "TD(199)",
+   "code": 22471,
+   "label": "TD(199)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 199
+  },
+  {
+   "id": "TD(200)",
+   "code": 22472,
+   "label": "TD(200)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 200
+  },
+  {
+   "id": "TD(201)",
+   "code": 22473,
+   "label": "TD(201)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 201
+  },
+  {
+   "id": "TD(202)",
+   "code": 22474,
+   "label": "TD(202)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 202
+  },
+  {
+   "id": "TD(203)",
+   "code": 22475,
+   "label": "TD(203)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 203
+  },
+  {
+   "id": "TD(204)",
+   "code": 22476,
+   "label": "TD(204)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 204
+  },
+  {
+   "id": "TD(205)",
+   "code": 22477,
+   "label": "TD(205)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 205
+  },
+  {
+   "id": "TD(206)",
+   "code": 22478,
+   "label": "TD(206)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 206
+  },
+  {
+   "id": "TD(207)",
+   "code": 22479,
+   "label": "TD(207)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 207
+  },
+  {
+   "id": "TD(208)",
+   "code": 22480,
+   "label": "TD(208)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 208
+  },
+  {
+   "id": "TD(209)",
+   "code": 22481,
+   "label": "TD(209)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 209
+  },
+  {
+   "id": "TD(210)",
+   "code": 22482,
+   "label": "TD(210)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 210
+  },
+  {
+   "id": "TD(211)",
+   "code": 22483,
+   "label": "TD(211)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 211
+  },
+  {
+   "id": "TD(212)",
+   "code": 22484,
+   "label": "TD(212)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 212
+  },
+  {
+   "id": "TD(213)",
+   "code": 22485,
+   "label": "TD(213)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 213
+  },
+  {
+   "id": "TD(214)",
+   "code": 22486,
+   "label": "TD(214)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 214
+  },
+  {
+   "id": "TD(215)",
+   "code": 22487,
+   "label": "TD(215)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 215
+  },
+  {
+   "id": "TD(216)",
+   "code": 22488,
+   "label": "TD(216)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 216
+  },
+  {
+   "id": "TD(217)",
+   "code": 22489,
+   "label": "TD(217)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 217
+  },
+  {
+   "id": "TD(218)",
+   "code": 22490,
+   "label": "TD(218)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 218
+  },
+  {
+   "id": "TD(219)",
+   "code": 22491,
+   "label": "TD(219)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 219
+  },
+  {
+   "id": "TD(220)",
+   "code": 22492,
+   "label": "TD(220)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 220
+  },
+  {
+   "id": "TD(221)",
+   "code": 22493,
+   "label": "TD(221)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 221
+  },
+  {
+   "id": "TD(222)",
+   "code": 22494,
+   "label": "TD(222)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 222
+  },
+  {
+   "id": "TD(223)",
+   "code": 22495,
+   "label": "TD(223)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 223
+  },
+  {
+   "id": "TD(224)",
+   "code": 22496,
+   "label": "TD(224)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 224
+  },
+  {
+   "id": "TD(225)",
+   "code": 22497,
+   "label": "TD(225)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 225
+  },
+  {
+   "id": "TD(226)",
+   "code": 22498,
+   "label": "TD(226)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 226
+  },
+  {
+   "id": "TD(227)",
+   "code": 22499,
+   "label": "TD(227)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 227
+  },
+  {
+   "id": "TD(228)",
+   "code": 22500,
+   "label": "TD(228)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 228
+  },
+  {
+   "id": "TD(229)",
+   "code": 22501,
+   "label": "TD(229)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 229
+  },
+  {
+   "id": "TD(230)",
+   "code": 22502,
+   "label": "TD(230)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 230
+  },
+  {
+   "id": "TD(231)",
+   "code": 22503,
+   "label": "TD(231)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 231
+  },
+  {
+   "id": "TD(232)",
+   "code": 22504,
+   "label": "TD(232)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 232
+  },
+  {
+   "id": "TD(233)",
+   "code": 22505,
+   "label": "TD(233)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 233
+  },
+  {
+   "id": "TD(234)",
+   "code": 22506,
+   "label": "TD(234)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 234
+  },
+  {
+   "id": "TD(235)",
+   "code": 22507,
+   "label": "TD(235)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 235
+  },
+  {
+   "id": "TD(236)",
+   "code": 22508,
+   "label": "TD(236)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 236
+  },
+  {
+   "id": "TD(237)",
+   "code": 22509,
+   "label": "TD(237)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 237
+  },
+  {
+   "id": "TD(238)",
+   "code": 22510,
+   "label": "TD(238)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 238
+  },
+  {
+   "id": "TD(239)",
+   "code": 22511,
+   "label": "TD(239)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 239
+  },
+  {
+   "id": "TD(240)",
+   "code": 22512,
+   "label": "TD(240)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 240
+  },
+  {
+   "id": "TD(241)",
+   "code": 22513,
+   "label": "TD(241)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 241
+  },
+  {
+   "id": "TD(242)",
+   "code": 22514,
+   "label": "TD(242)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 242
+  },
+  {
+   "id": "TD(243)",
+   "code": 22515,
+   "label": "TD(243)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 243
+  },
+  {
+   "id": "TD(244)",
+   "code": 22516,
+   "label": "TD(244)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 244
+  },
+  {
+   "id": "TD(245)",
+   "code": 22517,
+   "label": "TD(245)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 245
+  },
+  {
+   "id": "TD(246)",
+   "code": 22518,
+   "label": "TD(246)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 246
+  },
+  {
+   "id": "TD(247)",
+   "code": 22519,
+   "label": "TD(247)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 247
+  },
+  {
+   "id": "TD(248)",
+   "code": 22520,
+   "label": "TD(248)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 248
+  },
+  {
+   "id": "TD(249)",
+   "code": 22521,
+   "label": "TD(249)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 249
+  },
+  {
+   "id": "TD(250)",
+   "code": 22522,
+   "label": "TD(250)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 250
+  },
+  {
+   "id": "TD(251)",
+   "code": 22523,
+   "label": "TD(251)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 251
+  },
+  {
+   "id": "TD(252)",
+   "code": 22524,
+   "label": "TD(252)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 252
+  },
+  {
+   "id": "TD(253)",
+   "code": 22525,
+   "label": "TD(253)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 253
+  },
+  {
+   "id": "TD(254)",
+   "code": 22526,
+   "label": "TD(254)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 254
+  },
+  {
+   "id": "TD(255)",
+   "code": 22527,
+   "label": "TD(255)",
+   "group": "tap_dance",
+   "tooltip": "Tap dance keycode",
+   "index": 255
+  },
+  {
+   "id": "M0",
+   "code": 24338,
+   "label": "M0",
+   "group": "macro",
+   "index": 0
+  },
+  {
+   "id": "M1",
+   "code": 24339,
+   "label": "M1",
+   "group": "macro",
+   "index": 1
+  },
+  {
+   "id": "M2",
+   "code": 24340,
+   "label": "M2",
+   "group": "macro",
+   "index": 2
+  },
+  {
+   "id": "M3",
+   "code": 24341,
+   "label": "M3",
+   "group": "macro",
+   "index": 3
+  },
+  {
+   "id": "M4",
+   "code": 24342,
+   "label": "M4",
+   "group": "macro",
+   "index": 4
+  },
+  {
+   "id": "M5",
+   "code": 24343,
+   "label": "M5",
+   "group": "macro",
+   "index": 5
+  },
+  {
+   "id": "M6",
+   "code": 24344,
+   "label": "M6",
+   "group": "macro",
+   "index": 6
+  },
+  {
+   "id": "M7",
+   "code": 24345,
+   "label": "M7",
+   "group": "macro",
+   "index": 7
+  },
+  {
+   "id": "M8",
+   "code": 24346,
+   "label": "M8",
+   "group": "macro",
+   "index": 8
+  },
+  {
+   "id": "M9",
+   "code": 24347,
+   "label": "M9",
+   "group": "macro",
+   "index": 9
+  },
+  {
+   "id": "M10",
+   "code": 24348,
+   "label": "M10",
+   "group": "macro",
+   "index": 10
+  },
+  {
+   "id": "M11",
+   "code": 24349,
+   "label": "M11",
+   "group": "macro",
+   "index": 11
+  },
+  {
+   "id": "M12",
+   "code": 24350,
+   "label": "M12",
+   "group": "macro",
+   "index": 12
+  },
+  {
+   "id": "M13",
+   "code": 24351,
+   "label": "M13",
+   "group": "macro",
+   "index": 13
+  },
+  {
+   "id": "M14",
+   "code": 24352,
+   "label": "M14",
+   "group": "macro",
+   "index": 14
+  },
+  {
+   "id": "M15",
+   "code": 24353,
+   "label": "M15",
+   "group": "macro",
+   "index": 15
+  },
+  {
+   "id": "M16",
+   "code": 24354,
+   "label": "M16",
+   "group": "macro",
+   "index": 16
+  },
+  {
+   "id": "M17",
+   "code": 24355,
+   "label": "M17",
+   "group": "macro",
+   "index": 17
+  },
+  {
+   "id": "M18",
+   "code": 24356,
+   "label": "M18",
+   "group": "macro",
+   "index": 18
+  },
+  {
+   "id": "M19",
+   "code": 24357,
+   "label": "M19",
+   "group": "macro",
+   "index": 19
+  },
+  {
+   "id": "M20",
+   "code": 24358,
+   "label": "M20",
+   "group": "macro",
+   "index": 20
+  },
+  {
+   "id": "M21",
+   "code": 24359,
+   "label": "M21",
+   "group": "macro",
+   "index": 21
+  },
+  {
+   "id": "M22",
+   "code": 24360,
+   "label": "M22",
+   "group": "macro",
+   "index": 22
+  },
+  {
+   "id": "M23",
+   "code": 24361,
+   "label": "M23",
+   "group": "macro",
+   "index": 23
+  },
+  {
+   "id": "M24",
+   "code": 24362,
+   "label": "M24",
+   "group": "macro",
+   "index": 24
+  },
+  {
+   "id": "M25",
+   "code": 24363,
+   "label": "M25",
+   "group": "macro",
+   "index": 25
+  },
+  {
+   "id": "M26",
+   "code": 24364,
+   "label": "M26",
+   "group": "macro",
+   "index": 26
+  },
+  {
+   "id": "M27",
+   "code": 24365,
+   "label": "M27",
+   "group": "macro",
+   "index": 27
+  },
+  {
+   "id": "M28",
+   "code": 24366,
+   "label": "M28",
+   "group": "macro",
+   "index": 28
+  },
+  {
+   "id": "M29",
+   "code": 24367,
+   "label": "M29",
+   "group": "macro",
+   "index": 29
+  },
+  {
+   "id": "M30",
+   "code": 24368,
+   "label": "M30",
+   "group": "macro",
+   "index": 30
+  },
+  {
+   "id": "M31",
+   "code": 24369,
+   "label": "M31",
+   "group": "macro",
+   "index": 31
+  },
+  {
+   "id": "M32",
+   "code": 24370,
+   "label": "M32",
+   "group": "macro",
+   "index": 32
+  },
+  {
+   "id": "M33",
+   "code": 24371,
+   "label": "M33",
+   "group": "macro",
+   "index": 33
+  },
+  {
+   "id": "M34",
+   "code": 24372,
+   "label": "M34",
+   "group": "macro",
+   "index": 34
+  },
+  {
+   "id": "M35",
+   "code": 24373,
+   "label": "M35",
+   "group": "macro",
+   "index": 35
+  },
+  {
+   "id": "M36",
+   "code": 24374,
+   "label": "M36",
+   "group": "macro",
+   "index": 36
+  },
+  {
+   "id": "M37",
+   "code": 24375,
+   "label": "M37",
+   "group": "macro",
+   "index": 37
+  },
+  {
+   "id": "M38",
+   "code": 24376,
+   "label": "M38",
+   "group": "macro",
+   "index": 38
+  },
+  {
+   "id": "M39",
+   "code": 24377,
+   "label": "M39",
+   "group": "macro",
+   "index": 39
+  },
+  {
+   "id": "M40",
+   "code": 24378,
+   "label": "M40",
+   "group": "macro",
+   "index": 40
+  },
+  {
+   "id": "M41",
+   "code": 24379,
+   "label": "M41",
+   "group": "macro",
+   "index": 41
+  },
+  {
+   "id": "M42",
+   "code": 24380,
+   "label": "M42",
+   "group": "macro",
+   "index": 42
+  },
+  {
+   "id": "M43",
+   "code": 24381,
+   "label": "M43",
+   "group": "macro",
+   "index": 43
+  },
+  {
+   "id": "M44",
+   "code": 24382,
+   "label": "M44",
+   "group": "macro",
+   "index": 44
+  },
+  {
+   "id": "M45",
+   "code": 24383,
+   "label": "M45",
+   "group": "macro",
+   "index": 45
+  },
+  {
+   "id": "M46",
+   "code": 24384,
+   "label": "M46",
+   "group": "macro",
+   "index": 46
+  },
+  {
+   "id": "M47",
+   "code": 24385,
+   "label": "M47",
+   "group": "macro",
+   "index": 47
+  },
+  {
+   "id": "M48",
+   "code": 24386,
+   "label": "M48",
+   "group": "macro",
+   "index": 48
+  },
+  {
+   "id": "M49",
+   "code": 24387,
+   "label": "M49",
+   "group": "macro",
+   "index": 49
+  },
+  {
+   "id": "M50",
+   "code": 24388,
+   "label": "M50",
+   "group": "macro",
+   "index": 50
+  },
+  {
+   "id": "M51",
+   "code": 24389,
+   "label": "M51",
+   "group": "macro",
+   "index": 51
+  },
+  {
+   "id": "M52",
+   "code": 24390,
+   "label": "M52",
+   "group": "macro",
+   "index": 52
+  },
+  {
+   "id": "M53",
+   "code": 24391,
+   "label": "M53",
+   "group": "macro",
+   "index": 53
+  },
+  {
+   "id": "M54",
+   "code": 24392,
+   "label": "M54",
+   "group": "macro",
+   "index": 54
+  },
+  {
+   "id": "M55",
+   "code": 24393,
+   "label": "M55",
+   "group": "macro",
+   "index": 55
+  },
+  {
+   "id": "M56",
+   "code": 24394,
+   "label": "M56",
+   "group": "macro",
+   "index": 56
+  },
+  {
+   "id": "M57",
+   "code": 24395,
+   "label": "M57",
+   "group": "macro",
+   "index": 57
+  },
+  {
+   "id": "M58",
+   "code": 24396,
+   "label": "M58",
+   "group": "macro",
+   "index": 58
+  },
+  {
+   "id": "M59",
+   "code": 24397,
+   "label": "M59",
+   "group": "macro",
+   "index": 59
+  },
+  {
+   "id": "M60",
+   "code": 24398,
+   "label": "M60",
+   "group": "macro",
+   "index": 60
+  },
+  {
+   "id": "M61",
+   "code": 24399,
+   "label": "M61",
+   "group": "macro",
+   "index": 61
+  },
+  {
+   "id": "M62",
+   "code": 24400,
+   "label": "M62",
+   "group": "macro",
+   "index": 62
+  },
+  {
+   "id": "M63",
+   "code": 24401,
+   "label": "M63",
+   "group": "macro",
+   "index": 63
+  },
+  {
+   "id": "M64",
+   "code": 24402,
+   "label": "M64",
+   "group": "macro",
+   "index": 64
+  },
+  {
+   "id": "M65",
+   "code": 24403,
+   "label": "M65",
+   "group": "macro",
+   "index": 65
+  },
+  {
+   "id": "M66",
+   "code": 24404,
+   "label": "M66",
+   "group": "macro",
+   "index": 66
+  },
+  {
+   "id": "M67",
+   "code": 24405,
+   "label": "M67",
+   "group": "macro",
+   "index": 67
+  },
+  {
+   "id": "M68",
+   "code": 24406,
+   "label": "M68",
+   "group": "macro",
+   "index": 68
+  },
+  {
+   "id": "M69",
+   "code": 24407,
+   "label": "M69",
+   "group": "macro",
+   "index": 69
+  },
+  {
+   "id": "M70",
+   "code": 24408,
+   "label": "M70",
+   "group": "macro",
+   "index": 70
+  },
+  {
+   "id": "M71",
+   "code": 24409,
+   "label": "M71",
+   "group": "macro",
+   "index": 71
+  },
+  {
+   "id": "M72",
+   "code": 24410,
+   "label": "M72",
+   "group": "macro",
+   "index": 72
+  },
+  {
+   "id": "M73",
+   "code": 24411,
+   "label": "M73",
+   "group": "macro",
+   "index": 73
+  },
+  {
+   "id": "M74",
+   "code": 24412,
+   "label": "M74",
+   "group": "macro",
+   "index": 74
+  },
+  {
+   "id": "M75",
+   "code": 24413,
+   "label": "M75",
+   "group": "macro",
+   "index": 75
+  },
+  {
+   "id": "M76",
+   "code": 24414,
+   "label": "M76",
+   "group": "macro",
+   "index": 76
+  },
+  {
+   "id": "M77",
+   "code": 24415,
+   "label": "M77",
+   "group": "macro",
+   "index": 77
+  },
+  {
+   "id": "M78",
+   "code": 24416,
+   "label": "M78",
+   "group": "macro",
+   "index": 78
+  },
+  {
+   "id": "M79",
+   "code": 24417,
+   "label": "M79",
+   "group": "macro",
+   "index": 79
+  },
+  {
+   "id": "M80",
+   "code": 24418,
+   "label": "M80",
+   "group": "macro",
+   "index": 80
+  },
+  {
+   "id": "M81",
+   "code": 24419,
+   "label": "M81",
+   "group": "macro",
+   "index": 81
+  },
+  {
+   "id": "M82",
+   "code": 24420,
+   "label": "M82",
+   "group": "macro",
+   "index": 82
+  },
+  {
+   "id": "M83",
+   "code": 24421,
+   "label": "M83",
+   "group": "macro",
+   "index": 83
+  },
+  {
+   "id": "M84",
+   "code": 24422,
+   "label": "M84",
+   "group": "macro",
+   "index": 84
+  },
+  {
+   "id": "M85",
+   "code": 24423,
+   "label": "M85",
+   "group": "macro",
+   "index": 85
+  },
+  {
+   "id": "M86",
+   "code": 24424,
+   "label": "M86",
+   "group": "macro",
+   "index": 86
+  },
+  {
+   "id": "M87",
+   "code": 24425,
+   "label": "M87",
+   "group": "macro",
+   "index": 87
+  },
+  {
+   "id": "M88",
+   "code": 24426,
+   "label": "M88",
+   "group": "macro",
+   "index": 88
+  },
+  {
+   "id": "M89",
+   "code": 24427,
+   "label": "M89",
+   "group": "macro",
+   "index": 89
+  },
+  {
+   "id": "M90",
+   "code": 24428,
+   "label": "M90",
+   "group": "macro",
+   "index": 90
+  },
+  {
+   "id": "M91",
+   "code": 24429,
+   "label": "M91",
+   "group": "macro",
+   "index": 91
+  },
+  {
+   "id": "M92",
+   "code": 24430,
+   "label": "M92",
+   "group": "macro",
+   "index": 92
+  },
+  {
+   "id": "M93",
+   "code": 24431,
+   "label": "M93",
+   "group": "macro",
+   "index": 93
+  },
+  {
+   "id": "M94",
+   "code": 24432,
+   "label": "M94",
+   "group": "macro",
+   "index": 94
+  },
+  {
+   "id": "M95",
+   "code": 24433,
+   "label": "M95",
+   "group": "macro",
+   "index": 95
+  },
+  {
+   "id": "M96",
+   "code": 24434,
+   "label": "M96",
+   "group": "macro",
+   "index": 96
+  },
+  {
+   "id": "M97",
+   "code": 24435,
+   "label": "M97",
+   "group": "macro",
+   "index": 97
+  },
+  {
+   "id": "M98",
+   "code": 24436,
+   "label": "M98",
+   "group": "macro",
+   "index": 98
+  },
+  {
+   "id": "M99",
+   "code": 24437,
+   "label": "M99",
+   "group": "macro",
+   "index": 99
+  },
+  {
+   "id": "M100",
+   "code": 24438,
+   "label": "M100",
+   "group": "macro",
+   "index": 100
+  },
+  {
+   "id": "M101",
+   "code": 24439,
+   "label": "M101",
+   "group": "macro",
+   "index": 101
+  },
+  {
+   "id": "M102",
+   "code": 24440,
+   "label": "M102",
+   "group": "macro",
+   "index": 102
+  },
+  {
+   "id": "M103",
+   "code": 24441,
+   "label": "M103",
+   "group": "macro",
+   "index": 103
+  },
+  {
+   "id": "M104",
+   "code": 24442,
+   "label": "M104",
+   "group": "macro",
+   "index": 104
+  },
+  {
+   "id": "M105",
+   "code": 24443,
+   "label": "M105",
+   "group": "macro",
+   "index": 105
+  },
+  {
+   "id": "M106",
+   "code": 24444,
+   "label": "M106",
+   "group": "macro",
+   "index": 106
+  },
+  {
+   "id": "M107",
+   "code": 24445,
+   "label": "M107",
+   "group": "macro",
+   "index": 107
+  },
+  {
+   "id": "M108",
+   "code": 24446,
+   "label": "M108",
+   "group": "macro",
+   "index": 108
+  },
+  {
+   "id": "M109",
+   "code": 24447,
+   "label": "M109",
+   "group": "macro",
+   "index": 109
+  },
+  {
+   "id": "M110",
+   "code": 24448,
+   "label": "M110",
+   "group": "macro",
+   "index": 110
+  },
+  {
+   "id": "M111",
+   "code": 24449,
+   "label": "M111",
+   "group": "macro",
+   "index": 111
+  },
+  {
+   "id": "M112",
+   "code": 24450,
+   "label": "M112",
+   "group": "macro",
+   "index": 112
+  },
+  {
+   "id": "M113",
+   "code": 24451,
+   "label": "M113",
+   "group": "macro",
+   "index": 113
+  },
+  {
+   "id": "M114",
+   "code": 24452,
+   "label": "M114",
+   "group": "macro",
+   "index": 114
+  },
+  {
+   "id": "M115",
+   "code": 24453,
+   "label": "M115",
+   "group": "macro",
+   "index": 115
+  },
+  {
+   "id": "M116",
+   "code": 24454,
+   "label": "M116",
+   "group": "macro",
+   "index": 116
+  },
+  {
+   "id": "M117",
+   "code": 24455,
+   "label": "M117",
+   "group": "macro",
+   "index": 117
+  },
+  {
+   "id": "M118",
+   "code": 24456,
+   "label": "M118",
+   "group": "macro",
+   "index": 118
+  },
+  {
+   "id": "M119",
+   "code": 24457,
+   "label": "M119",
+   "group": "macro",
+   "index": 119
+  },
+  {
+   "id": "M120",
+   "code": 24458,
+   "label": "M120",
+   "group": "macro",
+   "index": 120
+  },
+  {
+   "id": "M121",
+   "code": 24459,
+   "label": "M121",
+   "group": "macro",
+   "index": 121
+  },
+  {
+   "id": "M122",
+   "code": 24460,
+   "label": "M122",
+   "group": "macro",
+   "index": 122
+  },
+  {
+   "id": "M123",
+   "code": 24461,
+   "label": "M123",
+   "group": "macro",
+   "index": 123
+  },
+  {
+   "id": "M124",
+   "code": 24462,
+   "label": "M124",
+   "group": "macro",
+   "index": 124
+  },
+  {
+   "id": "M125",
+   "code": 24463,
+   "label": "M125",
+   "group": "macro",
+   "index": 125
+  },
+  {
+   "id": "M126",
+   "code": 24464,
+   "label": "M126",
+   "group": "macro",
+   "index": 126
+  },
+  {
+   "id": "M127",
+   "code": 24465,
+   "label": "M127",
+   "group": "macro",
+   "index": 127
+  },
+  {
+   "id": "M128",
+   "code": 24466,
+   "label": "M128",
+   "group": "macro",
+   "index": 128
+  },
+  {
+   "id": "M129",
+   "code": 24467,
+   "label": "M129",
+   "group": "macro",
+   "index": 129
+  },
+  {
+   "id": "M130",
+   "code": 24468,
+   "label": "M130",
+   "group": "macro",
+   "index": 130
+  },
+  {
+   "id": "M131",
+   "code": 24469,
+   "label": "M131",
+   "group": "macro",
+   "index": 131
+  },
+  {
+   "id": "M132",
+   "code": 24470,
+   "label": "M132",
+   "group": "macro",
+   "index": 132
+  },
+  {
+   "id": "M133",
+   "code": 24471,
+   "label": "M133",
+   "group": "macro",
+   "index": 133
+  },
+  {
+   "id": "M134",
+   "code": 24472,
+   "label": "M134",
+   "group": "macro",
+   "index": 134
+  },
+  {
+   "id": "M135",
+   "code": 24473,
+   "label": "M135",
+   "group": "macro",
+   "index": 135
+  },
+  {
+   "id": "M136",
+   "code": 24474,
+   "label": "M136",
+   "group": "macro",
+   "index": 136
+  },
+  {
+   "id": "M137",
+   "code": 24475,
+   "label": "M137",
+   "group": "macro",
+   "index": 137
+  },
+  {
+   "id": "M138",
+   "code": 24476,
+   "label": "M138",
+   "group": "macro",
+   "index": 138
+  },
+  {
+   "id": "M139",
+   "code": 24477,
+   "label": "M139",
+   "group": "macro",
+   "index": 139
+  },
+  {
+   "id": "M140",
+   "code": 24478,
+   "label": "M140",
+   "group": "macro",
+   "index": 140
+  },
+  {
+   "id": "M141",
+   "code": 24479,
+   "label": "M141",
+   "group": "macro",
+   "index": 141
+  },
+  {
+   "id": "M142",
+   "code": 24480,
+   "label": "M142",
+   "group": "macro",
+   "index": 142
+  },
+  {
+   "id": "M143",
+   "code": 24481,
+   "label": "M143",
+   "group": "macro",
+   "index": 143
+  },
+  {
+   "id": "M144",
+   "code": 24482,
+   "label": "M144",
+   "group": "macro",
+   "index": 144
+  },
+  {
+   "id": "M145",
+   "code": 24483,
+   "label": "M145",
+   "group": "macro",
+   "index": 145
+  },
+  {
+   "id": "M146",
+   "code": 24484,
+   "label": "M146",
+   "group": "macro",
+   "index": 146
+  },
+  {
+   "id": "M147",
+   "code": 24485,
+   "label": "M147",
+   "group": "macro",
+   "index": 147
+  },
+  {
+   "id": "M148",
+   "code": 24486,
+   "label": "M148",
+   "group": "macro",
+   "index": 148
+  },
+  {
+   "id": "M149",
+   "code": 24487,
+   "label": "M149",
+   "group": "macro",
+   "index": 149
+  },
+  {
+   "id": "M150",
+   "code": 24488,
+   "label": "M150",
+   "group": "macro",
+   "index": 150
+  },
+  {
+   "id": "M151",
+   "code": 24489,
+   "label": "M151",
+   "group": "macro",
+   "index": 151
+  },
+  {
+   "id": "M152",
+   "code": 24490,
+   "label": "M152",
+   "group": "macro",
+   "index": 152
+  },
+  {
+   "id": "M153",
+   "code": 24491,
+   "label": "M153",
+   "group": "macro",
+   "index": 153
+  },
+  {
+   "id": "M154",
+   "code": 24492,
+   "label": "M154",
+   "group": "macro",
+   "index": 154
+  },
+  {
+   "id": "M155",
+   "code": 24493,
+   "label": "M155",
+   "group": "macro",
+   "index": 155
+  },
+  {
+   "id": "M156",
+   "code": 24494,
+   "label": "M156",
+   "group": "macro",
+   "index": 156
+  },
+  {
+   "id": "M157",
+   "code": 24495,
+   "label": "M157",
+   "group": "macro",
+   "index": 157
+  },
+  {
+   "id": "M158",
+   "code": 24496,
+   "label": "M158",
+   "group": "macro",
+   "index": 158
+  },
+  {
+   "id": "M159",
+   "code": 24497,
+   "label": "M159",
+   "group": "macro",
+   "index": 159
+  },
+  {
+   "id": "M160",
+   "code": 24498,
+   "label": "M160",
+   "group": "macro",
+   "index": 160
+  },
+  {
+   "id": "M161",
+   "code": 24499,
+   "label": "M161",
+   "group": "macro",
+   "index": 161
+  },
+  {
+   "id": "M162",
+   "code": 24500,
+   "label": "M162",
+   "group": "macro",
+   "index": 162
+  },
+  {
+   "id": "M163",
+   "code": 24501,
+   "label": "M163",
+   "group": "macro",
+   "index": 163
+  },
+  {
+   "id": "M164",
+   "code": 24502,
+   "label": "M164",
+   "group": "macro",
+   "index": 164
+  },
+  {
+   "id": "M165",
+   "code": 24503,
+   "label": "M165",
+   "group": "macro",
+   "index": 165
+  },
+  {
+   "id": "M166",
+   "code": 24504,
+   "label": "M166",
+   "group": "macro",
+   "index": 166
+  },
+  {
+   "id": "M167",
+   "code": 24505,
+   "label": "M167",
+   "group": "macro",
+   "index": 167
+  },
+  {
+   "id": "M168",
+   "code": 24506,
+   "label": "M168",
+   "group": "macro",
+   "index": 168
+  },
+  {
+   "id": "M169",
+   "code": 24507,
+   "label": "M169",
+   "group": "macro",
+   "index": 169
+  },
+  {
+   "id": "M170",
+   "code": 24508,
+   "label": "M170",
+   "group": "macro",
+   "index": 170
+  },
+  {
+   "id": "M171",
+   "code": 24509,
+   "label": "M171",
+   "group": "macro",
+   "index": 171
+  },
+  {
+   "id": "M172",
+   "code": 24510,
+   "label": "M172",
+   "group": "macro",
+   "index": 172
+  },
+  {
+   "id": "M173",
+   "code": 24511,
+   "label": "M173",
+   "group": "macro",
+   "index": 173
+  },
+  {
+   "id": "M174",
+   "code": 24512,
+   "label": "M174",
+   "group": "macro",
+   "index": 174
+  },
+  {
+   "id": "M175",
+   "code": 24513,
+   "label": "M175",
+   "group": "macro",
+   "index": 175
+  },
+  {
+   "id": "M176",
+   "code": 24514,
+   "label": "M176",
+   "group": "macro",
+   "index": 176
+  },
+  {
+   "id": "M177",
+   "code": 24515,
+   "label": "M177",
+   "group": "macro",
+   "index": 177
+  },
+  {
+   "id": "M178",
+   "code": 24516,
+   "label": "M178",
+   "group": "macro",
+   "index": 178
+  },
+  {
+   "id": "M179",
+   "code": 24517,
+   "label": "M179",
+   "group": "macro",
+   "index": 179
+  },
+  {
+   "id": "M180",
+   "code": 24518,
+   "label": "M180",
+   "group": "macro",
+   "index": 180
+  },
+  {
+   "id": "M181",
+   "code": 24519,
+   "label": "M181",
+   "group": "macro",
+   "index": 181
+  },
+  {
+   "id": "M182",
+   "code": 24520,
+   "label": "M182",
+   "group": "macro",
+   "index": 182
+  },
+  {
+   "id": "M183",
+   "code": 24521,
+   "label": "M183",
+   "group": "macro",
+   "index": 183
+  },
+  {
+   "id": "M184",
+   "code": 24522,
+   "label": "M184",
+   "group": "macro",
+   "index": 184
+  },
+  {
+   "id": "M185",
+   "code": 24523,
+   "label": "M185",
+   "group": "macro",
+   "index": 185
+  },
+  {
+   "id": "M186",
+   "code": 24524,
+   "label": "M186",
+   "group": "macro",
+   "index": 186
+  },
+  {
+   "id": "M187",
+   "code": 24525,
+   "label": "M187",
+   "group": "macro",
+   "index": 187
+  },
+  {
+   "id": "M188",
+   "code": 24526,
+   "label": "M188",
+   "group": "macro",
+   "index": 188
+  },
+  {
+   "id": "M189",
+   "code": 24527,
+   "label": "M189",
+   "group": "macro",
+   "index": 189
+  },
+  {
+   "id": "M190",
+   "code": 24528,
+   "label": "M190",
+   "group": "macro",
+   "index": 190
+  },
+  {
+   "id": "M191",
+   "code": 24529,
+   "label": "M191",
+   "group": "macro",
+   "index": 191
+  },
+  {
+   "id": "M192",
+   "code": 24530,
+   "label": "M192",
+   "group": "macro",
+   "index": 192
+  },
+  {
+   "id": "M193",
+   "code": 24531,
+   "label": "M193",
+   "group": "macro",
+   "index": 193
+  },
+  {
+   "id": "M194",
+   "code": 24532,
+   "label": "M194",
+   "group": "macro",
+   "index": 194
+  },
+  {
+   "id": "M195",
+   "code": 24533,
+   "label": "M195",
+   "group": "macro",
+   "index": 195
+  },
+  {
+   "id": "M196",
+   "code": 24534,
+   "label": "M196",
+   "group": "macro",
+   "index": 196
+  },
+  {
+   "id": "M197",
+   "code": 24535,
+   "label": "M197",
+   "group": "macro",
+   "index": 197
+  },
+  {
+   "id": "M198",
+   "code": 24536,
+   "label": "M198",
+   "group": "macro",
+   "index": 198
+  },
+  {
+   "id": "M199",
+   "code": 24537,
+   "label": "M199",
+   "group": "macro",
+   "index": 199
+  },
+  {
+   "id": "M200",
+   "code": 24538,
+   "label": "M200",
+   "group": "macro",
+   "index": 200
+  },
+  {
+   "id": "M201",
+   "code": 24539,
+   "label": "M201",
+   "group": "macro",
+   "index": 201
+  },
+  {
+   "id": "M202",
+   "code": 24540,
+   "label": "M202",
+   "group": "macro",
+   "index": 202
+  },
+  {
+   "id": "M203",
+   "code": 24541,
+   "label": "M203",
+   "group": "macro",
+   "index": 203
+  },
+  {
+   "id": "M204",
+   "code": 24542,
+   "label": "M204",
+   "group": "macro",
+   "index": 204
+  },
+  {
+   "id": "M205",
+   "code": 24543,
+   "label": "M205",
+   "group": "macro",
+   "index": 205
+  },
+  {
+   "id": "M206",
+   "code": 24544,
+   "label": "M206",
+   "group": "macro",
+   "index": 206
+  },
+  {
+   "id": "M207",
+   "code": 24545,
+   "label": "M207",
+   "group": "macro",
+   "index": 207
+  },
+  {
+   "id": "M208",
+   "code": 24546,
+   "label": "M208",
+   "group": "macro",
+   "index": 208
+  },
+  {
+   "id": "M209",
+   "code": 24547,
+   "label": "M209",
+   "group": "macro",
+   "index": 209
+  },
+  {
+   "id": "M210",
+   "code": 24548,
+   "label": "M210",
+   "group": "macro",
+   "index": 210
+  },
+  {
+   "id": "M211",
+   "code": 24549,
+   "label": "M211",
+   "group": "macro",
+   "index": 211
+  },
+  {
+   "id": "M212",
+   "code": 24550,
+   "label": "M212",
+   "group": "macro",
+   "index": 212
+  },
+  {
+   "id": "M213",
+   "code": 24551,
+   "label": "M213",
+   "group": "macro",
+   "index": 213
+  },
+  {
+   "id": "M214",
+   "code": 24552,
+   "label": "M214",
+   "group": "macro",
+   "index": 214
+  },
+  {
+   "id": "M215",
+   "code": 24553,
+   "label": "M215",
+   "group": "macro",
+   "index": 215
+  },
+  {
+   "id": "M216",
+   "code": 24554,
+   "label": "M216",
+   "group": "macro",
+   "index": 216
+  },
+  {
+   "id": "M217",
+   "code": 24555,
+   "label": "M217",
+   "group": "macro",
+   "index": 217
+  },
+  {
+   "id": "M218",
+   "code": 24556,
+   "label": "M218",
+   "group": "macro",
+   "index": 218
+  },
+  {
+   "id": "M219",
+   "code": 24557,
+   "label": "M219",
+   "group": "macro",
+   "index": 219
+  },
+  {
+   "id": "M220",
+   "code": 24558,
+   "label": "M220",
+   "group": "macro",
+   "index": 220
+  },
+  {
+   "id": "M221",
+   "code": 24559,
+   "label": "M221",
+   "group": "macro",
+   "index": 221
+  },
+  {
+   "id": "M222",
+   "code": 24560,
+   "label": "M222",
+   "group": "macro",
+   "index": 222
+  },
+  {
+   "id": "M223",
+   "code": 24561,
+   "label": "M223",
+   "group": "macro",
+   "index": 223
+  },
+  {
+   "id": "M224",
+   "code": 24562,
+   "label": "M224",
+   "group": "macro",
+   "index": 224
+  },
+  {
+   "id": "M225",
+   "code": 24563,
+   "label": "M225",
+   "group": "macro",
+   "index": 225
+  },
+  {
+   "id": "M226",
+   "code": 24564,
+   "label": "M226",
+   "group": "macro",
+   "index": 226
+  },
+  {
+   "id": "M227",
+   "code": 24565,
+   "label": "M227",
+   "group": "macro",
+   "index": 227
+  },
+  {
+   "id": "M228",
+   "code": 24566,
+   "label": "M228",
+   "group": "macro",
+   "index": 228
+  },
+  {
+   "id": "M229",
+   "code": 24567,
+   "label": "M229",
+   "group": "macro",
+   "index": 229
+  },
+  {
+   "id": "M230",
+   "code": 24568,
+   "label": "M230",
+   "group": "macro",
+   "index": 230
+  },
+  {
+   "id": "M231",
+   "code": 24569,
+   "label": "M231",
+   "group": "macro",
+   "index": 231
+  },
+  {
+   "id": "M232",
+   "code": 24570,
+   "label": "M232",
+   "group": "macro",
+   "index": 232
+  },
+  {
+   "id": "M233",
+   "code": 24571,
+   "label": "M233",
+   "group": "macro",
+   "index": 233
+  },
+  {
+   "id": "M234",
+   "code": 24572,
+   "label": "M234",
+   "group": "macro",
+   "index": 234
+  },
+  {
+   "id": "M235",
+   "code": 24573,
+   "label": "M235",
+   "group": "macro",
+   "index": 235
+  },
+  {
+   "id": "M236",
+   "code": 24574,
+   "label": "M236",
+   "group": "macro",
+   "index": 236
+  },
+  {
+   "id": "M237",
+   "code": 24575,
+   "label": "M237",
+   "group": "macro",
+   "index": 237
+  },
+  {
+   "id": "M238",
+   "code": 24576,
+   "label": "M238",
+   "group": "macro",
+   "index": 238
+  },
+  {
+   "id": "M239",
+   "code": 24577,
+   "label": "M239",
+   "group": "macro",
+   "index": 239
+  },
+  {
+   "id": "M240",
+   "code": 24578,
+   "label": "M240",
+   "group": "macro",
+   "index": 240
+  },
+  {
+   "id": "M241",
+   "code": 24579,
+   "label": "M241",
+   "group": "macro",
+   "index": 241
+  },
+  {
+   "id": "M242",
+   "code": 24580,
+   "label": "M242",
+   "group": "macro",
+   "index": 242
+  },
+  {
+   "id": "M243",
+   "code": 24581,
+   "label": "M243",
+   "group": "macro",
+   "index": 243
+  },
+  {
+   "id": "M244",
+   "code": 24582,
+   "label": "M244",
+   "group": "macro",
+   "index": 244
+  },
+  {
+   "id": "M245",
+   "code": 24583,
+   "label": "M245",
+   "group": "macro",
+   "index": 245
+  },
+  {
+   "id": "M246",
+   "code": 24584,
+   "label": "M246",
+   "group": "macro",
+   "index": 246
+  },
+  {
+   "id": "M247",
+   "code": 24585,
+   "label": "M247",
+   "group": "macro",
+   "index": 247
+  },
+  {
+   "id": "M248",
+   "code": 24586,
+   "label": "M248",
+   "group": "macro",
+   "index": 248
+  },
+  {
+   "id": "M249",
+   "code": 24587,
+   "label": "M249",
+   "group": "macro",
+   "index": 249
+  },
+  {
+   "id": "M250",
+   "code": 24588,
+   "label": "M250",
+   "group": "macro",
+   "index": 250
+  },
+  {
+   "id": "M251",
+   "code": 24589,
+   "label": "M251",
+   "group": "macro",
+   "index": 251
+  },
+  {
+   "id": "M252",
+   "code": 24590,
+   "label": "M252",
+   "group": "macro",
+   "index": 252
+  },
+  {
+   "id": "M253",
+   "code": 24591,
+   "label": "M253",
+   "group": "macro",
+   "index": 253
+  },
+  {
+   "id": "M254",
+   "code": 24592,
+   "label": "M254",
+   "group": "macro",
+   "index": 254
+  },
+  {
+   "id": "M255",
+   "code": 24593,
+   "label": "M255",
+   "group": "macro",
+   "index": 255
+  },
+  {
+   "id": "DYN_REC_START1",
+   "code": 23811,
+   "label": "DM1\nRec",
+   "group": "macro",
+   "tooltip": "Dynamic Macro 1 Rec Start",
+   "alias": [
+    "DM_REC1"
+   ]
+  },
+  {
+   "id": "DYN_REC_START2",
+   "code": 23812,
+   "label": "DM2\nRec",
+   "group": "macro",
+   "tooltip": "Dynamic Macro 2 Rec Start",
+   "alias": [
+    "DM_REC2"
+   ]
+  },
+  {
+   "id": "DYN_REC_STOP",
+   "code": 23813,
+   "label": "DM Rec\nStop",
+   "group": "macro",
+   "tooltip": "Dynamic Macro Rec Stop",
+   "alias": [
+    "DM_RSTP"
+   ]
+  },
+  {
+   "id": "DYN_MACRO_PLAY1",
+   "code": 23814,
+   "label": "DM1\nPlay",
+   "group": "macro",
+   "tooltip": "Dynamic Macro 1 Play",
+   "alias": [
+    "DM_PLY1"
+   ]
+  },
+  {
+   "id": "DYN_MACRO_PLAY2",
+   "code": 23815,
+   "label": "DM2\nPlay",
+   "group": "macro",
+   "tooltip": "Dynamic Macro 2 Play",
+   "alias": [
+    "DM_PLY2"
+   ]
+  },
+  {
+   "id": "USER00",
+   "code": 24448,
+   "label": "User 0",
+   "group": "user",
+   "tooltip": "User keycode 0",
+   "index": 0
+  },
+  {
+   "id": "USER01",
+   "code": 24449,
+   "label": "User 1",
+   "group": "user",
+   "tooltip": "User keycode 1",
+   "index": 1
+  },
+  {
+   "id": "USER02",
+   "code": 24450,
+   "label": "User 2",
+   "group": "user",
+   "tooltip": "User keycode 2",
+   "index": 2
+  },
+  {
+   "id": "USER03",
+   "code": 24451,
+   "label": "User 3",
+   "group": "user",
+   "tooltip": "User keycode 3",
+   "index": 3
+  },
+  {
+   "id": "USER04",
+   "code": 24452,
+   "label": "User 4",
+   "group": "user",
+   "tooltip": "User keycode 4",
+   "index": 4
+  },
+  {
+   "id": "USER05",
+   "code": 24453,
+   "label": "User 5",
+   "group": "user",
+   "tooltip": "User keycode 5",
+   "index": 5
+  },
+  {
+   "id": "USER06",
+   "code": 24454,
+   "label": "User 6",
+   "group": "user",
+   "tooltip": "User keycode 6",
+   "index": 6
+  },
+  {
+   "id": "USER07",
+   "code": 24455,
+   "label": "User 7",
+   "group": "user",
+   "tooltip": "User keycode 7",
+   "index": 7
+  },
+  {
+   "id": "USER08",
+   "code": 24456,
+   "label": "User 8",
+   "group": "user",
+   "tooltip": "User keycode 8",
+   "index": 8
+  },
+  {
+   "id": "USER09",
+   "code": 24457,
+   "label": "User 9",
+   "group": "user",
+   "tooltip": "User keycode 9",
+   "index": 9
+  },
+  {
+   "id": "USER10",
+   "code": 24458,
+   "label": "User 10",
+   "group": "user",
+   "tooltip": "User keycode 10",
+   "index": 10
+  },
+  {
+   "id": "USER11",
+   "code": 24459,
+   "label": "User 11",
+   "group": "user",
+   "tooltip": "User keycode 11",
+   "index": 11
+  },
+  {
+   "id": "USER12",
+   "code": 24460,
+   "label": "User 12",
+   "group": "user",
+   "tooltip": "User keycode 12",
+   "index": 12
+  },
+  {
+   "id": "USER13",
+   "code": 24461,
+   "label": "User 13",
+   "group": "user",
+   "tooltip": "User keycode 13",
+   "index": 13
+  },
+  {
+   "id": "USER14",
+   "code": 24462,
+   "label": "User 14",
+   "group": "user",
+   "tooltip": "User keycode 14",
+   "index": 14
+  },
+  {
+   "id": "USER15",
+   "code": 24463,
+   "label": "User 15",
+   "group": "user",
+   "tooltip": "User keycode 15",
+   "index": 15
+  },
+  {
+   "id": "MI_C",
+   "code": 23599,
+   "label": "ᴹᴵᴰᴵ\nC",
+   "group": "midi",
+   "tooltip": "Midi send note C"
+  },
+  {
+   "id": "MI_Cs",
+   "code": 23600,
+   "label": "ᴹᴵᴰᴵ\nC#/Dᵇ",
+   "group": "midi",
+   "tooltip": "Midi send note C#/Dᵇ",
+   "alias": [
+    "MI_Db"
+   ]
+  },
+  {
+   "id": "MI_D",
+   "code": 23601,
+   "label": "ᴹᴵᴰᴵ\nD",
+   "group": "midi",
+   "tooltip": "Midi send note D"
+  },
+  {
+   "id": "MI_Ds",
+   "code": 23602,
+   "label": "ᴹᴵᴰᴵ\nD#/Eᵇ",
+   "group": "midi",
+   "tooltip": "Midi send note D#/Eᵇ",
+   "alias": [
+    "MI_Eb"
+   ]
+  },
+  {
+   "id": "MI_E",
+   "code": 23603,
+   "label": "ᴹᴵᴰᴵ\nE",
+   "group": "midi",
+   "tooltip": "Midi send note E"
+  },
+  {
+   "id": "MI_F",
+   "code": 23604,
+   "label": "ᴹᴵᴰᴵ\nF",
+   "group": "midi",
+   "tooltip": "Midi send note F"
+  },
+  {
+   "id": "MI_Fs",
+   "code": 23605,
+   "label": "ᴹᴵᴰᴵ\nF#/Gᵇ",
+   "group": "midi",
+   "tooltip": "Midi send note F#/Gᵇ",
+   "alias": [
+    "MI_Gb"
+   ]
+  },
+  {
+   "id": "MI_G",
+   "code": 23606,
+   "label": "ᴹᴵᴰᴵ\nG",
+   "group": "midi",
+   "tooltip": "Midi send note G"
+  },
+  {
+   "id": "MI_Gs",
+   "code": 23607,
+   "label": "ᴹᴵᴰᴵ\nG#/Aᵇ",
+   "group": "midi",
+   "tooltip": "Midi send note G#/Aᵇ",
+   "alias": [
+    "MI_Ab"
+   ]
+  },
+  {
+   "id": "MI_A",
+   "code": 23608,
+   "label": "ᴹᴵᴰᴵ\nA",
+   "group": "midi",
+   "tooltip": "Midi send note A"
+  },
+  {
+   "id": "MI_As",
+   "code": 23609,
+   "label": "ᴹᴵᴰᴵ\nA#/Bᵇ",
+   "group": "midi",
+   "tooltip": "Midi send note A#/Bᵇ",
+   "alias": [
+    "MI_Bb"
+   ]
+  },
+  {
+   "id": "MI_B",
+   "code": 23610,
+   "label": "ᴹᴵᴰᴵ\nB",
+   "group": "midi",
+   "tooltip": "Midi send note B"
+  },
+  {
+   "id": "MI_C_1",
+   "code": 23611,
+   "label": "ᴹᴵᴰᴵ\nC₁",
+   "group": "midi",
+   "tooltip": "Midi send note C₁"
+  },
+  {
+   "id": "MI_Cs_1",
+   "code": 23612,
+   "label": "ᴹᴵᴰᴵ\nC#₁/Dᵇ₁",
+   "group": "midi",
+   "tooltip": "Midi send note C#₁/Dᵇ₁",
+   "alias": [
+    "MI_Db_1"
+   ]
+  },
+  {
+   "id": "MI_D_1",
+   "code": 23613,
+   "label": "ᴹᴵᴰᴵ\nD₁",
+   "group": "midi",
+   "tooltip": "Midi send note D₁"
+  },
+  {
+   "id": "MI_Ds_1",
+   "code": 23614,
+   "label": "ᴹᴵᴰᴵ\nD#₁/Eᵇ₁",
+   "group": "midi",
+   "tooltip": "Midi send note D#₁/Eᵇ₁",
+   "alias": [
+    "MI_Eb_1"
+   ]
+  },
+  {
+   "id": "MI_E_1",
+   "code": 23615,
+   "label": "ᴹᴵᴰᴵ\nE₁",
+   "group": "midi",
+   "tooltip": "Midi send note E₁"
+  },
+  {
+   "id": "MI_F_1",
+   "code": 23616,
+   "label": "ᴹᴵᴰᴵ\nF₁",
+   "group": "midi",
+   "tooltip": "Midi send note F₁"
+  },
+  {
+   "id": "MI_Fs_1",
+   "code": 23617,
+   "label": "ᴹᴵᴰᴵ\nF#₁/Gᵇ₁",
+   "group": "midi",
+   "tooltip": "Midi send note F#₁/Gᵇ₁",
+   "alias": [
+    "MI_Gb_1"
+   ]
+  },
+  {
+   "id": "MI_G_1",
+   "code": 23618,
+   "label": "ᴹᴵᴰᴵ\nG₁",
+   "group": "midi",
+   "tooltip": "Midi send note G₁"
+  },
+  {
+   "id": "MI_Gs_1",
+   "code": 23619,
+   "label": "ᴹᴵᴰᴵ\nG#₁/Aᵇ₁",
+   "group": "midi",
+   "tooltip": "Midi send note G#₁/Aᵇ₁",
+   "alias": [
+    "MI_Ab_1"
+   ]
+  },
+  {
+   "id": "MI_A_1",
+   "code": 23620,
+   "label": "ᴹᴵᴰᴵ\nA₁",
+   "group": "midi",
+   "tooltip": "Midi send note A₁"
+  },
+  {
+   "id": "MI_As_1",
+   "code": 23621,
+   "label": "ᴹᴵᴰᴵ\nA#₁/Bᵇ₁",
+   "group": "midi",
+   "tooltip": "Midi send note A#₁/Bᵇ₁",
+   "alias": [
+    "MI_Bb_1"
+   ]
+  },
+  {
+   "id": "MI_B_1",
+   "code": 23622,
+   "label": "ᴹᴵᴰᴵ\nB₁",
+   "group": "midi",
+   "tooltip": "Midi send note B₁"
+  },
+  {
+   "id": "MI_C_2",
+   "code": 23623,
+   "label": "ᴹᴵᴰᴵ\nC₂",
+   "group": "midi",
+   "tooltip": "Midi send note C₂"
+  },
+  {
+   "id": "MI_Cs_2",
+   "code": 23624,
+   "label": "ᴹᴵᴰᴵ\nC#₂/Dᵇ₂",
+   "group": "midi",
+   "tooltip": "Midi send note C#₂/Dᵇ₂",
+   "alias": [
+    "MI_Db_2"
+   ]
+  },
+  {
+   "id": "MI_D_2",
+   "code": 23625,
+   "label": "ᴹᴵᴰᴵ\nD₂",
+   "group": "midi",
+   "tooltip": "Midi send note D₂"
+  },
+  {
+   "id": "MI_Ds_2",
+   "code": 23626,
+   "label": "ᴹᴵᴰᴵ\nD#₂/Eᵇ₂",
+   "group": "midi",
+   "tooltip": "Midi send note D#₂/Eᵇ₂",
+   "alias": [
+    "MI_Eb_2"
+   ]
+  },
+  {
+   "id": "MI_E_2",
+   "code": 23627,
+   "label": "ᴹᴵᴰᴵ\nE₂",
+   "group": "midi",
+   "tooltip": "Midi send note E₂"
+  },
+  {
+   "id": "MI_F_2",
+   "code": 23628,
+   "label": "ᴹᴵᴰᴵ\nF₂",
+   "group": "midi",
+   "tooltip": "Midi send note F₂"
+  },
+  {
+   "id": "MI_Fs_2",
+   "code": 23629,
+   "label": "ᴹᴵᴰᴵ\nF#₂/Gᵇ₂",
+   "group": "midi",
+   "tooltip": "Midi send note F#₂/Gᵇ₂",
+   "alias": [
+    "MI_Gb_2"
+   ]
+  },
+  {
+   "id": "MI_G_2",
+   "code": 23630,
+   "label": "ᴹᴵᴰᴵ\nG₂",
+   "group": "midi",
+   "tooltip": "Midi send note G₂"
+  },
+  {
+   "id": "MI_Gs_2",
+   "code": 23631,
+   "label": "ᴹᴵᴰᴵ\nG#₂/Aᵇ₂",
+   "group": "midi",
+   "tooltip": "Midi send note G#₂/Aᵇ₂",
+   "alias": [
+    "MI_Ab_2"
+   ]
+  },
+  {
+   "id": "MI_A_2",
+   "code": 23632,
+   "label": "ᴹᴵᴰᴵ\nA₂",
+   "group": "midi",
+   "tooltip": "Midi send note A₂"
+  },
+  {
+   "id": "MI_As_2",
+   "code": 23633,
+   "label": "ᴹᴵᴰᴵ\nA#₂/Bᵇ₂",
+   "group": "midi",
+   "tooltip": "Midi send note A#₂/Bᵇ₂",
+   "alias": [
+    "MI_Bb_2"
+   ]
+  },
+  {
+   "id": "MI_B_2",
+   "code": 23634,
+   "label": "ᴹᴵᴰᴵ\nB₂",
+   "group": "midi",
+   "tooltip": "Midi send note B₂"
+  },
+  {
+   "id": "MI_C_3",
+   "code": 23635,
+   "label": "ᴹᴵᴰᴵ\nC₃",
+   "group": "midi",
+   "tooltip": "Midi send note C₃"
+  },
+  {
+   "id": "MI_Cs_3",
+   "code": 23636,
+   "label": "ᴹᴵᴰᴵ\nC#₃/Dᵇ₃",
+   "group": "midi",
+   "tooltip": "Midi send note C#₃/Dᵇ₃",
+   "alias": [
+    "MI_Db_3"
+   ]
+  },
+  {
+   "id": "MI_D_3",
+   "code": 23637,
+   "label": "ᴹᴵᴰᴵ\nD₃",
+   "group": "midi",
+   "tooltip": "Midi send note D₃"
+  },
+  {
+   "id": "MI_Ds_3",
+   "code": 23638,
+   "label": "ᴹᴵᴰᴵ\nD#₃/Eᵇ₃",
+   "group": "midi",
+   "tooltip": "Midi send note D#₃/Eᵇ₃",
+   "alias": [
+    "MI_Eb_3"
+   ]
+  },
+  {
+   "id": "MI_E_3",
+   "code": 23639,
+   "label": "ᴹᴵᴰᴵ\nE₃",
+   "group": "midi",
+   "tooltip": "Midi send note E₃"
+  },
+  {
+   "id": "MI_F_3",
+   "code": 23640,
+   "label": "ᴹᴵᴰᴵ\nF₃",
+   "group": "midi",
+   "tooltip": "Midi send note F₃"
+  },
+  {
+   "id": "MI_Fs_3",
+   "code": 23641,
+   "label": "ᴹᴵᴰᴵ\nF#₃/Gᵇ₃",
+   "group": "midi",
+   "tooltip": "Midi send note F#₃/Gᵇ₃",
+   "alias": [
+    "MI_Gb_3"
+   ]
+  },
+  {
+   "id": "MI_G_3",
+   "code": 23642,
+   "label": "ᴹᴵᴰᴵ\nG₃",
+   "group": "midi",
+   "tooltip": "Midi send note G₃"
+  },
+  {
+   "id": "MI_Gs_3",
+   "code": 23643,
+   "label": "ᴹᴵᴰᴵ\nG#₃/Aᵇ₃",
+   "group": "midi",
+   "tooltip": "Midi send note G#₃/Aᵇ₃",
+   "alias": [
+    "MI_Ab_3"
+   ]
+  },
+  {
+   "id": "MI_A_3",
+   "code": 23644,
+   "label": "ᴹᴵᴰᴵ\nA₃",
+   "group": "midi",
+   "tooltip": "Midi send note A₃"
+  },
+  {
+   "id": "MI_As_3",
+   "code": 23645,
+   "label": "ᴹᴵᴰᴵ\nA#₃/Bᵇ₃",
+   "group": "midi",
+   "tooltip": "Midi send note A#₃/Bᵇ₃",
+   "alias": [
+    "MI_Bb_3"
+   ]
+  },
+  {
+   "id": "MI_B_3",
+   "code": 23646,
+   "label": "ᴹᴵᴰᴵ\nB₃",
+   "group": "midi",
+   "tooltip": "Midi send note B₃"
+  },
+  {
+   "id": "MI_C_4",
+   "code": 23647,
+   "label": "ᴹᴵᴰᴵ\nC₄",
+   "group": "midi",
+   "tooltip": "Midi send note C₄"
+  },
+  {
+   "id": "MI_Cs_4",
+   "code": 23648,
+   "label": "ᴹᴵᴰᴵ\nC#₄/Dᵇ₄",
+   "group": "midi",
+   "tooltip": "Midi send note C#₄/Dᵇ₄",
+   "alias": [
+    "MI_Db_4"
+   ]
+  },
+  {
+   "id": "MI_D_4",
+   "code": 23649,
+   "label": "ᴹᴵᴰᴵ\nD₄",
+   "group": "midi",
+   "tooltip": "Midi send note D₄"
+  },
+  {
+   "id": "MI_Ds_4",
+   "code": 23650,
+   "label": "ᴹᴵᴰᴵ\nD#₄/Eᵇ₄",
+   "group": "midi",
+   "tooltip": "Midi send note D#₄/Eᵇ₄",
+   "alias": [
+    "MI_Eb_4"
+   ]
+  },
+  {
+   "id": "MI_E_4",
+   "code": 23651,
+   "label": "ᴹᴵᴰᴵ\nE₄",
+   "group": "midi",
+   "tooltip": "Midi send note E₄"
+  },
+  {
+   "id": "MI_F_4",
+   "code": 23652,
+   "label": "ᴹᴵᴰᴵ\nF₄",
+   "group": "midi",
+   "tooltip": "Midi send note F₄"
+  },
+  {
+   "id": "MI_Fs_4",
+   "code": 23653,
+   "label": "ᴹᴵᴰᴵ\nF#₄/Gᵇ₄",
+   "group": "midi",
+   "tooltip": "Midi send note F#₄/Gᵇ₄",
+   "alias": [
+    "MI_Gb_4"
+   ]
+  },
+  {
+   "id": "MI_G_4",
+   "code": 23654,
+   "label": "ᴹᴵᴰᴵ\nG₄",
+   "group": "midi",
+   "tooltip": "Midi send note G₄"
+  },
+  {
+   "id": "MI_Gs_4",
+   "code": 23655,
+   "label": "ᴹᴵᴰᴵ\nG#₄/Aᵇ₄",
+   "group": "midi",
+   "tooltip": "Midi send note G#₄/Aᵇ₄",
+   "alias": [
+    "MI_Ab_4"
+   ]
+  },
+  {
+   "id": "MI_A_4",
+   "code": 23656,
+   "label": "ᴹᴵᴰᴵ\nA₄",
+   "group": "midi",
+   "tooltip": "Midi send note A₄"
+  },
+  {
+   "id": "MI_As_4",
+   "code": 23657,
+   "label": "ᴹᴵᴰᴵ\nA#₄/Bᵇ₄",
+   "group": "midi",
+   "tooltip": "Midi send note A#₄/Bᵇ₄",
+   "alias": [
+    "MI_Bb_4"
+   ]
+  },
+  {
+   "id": "MI_B_4",
+   "code": 23658,
+   "label": "ᴹᴵᴰᴵ\nB₄",
+   "group": "midi",
+   "tooltip": "Midi send note B₄"
+  },
+  {
+   "id": "MI_C_5",
+   "code": 23659,
+   "label": "ᴹᴵᴰᴵ\nC₅",
+   "group": "midi",
+   "tooltip": "Midi send note C₅"
+  },
+  {
+   "id": "MI_Cs_5",
+   "code": 23660,
+   "label": "ᴹᴵᴰᴵ\nC#₅/Dᵇ₅",
+   "group": "midi",
+   "tooltip": "Midi send note C#₅/Dᵇ₅",
+   "alias": [
+    "MI_Db_5"
+   ]
+  },
+  {
+   "id": "MI_D_5",
+   "code": 23661,
+   "label": "ᴹᴵᴰᴵ\nD₅",
+   "group": "midi",
+   "tooltip": "Midi send note D₅"
+  },
+  {
+   "id": "MI_Ds_5",
+   "code": 23662,
+   "label": "ᴹᴵᴰᴵ\nD#₅/Eᵇ₅",
+   "group": "midi",
+   "tooltip": "Midi send note D#₅/Eᵇ₅",
+   "alias": [
+    "MI_Eb_5"
+   ]
+  },
+  {
+   "id": "MI_E_5",
+   "code": 23663,
+   "label": "ᴹᴵᴰᴵ\nE₅",
+   "group": "midi",
+   "tooltip": "Midi send note E₅"
+  },
+  {
+   "id": "MI_F_5",
+   "code": 23664,
+   "label": "ᴹᴵᴰᴵ\nF₅",
+   "group": "midi",
+   "tooltip": "Midi send note F₅"
+  },
+  {
+   "id": "MI_Fs_5",
+   "code": 23665,
+   "label": "ᴹᴵᴰᴵ\nF#₅/Gᵇ₅",
+   "group": "midi",
+   "tooltip": "Midi send note F#₅/Gᵇ₅",
+   "alias": [
+    "MI_Gb_5"
+   ]
+  },
+  {
+   "id": "MI_G_5",
+   "code": 23666,
+   "label": "ᴹᴵᴰᴵ\nG₅",
+   "group": "midi",
+   "tooltip": "Midi send note G₅"
+  },
+  {
+   "id": "MI_Gs_5",
+   "code": 23667,
+   "label": "ᴹᴵᴰᴵ\nG#₅/Aᵇ₅",
+   "group": "midi",
+   "tooltip": "Midi send note G#₅/Aᵇ₅",
+   "alias": [
+    "MI_Ab_5"
+   ]
+  },
+  {
+   "id": "MI_A_5",
+   "code": 23668,
+   "label": "ᴹᴵᴰᴵ\nA₅",
+   "group": "midi",
+   "tooltip": "Midi send note A₅"
+  },
+  {
+   "id": "MI_As_5",
+   "code": 23669,
+   "label": "ᴹᴵᴰᴵ\nA#₅/Bᵇ₅",
+   "group": "midi",
+   "tooltip": "Midi send note A#₅/Bᵇ₅",
+   "alias": [
+    "MI_Bb_5"
+   ]
+  },
+  {
+   "id": "MI_B_5",
+   "code": 23670,
+   "label": "ᴹᴵᴰᴵ\nB₅",
+   "group": "midi",
+   "tooltip": "Midi send note B₅"
+  },
+  {
+   "id": "MI_ALLOFF",
+   "code": 23728,
+   "label": "ᴹᴵᴰᴵ\nNotesᵒᶠᶠ",
+   "group": "midi",
+   "tooltip": "Midi send all notes OFF"
+  },
+  {
+   "id": "MI_OCT_N2",
+   "code": 23671,
+   "label": "ᴹᴵᴰᴵ\nOct₋₂",
+   "group": "midi_advanced",
+   "tooltip": "Midi set octave to -2"
+  },
+  {
+   "id": "MI_OCT_N1",
+   "code": 23672,
+   "label": "ᴹᴵᴰᴵ\nOct₋₁",
+   "group": "midi_advanced",
+   "tooltip": "Midi set octave to -1"
+  },
+  {
+   "id": "MI_OCT_0",
+   "code": 23673,
+   "label": "ᴹᴵᴰᴵ\nOct₀",
+   "group": "midi_advanced",
+   "tooltip": "Midi set octave to 0"
+  },
+  {
+   "id": "MI_OCT_1",
+   "code": 23674,
+   "label": "ᴹᴵᴰᴵ\nOct₊₁",
+   "group": "midi_advanced",
+   "tooltip": "Midi set octave to 1"
+  },
+  {
+   "id": "MI_OCT_2",
+   "code": 23675,
+   "label": "ᴹᴵᴰᴵ\nOct₊₂",
+   "group": "midi_advanced",
+   "tooltip": "Midi set octave to 2"
+  },
+  {
+   "id": "MI_OCT_3",
+   "code": 23676,
+   "label": "ᴹᴵᴰᴵ\nOct₊₃",
+   "group": "midi_advanced",
+   "tooltip": "Midi set octave to 3"
+  },
+  {
+   "id": "MI_OCT_4",
+   "code": 23677,
+   "label": "ᴹᴵᴰᴵ\nOct₊₄",
+   "group": "midi_advanced",
+   "tooltip": "Midi set octave to 4"
+  },
+  {
+   "id": "MI_OCT_5",
+   "code": 23678,
+   "label": "ᴹᴵᴰᴵ\nOct₊₅",
+   "group": "midi_advanced",
+   "tooltip": "Midi set octave to 5"
+  },
+  {
+   "id": "MI_OCT_6",
+   "code": 23679,
+   "label": "ᴹᴵᴰᴵ\nOct₊₆",
+   "group": "midi_advanced",
+   "tooltip": "Midi set octave to 6"
+  },
+  {
+   "id": "MI_OCT_7",
+   "code": 23680,
+   "label": "ᴹᴵᴰᴵ\nOct₊₇",
+   "group": "midi_advanced",
+   "tooltip": "Midi set octave to 7"
+  },
+  {
+   "id": "MI_OCTD",
+   "code": 23681,
+   "label": "ᴹᴵᴰᴵ\nOctᴰᴺ",
+   "group": "midi_advanced",
+   "tooltip": "Midi move down an octave"
+  },
+  {
+   "id": "MI_OCTU",
+   "code": 23682,
+   "label": "ᴹᴵᴰᴵ\nOctᵁᴾ",
+   "group": "midi_advanced",
+   "tooltip": "Midi move up an octave"
+  },
+  {
+   "id": "MI_TRNS_N6",
+   "code": 23683,
+   "label": "ᴹᴵᴰᴵ\nTrans₋₆",
+   "group": "midi_advanced",
+   "tooltip": "Midi set transposition to -4 semitones"
+  },
+  {
+   "id": "MI_TRNS_N5",
+   "code": 23684,
+   "label": "ᴹᴵᴰᴵ\nTrans₋₅",
+   "group": "midi_advanced",
+   "tooltip": "Midi set transposition to -5 semitones"
+  },
+  {
+   "id": "MI_TRNS_N4",
+   "code": 23685,
+   "label": "ᴹᴵᴰᴵ\nTrans₋₄",
+   "group": "midi_advanced",
+   "tooltip": "Midi set transposition to -4 semitones"
+  },
+  {
+   "id": "MI_TRNS_N3",
+   "code": 23686,
+   "label": "ᴹᴵᴰᴵ\nTrans₋₃",
+   "group": "midi_advanced",
+   "tooltip": "Midi set transposition to -3 semitones"
+  },
+  {
+   "id": "MI_TRNS_N2",
+   "code": 23687,
+   "label": "ᴹᴵᴰᴵ\nTrans₋₂",
+   "group": "midi_advanced",
+   "tooltip": "Midi set transposition to -2 semitones"
+  },
+  {
+   "id": "MI_TRNS_N1",
+   "code": 23688,
+   "label": "ᴹᴵᴰᴵ\nTrans₋₁",
+   "group": "midi_advanced",
+   "tooltip": "Midi set transposition to -1 semitones"
+  },
+  {
+   "id": "MI_TRNS_0",
+   "code": 23689,
+   "label": "ᴹᴵᴰᴵ\nTrans₀",
+   "group": "midi_advanced",
+   "tooltip": "Midi set no transposition"
+  },
+  {
+   "id": "MI_TRNS_1",
+   "code": 23690,
+   "label": "ᴹᴵᴰᴵ\nTrans₊₁",
+   "group": "midi_advanced",
+   "tooltip": "Midi set transposition to +1 semitones"
+  },
+  {
+   "id": "MI_TRNS_2",
+   "code": 23691,
+   "label": "ᴹᴵᴰᴵ\nTrans₊₂",
+   "group": "midi_advanced",
+   "tooltip": "Midi set transposition to +2 semitones"
+  },
+  {
+   "id": "MI_TRNS_3",
+   "code": 23692,
+   "label": "ᴹᴵᴰᴵ\nTrans₊₃",
+   "group": "midi_advanced",
+   "tooltip": "Midi set transposition to +3 semitones"
+  },
+  {
+   "id": "MI_TRNS_4",
+   "code": 23693,
+   "label": "ᴹᴵᴰᴵ\nTrans₊₄",
+   "group": "midi_advanced",
+   "tooltip": "Midi set transposition to +4 semitones"
+  },
+  {
+   "id": "MI_TRNS_5",
+   "code": 23694,
+   "label": "ᴹᴵᴰᴵ\nTrans₊₅",
+   "group": "midi_advanced",
+   "tooltip": "Midi set transposition to +5 semitones"
+  },
+  {
+   "id": "MI_TRNS_6",
+   "code": 23695,
+   "label": "ᴹᴵᴰᴵ\nTrans₊₆",
+   "group": "midi_advanced",
+   "tooltip": "Midi set transposition to +6 semitones"
+  },
+  {
+   "id": "MI_TRNSD",
+   "code": 23696,
+   "label": "ᴹᴵᴰᴵ\nTransᴰᴺ",
+   "group": "midi_advanced",
+   "tooltip": "Midi decrease transposition"
+  },
+  {
+   "id": "MI_TRNSU",
+   "code": 23697,
+   "label": "ᴹᴵᴰᴵ\nTransᵁᴾ",
+   "group": "midi_advanced",
+   "tooltip": "Midi increase transposition"
+  },
+  {
+   "id": "MI_VEL_1",
+   "code": 23698,
+   "label": "ᴹᴵᴰᴵ\nVel₁",
+   "group": "midi_advanced",
+   "tooltip": "Midi set velocity to 0",
+   "alias": [
+    "MI_VEL_0"
+   ]
+  },
+  {
+   "id": "MI_VEL_2",
+   "code": 23699,
+   "label": "ᴹᴵᴰᴵ\nVel₂",
+   "group": "midi_advanced",
+   "tooltip": "Midi set velocity to 25"
+  },
+  {
+   "id": "MI_VEL_3",
+   "code": 23700,
+   "label": "ᴹᴵᴰᴵ\nVel₃",
+   "group": "midi_advanced",
+   "tooltip": "Midi set velocity to 38"
+  },
+  {
+   "id": "MI_VEL_4",
+   "code": 23701,
+   "label": "ᴹᴵᴰᴵ\nVel₄",
+   "group": "midi_advanced",
+   "tooltip": "Midi set velocity to 51"
+  },
+  {
+   "id": "MI_VEL_5",
+   "code": 23702,
+   "label": "ᴹᴵᴰᴵ\nVel₅",
+   "group": "midi_advanced",
+   "tooltip": "Midi set velocity to 64"
+  },
+  {
+   "id": "MI_VEL_6",
+   "code": 23703,
+   "label": "ᴹᴵᴰᴵ\nVel₆",
+   "group": "midi_advanced",
+   "tooltip": "Midi set velocity to 76"
+  },
+  {
+   "id": "MI_VEL_7",
+   "code": 23704,
+   "label": "ᴹᴵᴰᴵ\nVel₇",
+   "group": "midi_advanced",
+   "tooltip": "Midi set velocity to 89"
+  },
+  {
+   "id": "MI_VEL_8",
+   "code": 23705,
+   "label": "ᴹᴵᴰᴵ\nVel₈",
+   "group": "midi_advanced",
+   "tooltip": "Midi set velocity to 102"
+  },
+  {
+   "id": "MI_VEL_9",
+   "code": 23706,
+   "label": "ᴹᴵᴰᴵ\nVel₉",
+   "group": "midi_advanced",
+   "tooltip": "Midi set velocity to 114"
+  },
+  {
+   "id": "MI_VEL_10",
+   "code": 23707,
+   "label": "ᴹᴵᴰᴵ\nVel₁₀",
+   "group": "midi_advanced",
+   "tooltip": "Midi set velocity to 127"
+  },
+  {
+   "id": "MI_VELD",
+   "code": 23708,
+   "label": "ᴹᴵᴰᴵ\nVelᴰᴺ",
+   "group": "midi_advanced",
+   "tooltip": "Midi decrease velocity"
+  },
+  {
+   "id": "MI_VELU",
+   "code": 23709,
+   "label": "ᴹᴵᴰᴵ\nVelᵁᴾ",
+   "group": "midi_advanced",
+   "tooltip": "Midi increase velocity"
+  },
+  {
+   "id": "MI_CH1",
+   "code": 23710,
+   "label": "ᴹᴵᴰᴵ\nCH₁",
+   "group": "midi_advanced",
+   "tooltip": "Midi set channel to 1"
+  },
+  {
+   "id": "MI_CH2",
+   "code": 23711,
+   "label": "ᴹᴵᴰᴵ\nCH₂",
+   "group": "midi_advanced",
+   "tooltip": "Midi set channel to 2"
+  },
+  {
+   "id": "MI_CH3",
+   "code": 23712,
+   "label": "ᴹᴵᴰᴵ\nCH₃",
+   "group": "midi_advanced",
+   "tooltip": "Midi set channel to 3"
+  },
+  {
+   "id": "MI_CH4",
+   "code": 23713,
+   "label": "ᴹᴵᴰᴵ\nCH₄",
+   "group": "midi_advanced",
+   "tooltip": "Midi set channel to 4"
+  },
+  {
+   "id": "MI_CH5",
+   "code": 23714,
+   "label": "ᴹᴵᴰᴵ\nCH₅",
+   "group": "midi_advanced",
+   "tooltip": "Midi set channel to 5"
+  },
+  {
+   "id": "MI_CH6",
+   "code": 23715,
+   "label": "ᴹᴵᴰᴵ\nCH₆",
+   "group": "midi_advanced",
+   "tooltip": "Midi set channel to 6"
+  },
+  {
+   "id": "MI_CH7",
+   "code": 23716,
+   "label": "ᴹᴵᴰᴵ\nCH₇",
+   "group": "midi_advanced",
+   "tooltip": "Midi set channel to 7"
+  },
+  {
+   "id": "MI_CH8",
+   "code": 23717,
+   "label": "ᴹᴵᴰᴵ\nCH₈",
+   "group": "midi_advanced",
+   "tooltip": "Midi set channel to 8"
+  },
+  {
+   "id": "MI_CH9",
+   "code": 23718,
+   "label": "ᴹᴵᴰᴵ\nCH₉",
+   "group": "midi_advanced",
+   "tooltip": "Midi set channel to 9"
+  },
+  {
+   "id": "MI_CH10",
+   "code": 23719,
+   "label": "ᴹᴵᴰᴵ\nCH₁₀",
+   "group": "midi_advanced",
+   "tooltip": "Midi set channel to 10"
+  },
+  {
+   "id": "MI_CH11",
+   "code": 23720,
+   "label": "ᴹᴵᴰᴵ\nCH₁₁",
+   "group": "midi_advanced",
+   "tooltip": "Midi set channel to 11"
+  },
+  {
+   "id": "MI_CH12",
+   "code": 23721,
+   "label": "ᴹᴵᴰᴵ\nCH₁₂",
+   "group": "midi_advanced",
+   "tooltip": "Midi set channel to 12"
+  },
+  {
+   "id": "MI_CH13",
+   "code": 23722,
+   "label": "ᴹᴵᴰᴵ\nCH₁₃",
+   "group": "midi_advanced",
+   "tooltip": "Midi set channel to 13"
+  },
+  {
+   "id": "MI_CH14",
+   "code": 23723,
+   "label": "ᴹᴵᴰᴵ\nCH₁₄",
+   "group": "midi_advanced",
+   "tooltip": "Midi set channel to 14"
+  },
+  {
+   "id": "MI_CH15",
+   "code": 23724,
+   "label": "ᴹᴵᴰᴵ\nCH₁₅",
+   "group": "midi_advanced",
+   "tooltip": "Midi set channel to 15"
+  },
+  {
+   "id": "MI_CH16",
+   "code": 23725,
+   "label": "ᴹᴵᴰᴵ\nCH₁₆",
+   "group": "midi_advanced",
+   "tooltip": "Midi set channel to 16"
+  },
+  {
+   "id": "MI_CHD",
+   "code": 23726,
+   "label": "ᴹᴵᴰᴵ\nCHᴰᴺ",
+   "group": "midi_advanced",
+   "tooltip": "Midi decrease channel"
+  },
+  {
+   "id": "MI_CHU",
+   "code": 23727,
+   "label": "ᴹᴵᴰᴵ\nCHᵁᴾ",
+   "group": "midi_advanced",
+   "tooltip": "Midi increase channel"
+  },
+  {
+   "id": "MI_SUS",
+   "code": 23729,
+   "label": "ᴹᴵᴰᴵ\nSust",
+   "group": "midi_advanced",
+   "tooltip": "Midi Sustain"
+  },
+  {
+   "id": "MI_PORT",
+   "code": 23730,
+   "label": "ᴹᴵᴰᴵ\nPort",
+   "group": "midi_advanced",
+   "tooltip": "Midi Portmento"
+  },
+  {
+   "id": "MI_SOST",
+   "code": 23731,
+   "label": "ᴹᴵᴰᴵ\nSost",
+   "group": "midi_advanced",
+   "tooltip": "Midi Sostenuto"
+  },
+  {
+   "id": "MI_SOFT",
+   "code": 23732,
+   "label": "ᴹᴵᴰᴵ\nSPedal",
+   "group": "midi_advanced",
+   "tooltip": "Midi Soft Pedal"
+  },
+  {
+   "id": "MI_LEG",
+   "code": 23733,
+   "label": "ᴹᴵᴰᴵ\nLegat",
+   "group": "midi_advanced",
+   "tooltip": "Midi Legato"
+  },
+  {
+   "id": "MI_MOD",
+   "code": 23734,
+   "label": "ᴹᴵᴰᴵ\nModul",
+   "group": "midi_advanced",
+   "tooltip": "Midi Modulation"
+  },
+  {
+   "id": "MI_MODSD",
+   "code": 23735,
+   "label": "ᴹᴵᴰᴵ\nModulᴰᴺ",
+   "group": "midi_advanced",
+   "tooltip": "Midi decrease modulation speed"
+  },
+  {
+   "id": "MI_MODSU",
+   "code": 23736,
+   "label": "ᴹᴵᴰᴵ\nModulᵁᴾ",
+   "group": "midi_advanced",
+   "tooltip": "Midi increase modulation speed"
+  },
+  {
+   "id": "MI_BENDD",
+   "code": 23737,
+   "label": "ᴹᴵᴰᴵ\nBendᴰᴺ",
+   "group": "midi_advanced",
+   "tooltip": "Midi bend pitch down"
+  },
+  {
+   "id": "MI_BENDU",
+   "code": 23738,
+   "label": "ᴹᴵᴰᴵ\nBendᵁᴾ",
+   "group": "midi_advanced",
+   "tooltip": "Midi bend pitch up"
+  }
+ ]
+}

@@ -1,0 +1,182 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+import type React from 'react'
+import type { KeycodeCatalog, KeycodeGroup } from '@/core/keycodes/catalog'
+import { placeKeys, type LayoutEncoder, type LayoutKey } from '@/core/layout'
+import type { Selection } from '@/store'
+
+const U = 56 // pixels per key unit
+const GAP = 3 // gap between neighbouring caps
+const PAD = 18 // case border around the keys
+
+interface Props {
+  keys: LayoutKey[]
+  encoders?: LayoutEncoder[]
+  /** Keycodes for the shown layer: keycodes[row][col]. */
+  keycodes: number[][]
+  /** Encoder keycodes for the shown layer: encoderCodes[index] = [left, right]. */
+  encoderCodes?: [number, number][]
+  layoutChoices?: number[]
+  catalog: KeycodeCatalog
+  selected?: Selection | null
+  /** Keys drawn in the accent colour, such as the keys to hold for unlocking. */
+  highlighted?: { row: number; col: number }[]
+  /** Leave out to draw a decorative, non-interactive keyboard. */
+  onSelect?(selection: Selection): void
+  /** Size classes for the drawing; it keeps its shape and centres inside them. */
+  className?: string
+}
+
+const TONES = {
+  cap: { top: 'fill-cap', skirt: 'fill-cap-skirt', text: 'fill-legend' },
+  mod: { top: 'fill-mod', skirt: 'fill-mod-skirt', text: 'fill-white' },
+  pick: { top: 'fill-pick', skirt: 'fill-pick-skirt', text: 'fill-white' },
+}
+
+/** Keys that type characters get light caps; everything else gets darker caps, like a real board. */
+const TYPING_GROUPS = new Set<KeycodeGroup | undefined>(['basic', 'shifted', 'numpad', 'iso', 'special'])
+const DARK_BASIC_KEYS = new Set([0x28, 0x29, 0x2a, 0x2b, 0x39, 0x65, 0xe0, 0xe1, 0xe2, 0xe3, 0xe4, 0xe5, 0xe6, 0xe7])
+
+const TURNS = [
+  { name: 'Turn left', arrow: '↺' },
+  { name: 'Turn right', arrow: '↻' },
+]
+
+/** Draws the keyboard as keycaps on a case. Keys are buttons, so it works with Tab and Enter too. */
+export function KeyboardView({
+  keys,
+  encoders = [],
+  keycodes,
+  encoderCodes = [],
+  layoutChoices = [],
+  catalog,
+  selected,
+  highlighted = [],
+  onSelect,
+  className = 'w-full max-w-5xl',
+}: Props) {
+  const placed = placeKeys<LayoutKey | LayoutEncoder>([...keys, ...encoders], layoutChoices)
+  const width = Math.max(...placed.map((k) => k.x + k.w)) * U + PAD * 2
+  const height = Math.max(...placed.map((k) => k.y + k.h)) * U + PAD * 2
+
+  return (
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      className={`${className} drop-shadow-[0_16px_24px_rgba(29,39,49,0.28)]`}
+      role={onSelect ? 'group' : 'img'}
+      aria-label="Keyboard layout"
+    >
+      <rect width={width} height={height} rx={16} className="fill-case" />
+      {placed.map((item) => {
+        const isKey = 'row' in item
+        const selection: Selection = isKey
+          ? { kind: 'key', row: item.row, col: item.col }
+          : { kind: 'encoder', index: item.index, direction: item.direction }
+        const code = isKey ? (keycodes[item.row]?.[item.col] ?? 0) : (encoderCodes[item.index]?.[item.direction] ?? 0)
+        const { name, legend, group } = catalog.describe(code)
+        const isSelected =
+          sameSelection(selected, selection) || (isKey && highlighted.some((h) => h.row === item.row && h.col === item.col))
+        const isTyping = TYPING_GROUPS.has(group) && !DARK_BASIC_KEYS.has(code)
+        const tone = TONES[isSelected ? 'pick' : isTyping ? 'cap' : 'mod']
+        const turn = isKey ? null : TURNS[item.direction]
+        const label = turn ? `Knob ${turn.name.toLowerCase()}: ${name}` : `Key ${name}`
+
+        const x = PAD + item.x * U + GAP / 2
+        const y = PAD + item.y * U + GAP / 2
+        const w = item.w * U - GAP
+        const h = item.h * U - GAP
+        const { angle, x: rx, y: ry } = item.rotation
+        const lines = legendLines(legend, w)
+        const fontSize = lines.length > 2 ? 10 : 13
+        const lineHeight = fontSize + 2
+        const radius = Math.min(w, h) / 2
+
+        return (
+          <g
+            key={isKey ? `k${item.row},${item.col},${item.x},${item.y}` : `e${item.index},${item.direction}`}
+            transform={angle ? `rotate(${angle} ${PAD + rx * U} ${PAD + ry * U})` : undefined}
+            {...(onSelect && {
+              role: 'button',
+              tabIndex: 0,
+              'aria-pressed': isSelected,
+              'aria-label': label,
+              className:
+                'cursor-pointer outline-none [&:focus-visible>:nth-child(2)]:stroke-pick [&:focus-visible>:nth-child(2)]:stroke-[3]',
+              onClick: () => onSelect(selection),
+              onKeyDown: (e: React.KeyboardEvent) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  onSelect(selection)
+                }
+              },
+            })}
+          >
+            <title>{turn ? `${turn.name}: ${name}` : name}</title>
+            {turn ? (
+              <>
+                <circle cx={x + w / 2} cy={y + h / 2} r={radius} className={`${tone.skirt} transition-colors`} />
+                <circle cx={x + w / 2} cy={y + h / 2 - 1.5} r={radius - 5} className={`${tone.top} transition-colors`} />
+                <text
+                  x={x + w / 2}
+                  y={y + h / 2 - 3}
+                  textAnchor="middle"
+                  className={`pointer-events-none select-none font-sans text-[15px] font-bold ${tone.text}`}
+                >
+                  {turn.arrow}
+                  <tspan x={x + w / 2} dy={13} className="text-[10px] font-semibold">
+                    {fitText(legend.join(' '), w - 12, 6.5)}
+                  </tspan>
+                </text>
+              </>
+            ) : (
+              <>
+                <rect x={x} y={y} width={w} height={h} rx={7} className={`${tone.skirt} transition-colors`} />
+                <rect
+                  x={x + 5}
+                  y={y + 3}
+                  width={w - 10}
+                  height={h - 11}
+                  rx={5}
+                  className={`${tone.top} transition-[fill,transform] duration-150 ${isSelected ? '-translate-y-0.5' : ''}`}
+                />
+                <text
+                  x={x + 11}
+                  y={y + 8 + fontSize}
+                  style={{ fontSize }}
+                  className={`pointer-events-none select-none font-sans font-semibold ${tone.text}`}
+                >
+                  {lines.map((line, i) => (
+                    <tspan key={i} x={x + 11} dy={i === 0 ? 0 : lineHeight}>
+                      {line}
+                    </tspan>
+                  ))}
+                </text>
+              </>
+            )}
+          </g>
+        )
+      })}
+    </svg>
+  )
+}
+
+function sameSelection(a: Selection | null | undefined, b: Selection): boolean {
+  if (!a || a.kind !== b.kind) return false
+  return a.kind === 'key' && b.kind === 'key'
+    ? a.row === b.row && a.col === b.col
+    : a.kind === 'encoder' && b.kind === 'encoder' && a.index === b.index && a.direction === b.direction
+}
+
+/** Fits legend lines to the cap width; one long word becomes two lines ("Right Shift"). */
+function legendLines(legend: string[], width: number): string[] {
+  const max = Math.floor((width - 16) / 7.5)
+  if (legend.length === 1 && legend[0].length > max && legend[0].includes(' ')) {
+    const space = legend[0].indexOf(' ')
+    return [fitText(legend[0].slice(0, space), width - 16), fitText(legend[0].slice(space + 1), width - 16)]
+  }
+  return legend.slice(0, 3).map((l) => fitText(l, width - 16))
+}
+
+function fitText(text: string, width: number, charWidth = 7.5): string {
+  const max = Math.max(1, Math.floor(width / charWidth))
+  return text.length > max ? `${text.slice(0, max - 1)}…` : text
+}

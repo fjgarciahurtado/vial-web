@@ -1,0 +1,15 @@
+# Static site: Vite builds to dist/. Deploying is a manual step for now.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Only this site may use WebHID; nothing else powerful is needed.
+    Permissions-Policy = "hid=(self), camera=(), microphone=(), geolocation=()"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

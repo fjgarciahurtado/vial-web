@@ -1,0 +1,123 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+import { describe, expect, it } from 'vitest'
+import { createBackup, parseBackup, planRestore, type BackupSource } from './backup'
+import v6Data from './keycodes/data/keycodes-v6.json'
+import { KeycodeCatalog, type KeycodeData } from './keycodes/catalog'
+import { parseLayout } from './layout'
+
+const catalog = new KeycodeCatalog(v6Data as KeycodeData, {
+  layers: 2,
+  macroCount: 0,
+  tapDanceCount: 0,
+  features: new Set(),
+})
+const enc = (label: string) => `${label}\n\n\n\n\n\n\n\n\ne`
+
+// 1 row, 3 columns, but column 2 has no key in the layout.
+const source: BackupSource = {
+  keyboardId: 0xf1f2f3f4f5f6f7f8n,
+  viaProtocol: 9,
+  vialProtocol: 6,
+  rows: 1,
+  cols: 3,
+  layers: 2,
+  ...parseLayout([['0,0', '0,1', enc('0,0'), enc('0,1')]]),
+  keymap: [[[0x04, 0x0204, 0x00]], [[0x01, 0x5221, 0x00]]],
+  encoderKeymap: [[[0xaa, 0xa9]], [[0x01, 0x01]]],
+  layoutOptionsValue: -1,
+  catalog,
+}
+
+describe('createBackup', () => {
+  const text = createBackup(source)
+  const json = JSON.parse(text)
+
+  it('writes the vial-gui .vil structure', () => {
+    expect(json).toMatchObject({
+      version: 1,
+      layout: [[['KC_A', 'LSFT(KC_A)', -1]], [['KC_TRNS', 'MO(1)', -1]]],
+      encoder_layout: [[['KC_VOLD', 'KC_VOLU']], [['KC_TRNS', 'KC_TRNS']]],
+      layout_options: -1,
+      vial_protocol: 6,
+      via_protocol: 9,
+    })
+  })
+
+  it('keeps the full 64-bit keyboard id', () => {
+    expect(text).toContain('"uid": 17434265340928784376')
+  })
+
+  it('leaves out sections it does not manage, so vial-gui keeps them on restore', () => {
+    for (const section of ['macro', 'tap_dance', 'combo', 'key_override', 'alt_repeat_key', 'settings']) {
+      expect(json).not.toHaveProperty(section)
+    }
+  })
+})
+
+describe('parseBackup', () => {
+  it('reads a backup back, including the exact keyboard id', () => {
+    const backup = parseBackup(createBackup(source))
+    expect(backup.uid).toBe(0xf1f2f3f4f5f6f7f8n)
+    expect(backup.layout[0][0]).toEqual(['KC_A', 'LSFT(KC_A)', -1])
+  })
+
+  it('ignores sections that only hold empty slots', () => {
+    const backup = parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [], tap_dance: [['KC_NO', 'KC_NO', 'KC_NO', 'KC_NO', 200]] }))
+    expect(backup.notRestored).toEqual([])
+  })
+
+  it('lists saved settings this app cannot restore yet', () => {
+    const backup = parseBackup(
+      JSON.stringify({ version: 1, uid: 1, layout: [], macro: [[['text', 'hi']]], tap_dance: [], settings: { 2: 1 } }),
+    )
+    expect(backup.notRestored).toEqual(['macros', 'QMK settings'])
+  })
+
+  it('rejects files that are not keymap backups', () => {
+    expect(() => parseBackup('{"hello": 1}')).toThrow("This file isn't a Vial keymap backup.")
+    expect(() => parseBackup('not json')).toThrow("This file isn't a Vial keymap backup.")
+  })
+})
+
+describe('planRestore', () => {
+  it('turns a backup into changes for keys and knobs that exist', () => {
+    const backup = parseBackup(
+      JSON.stringify({
+        version: 1,
+        uid: 1,
+        layout: [[['KC_B', 'KC_C', 'KC_D']], [['KC_E', 'KC_F', 'KC_G']], [['KC_H', 'KC_I', 'KC_J']]],
+        encoder_layout: [[['KC_MUTE', 'KC_MUTE']]],
+        layout_options: -1,
+      }),
+    )
+    const plan = planRestore(backup, source)
+    expect(plan.changes).toEqual([
+      { target: { kind: 'key', layer: 0, row: 0, col: 0 }, code: 0x05 },
+      { target: { kind: 'key', layer: 0, row: 0, col: 1 }, code: 0x06 },
+      { target: { kind: 'key', layer: 1, row: 0, col: 0 }, code: 0x08 },
+      { target: { kind: 'key', layer: 1, row: 0, col: 1 }, code: 0x09 },
+      { target: { kind: 'encoder', layer: 0, index: 0, direction: 0 }, code: 0xa8 },
+      { target: { kind: 'encoder', layer: 0, index: 0, direction: 1 }, code: 0xa8 },
+    ])
+    expect(plan.unknownKeys).toBe(0)
+  })
+
+  it('accepts numeric keycodes and counts names it cannot read', () => {
+    const backup = parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [[[4, 'NOT_A_KEY', -1]]] }))
+    const plan = planRestore(backup, source)
+    expect(plan.changes).toEqual([{ target: { kind: 'key', layer: 0, row: 0, col: 0 }, code: 0x04 }])
+    expect(plan.unknownKeys).toBe(1)
+  })
+
+  it('restores layout options when both sides have them', () => {
+    const backup = parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [], layout_options: 3 }))
+    expect(planRestore(backup, { ...source, layoutOptionsValue: 0 }).layoutOptions).toBe(3)
+    expect(planRestore(backup, source).layoutOptions).toBeNull()
+  })
+
+  it('notices backups from a different keyboard', () => {
+    const other = parseBackup(JSON.stringify({ version: 1, uid: 5, layout: [] }))
+    expect(planRestore(other, source).sameKeyboard).toBe(false)
+    expect(planRestore(parseBackup(createBackup(source)), source).sameKeyboard).toBe(true)
+  })
+})

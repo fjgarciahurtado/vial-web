@@ -1,0 +1,75 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+import { FakeKeyboard } from './fake-keyboard'
+import { loadKeyboard, type LoadedKeyboard } from './keyboard'
+import type { HidTransport } from './transport'
+
+// 60% ANSI: [width, base-layer keycode, function-layer keycode]
+type DemoKey = [number, number, number]
+const ___ = 0x01 // KC_TRNS: same as the layer below
+
+const ROWS: DemoKey[][] = [
+  [[1, 0x29, 0x35], ...[0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x2d, 0x2e].map((k, i): DemoKey => [1, k, 0x3a + i]), [2, 0x2a, 0x4c]],
+  [[1.5, 0x2b, ___], ...[0x14, 0x1a, 0x08, 0x15, 0x17, 0x1c, 0x18, 0x0c, 0x12, 0x13, 0x2f, 0x30].map((k): DemoKey => [1, k, ___]), [1.5, 0x31, ___]],
+  [[1.75, 0x39, ___], ...[0x04, 0x16, 0x07, 0x09, 0x0a, 0x0b, 0x0d, 0x0e, 0x0f, 0x33, 0x34].map((k): DemoKey => [1, k, ___]), [2.25, 0x28, ___]],
+  [[2.25, 0xe1, ___], ...[0x1d, 0x1b, 0x06, 0x19, 0x05, 0x11, 0x10, 0x36, 0x37, 0x38].map((k): DemoKey => [1, k, ___]), [2.75, 0xe5, 0x52]],
+  [[1.25, 0xe0, ___], [1.25, 0xe3, ___], [1.25, 0xe2, ___], [6.25, 0x2c, ___], [1.25, 0xe6, 0x50], [1.25, 0xe7, 0x51], [1.25, 0x5221, ___], [1.25, 0xe4, 0x4f]],
+]
+
+/** Matrix column used by the extra key of the split backspace option. */
+const SPLIT_COL = 14
+const COLS = SPLIT_COL + 1
+
+// KLE label helpers: the 4th label slot holds "layout,option", "e" in the 10th marks an encoder.
+const option = (label: string, choice: number) => `${label}\n\n\n0,${choice}`
+const encoder = (label: string) => `${label}\n\n\n\n\n\n\n\n\ne`
+
+function kleRows(): unknown[][] {
+  const rows = ROWS.map((row, r) => row.flatMap(([w], c): unknown[] => (w === 1 ? [`${r},${c}`] : [{ w }, `${r},${c}`])))
+  // Backspace: one 2u key, or two 1u keys drawn beside the board, as vial.json files do.
+  const backspaceCol = ROWS[0].length - 1
+  rows[0][rows[0].length - 1] = option(`0,${backspaceCol}`, 0)
+  rows[0].push({ x: 0.5, w: 1 }, option(`0,${backspaceCol}`, 1), option(`0,${SPLIT_COL}`, 1))
+  // A volume knob above the top-right corner: one "key" per turn direction.
+  return [[{ x: 13 }, encoder('0,0'), encoder('0,1')], ...rows]
+}
+
+/**
+ * A pretend keyboard so people can explore the app before plugging one in.
+ * It speaks the real protocol, so the demo uses exactly the same code as hardware.
+ */
+export async function openDemoKeyboard(): Promise<{ transport: HidTransport; keyboard: LoadedKeyboard }> {
+  const fake = new FakeKeyboard({
+    definition: {
+      name: 'Demo 60% keyboard',
+      matrix: { rows: ROWS.length, cols: COLS },
+      layouts: { labels: ['Split Backspace'], keymap: kleRows() },
+    },
+    layers: 2,
+    vialProtocol: 6,
+    macroCount: 4,
+    featureFlags: 0b11,
+    encoders: 1,
+    // Unlock by holding Esc and Enter. The demo holds them for you.
+    unlockKeys: [
+      { row: 0, col: 0 },
+      { row: 2, col: 12 },
+    ],
+    holdPolls: 12,
+  })
+
+  const put = (layer: number, r: number, c: number, code: number) =>
+    fake.keymap.set([code >> 8, code & 0xff], ((layer * ROWS.length + r) * COLS + c) * 2)
+  ROWS.forEach((row, r) =>
+    row.forEach(([, base, fn], c) => {
+      put(0, r, c, base)
+      put(1, r, c, fn)
+    }),
+  )
+  put(0, 0, SPLIT_COL, 0x4c) // Delete
+  put(1, 0, SPLIT_COL, ___)
+  fake.encoders[0][0] = [0xaa, 0xa9] // Volume Down / Up
+  fake.encoders[1][0] = [0xac, 0xab] // Previous / Next Track
+
+  const keyboard = await loadKeyboard(fake.transport, 'Demo keyboard', { decompress: async (bytes) => bytes })
+  return { transport: fake.transport, keyboard }
+}
