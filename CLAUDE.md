@@ -41,9 +41,8 @@ Desktop wrapper (Tauri 2 + Rust `hidapi`) is planned, not started.
 - Colours: use the palette tokens in `src/index.css` (`ink`, `panel`, `field`, `line`...), never `bg-white`,
   so dark mode keeps working. Keycaps use `cap`/`legend`, which stay the same in dark mode.
 - Python one-off edits must pass `encoding="utf-8"`; the Windows default (cp1252) corrupts files.
-- Don't write code containing `
-` or other escapes through Bash heredocs here: they arrive as real
-  newlines. Use the Write and Edit tools for such files.
+- Don't write code containing backslash escapes (such as a newline escape in a string or regex)
+  through Bash heredocs here: they arrive as real newlines. Use the Write and Edit tools instead.
 
 <!-- fgf-ai-setup:start -->
 # Project Instructions for Claude
