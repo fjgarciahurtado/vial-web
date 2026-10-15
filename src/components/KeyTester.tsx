@@ -9,6 +9,7 @@ import { useApp } from '@/store'
 
 /** vial-gui polls every 20 ms; a little slower is still instant to the eye and lighter on the keyboard. */
 const POLL_MS = 30
+const LOCK_CHECK_EVERY = Math.round(1000 / POLL_MS)
 
 type Pos = { row: number; col: number }
 
@@ -30,8 +31,14 @@ export function KeyTester() {
     if (!testing || !client || !keyboard) return
     let stopped = false
     const poll = async () => {
-      while (!stopped) {
+      for (let tick = 0; !stopped; tick++) {
         try {
+          // A locked keyboard reports no presses at all, which would look like every key is broken.
+          // vial-gui checks the lock on every poll; once a second is enough to notice.
+          if (tick % LOCK_CHECK_EVERY === LOCK_CHECK_EVERY - 1 && !(await client.getUnlockStatus()).unlocked) {
+            if (!stopped) useApp.setState({ unlocked: false, notice: 'The keyboard locked itself. Unlock it to keep testing.' })
+            return
+          }
           const matrix = await readMatrix(client, keyboard.rows, keyboard.cols)
           const now = matrix.flatMap((cols, row) => cols.flatMap((on, col) => (on ? [{ row, col }] : [])))
           if (stopped) return
@@ -67,10 +74,12 @@ export function KeyTester() {
   }, [testing, isDemo, pressDemoKey])
 
   // Keys shown for the chosen layout options; placeKeys also drops decals.
-  const total = useMemo(
-    () => (keyboard ? new Set(placeKeys(keyboard.keys, keyboard.layoutChoices).map(key)).size : 0),
+  const visible = useMemo(
+    () => (keyboard ? new Set(placeKeys(keyboard.keys, keyboard.layoutChoices).map(key)) : new Set<string>()),
     [keyboard],
   )
+  // Hidden layout-option keys can still report presses; count only keys on screen.
+  const passedVisible = [...passed.keys()].filter((k) => visible.has(k)).length
   if (!keyboard) return null
 
   return (
@@ -115,7 +124,7 @@ export function KeyTester() {
           </div>
           <div className="flex items-center gap-3">
             <p aria-live="polite" className="font-semibold">
-              {passed.size} of {total} keys work
+              {passedVisible} of {visible.size} keys work
             </p>
             <Button variant="outline" onClick={() => setPassed(new Map())} disabled={passed.size === 0}>
               <RotateCcw aria-hidden />

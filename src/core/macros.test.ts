@@ -6,6 +6,7 @@ import { KeycodeCatalog, type KeycodeData } from './keycodes/catalog'
 import {
   deserializeMacro,
   describeMacro,
+  macroProblem,
   macroTextProblem,
   deserializeMacros,
   loadSavedMacro,
@@ -68,6 +69,24 @@ describe('macro bytes, protocol 2 and later', () => {
 
   it('refuses delays on protocol 1, which cannot store them', () => {
     expect(() => serializeMacro([{ type: 'delay', ms: 5 }], 1)).toThrow()
+  })
+
+  it('keeps delays in the range two bytes can hold, so no zero byte ends the macro early', () => {
+    expect(serializeMacro([{ type: 'delay', ms: 70000 }], 2)).toEqual(bytes('\x01\x04\xFF\xFF')) // 65024 ms
+    expect(serializeMacro([{ type: 'delay', ms: -5 }], 2)).toEqual(bytes('\x01\x04\x01\x01'))
+    expect(serializeMacro([{ type: 'delay', ms: 1.6 }], 2)).toEqual(bytes('\x01\x04\x03\x01'))
+  })
+})
+
+describe('macroProblem', () => {
+  it('accepts macros the keyboard can store', () => {
+    expect(macroProblem([{ type: 'text', text: 'ok' }, { type: 'delay', ms: 100 }])).toBeNull()
+  })
+  it('rejects text that would corrupt macro memory', () => {
+    expect(macroProblem([{ type: 'text', text: 'a\x00b' }])).not.toBeNull()
+  })
+  it('rejects delays outside 0 to 65024 ms', () => {
+    expect(macroProblem([{ type: 'delay', ms: 70000 }])).not.toBeNull()
   })
 })
 

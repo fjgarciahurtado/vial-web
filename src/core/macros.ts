@@ -25,6 +25,9 @@ const VIAL_MACRO_EXT_UP = 7
 /** From protocol 2, every escape starts with SS_QMK_PREFIX, and delays and 16-bit keycodes exist. */
 const VIAL_PROTOCOL_ADVANCED_MACROS = 2
 
+/** Longest pause a macro step can store. */
+export const MAX_DELAY_MS = 254 + 254 * 255
+
 const KEY_CODES = { tap: SS_TAP_CODE, down: SS_DOWN_CODE, up: SS_UP_CODE } as const
 const KEY_TYPES = { [SS_TAP_CODE]: 'tap', [SS_DOWN_CODE]: 'down', [SS_UP_CODE]: 'up' } as const
 const EXT_TO_BASIC: Record<number, number> = {
@@ -41,7 +44,9 @@ export function serializeMacro(macro: Macro, vialProtocol: number): Uint8Array {
       out.push(...new TextEncoder().encode(action.text))
     } else if (action.type === 'delay') {
       if (!advanced) throw new Error('This keyboard firmware is too old for pauses in macros.')
-      out.push(SS_QMK_PREFIX, SS_DELAY_CODE, (action.ms % 255) + 1, Math.floor(action.ms / 255) + 1)
+      // Each byte holds 1-255 (0 would end the macro), so delays go up to 254 + 254 * 255 ms.
+      const ms = Math.min(MAX_DELAY_MS, Math.max(0, Math.round(action.ms)))
+      out.push(SS_QMK_PREFIX, SS_DELAY_CODE, (ms % 255) + 1, Math.floor(ms / 255) + 1)
     } else {
       for (const kc of action.keys) {
         if (advanced) out.push(SS_QMK_PREFIX)
@@ -162,7 +167,8 @@ export function saveMacro(macro: Macro, catalog: KeycodeCatalog): SavedAction[] 
   )
 }
 
-export function loadSavedMacro(saved: unknown[], catalog: KeycodeCatalog): Macro {
+/** Reads one .vil macro. onUnknownKey is called for each key name the catalogue doesn't know. */
+export function loadSavedMacro(saved: unknown[], catalog: KeycodeCatalog, onUnknownKey?: () => void): Macro {
   const out: Macro = []
   for (const item of saved) {
     if (!Array.isArray(item)) continue
@@ -171,10 +177,31 @@ export function loadSavedMacro(saved: unknown[], catalog: KeycodeCatalog): Macro
     else if (tag === 'delay' && typeof args[0] === 'number') out.push({ type: 'delay', ms: args[0] })
     else if (tag === 'tap' || tag === 'down' || tag === 'up') {
       const keys = args.map((k) => (typeof k === 'number' ? k : catalog.deserialize(String(k))))
+      keys.filter((k) => k === undefined).forEach(() => onUnknownKey?.())
       out.push({ type: tag, keys: keys.filter((k): k is number => k !== undefined) })
     }
   }
   return out
+}
+
+/**
+ * Why a macro can't be written to the keyboard as it is, or null when it can.
+ * Covers what the editor already prevents, for macros that come from elsewhere such as backups.
+ */
+export function macroProblem(macro: Macro): string | null {
+  for (const action of macro) {
+    if (action.type === 'text') {
+      const problem = macroTextProblem(action.text)
+      if (problem) return problem
+    } else if (action.type === 'delay') {
+      if (!Number.isInteger(action.ms) || action.ms < 0 || action.ms > MAX_DELAY_MS) {
+        return `A pause of ${action.ms} ms can't be stored; pauses go from 0 to ${MAX_DELAY_MS} ms.`
+      }
+    } else if (action.keys.some((k) => !Number.isInteger(k) || k < 0 || k > 0xffff)) {
+      return 'A key in this macro is not a valid keycode.'
+    }
+  }
+  return null
 }
 
 /** One sentence about what a macro does, for lists and screen readers. */

@@ -75,7 +75,9 @@ computer's own keyboard presses the demo board's keys.
 **How it works.** `src/core/matrix.ts` ports `editor/matrix_test.py`: it reads
 `VIA_SWITCH_MATRIX_STATE` (`0x02 0x03`), whose reply holds `ceil(cols / 8)`
 big-endian bytes per row. The tester needs Vial protocol 3 or newer and a matrix
-that fits one report; the firmware only reports switches while unlocked.
+that fits one report; the firmware only reports switches while unlocked, so the
+tester rechecks the lock about once a second and asks to unlock again if it
+locked itself.
 
 ## Macros
 
@@ -108,12 +110,16 @@ memory is read in 28-byte chunks and reading stops once every macro has ended.
 `.vil` backups now include macros in vial-gui's format (`["text", "hi"]`,
 `["tap", "KC_ENTER"]`, `["delay", 100]`…). Restoring a backup writes its macros
 when they differ from the keyboard's, unlocking first. Macro changes are not
-part of Undo, matching vial-gui. Tap dance, combos, key overrides and QMK
+part of Undo, matching vial-gui. Before writing, restored macros get the same
+checks as the editor: text a keyboard can't type (including control characters
+that would end a macro early) or a pause outside 0–65024 ms leaves the keyboard's
+macros untouched and tells the user why. Unknown key names are counted in the
+restore message. Tap dance, combos, key overrides and QMK
 settings in a backup are still left untouched and reported to the user.
 
 ## Testing
 
-- 120 unit tests (Vitest), including vial-gui's own macro fixtures and
+- 128 unit tests (Vitest), including vial-gui's own macro fixtures and
   byte-level checks of every new protocol command against the firmware
   simulator in `src/core/fake-keyboard.ts`.
 - 27 browser tests (Playwright) on the demo keyboard, covering each feature

@@ -10,7 +10,7 @@
 import type { KeycodeCatalog } from './keycodes/catalog'
 import type { EncoderKeymap, Target } from './keymap-editor'
 import type { LayoutEncoder, LayoutKey } from './layout'
-import { loadSavedMacro, saveMacro, type Macro } from './macros'
+import { loadSavedMacro, macroProblem, saveMacro, type Macro } from './macros'
 import type { Keymap } from './vial-client'
 
 export interface BackupSource {
@@ -48,6 +48,8 @@ export interface RestorePlan {
   layoutOptions: number | null
   /** Every macro, ready to write, or null when the backup has no macros to restore. */
   macros: Macro[] | null
+  /** Plain-language notes about parts of the backup that won't be restored. */
+  notes: string[]
   /** Keycode names in the backup this app doesn't recognise. */
   unknownKeys: number
   sameKeyboard: boolean
@@ -145,14 +147,25 @@ export function planRestore(backup: Backup, kb: BackupSource): RestorePlan {
   )
 
   // Like restore_macros in vial-gui: fill missing macros with empty ones, drop extras.
-  const macros =
-    backup.macros && kb.macros.length
-      ? kb.macros.map((_, i) => loadSavedMacro(backup.macros![i] ?? [], kb.catalog))
-      : null
+  const notes: string[] = []
+  const backupHasMacros = backup.macros?.some((m) => m.length > 0) ?? false
+  let macros: Macro[] | null = null
+  if (backup.macros && kb.macros.length) {
+    macros = kb.macros.map((_, i) => loadSavedMacro(backup.macros![i] ?? [], kb.catalog, () => unknownKeys++))
+    const problem = macros.map(macroProblem).find(Boolean)
+    if (problem) {
+      // Writing it could shift every later macro in memory, so leave the keyboard's macros alone.
+      notes.push(`The macros in this backup weren't restored: ${problem}`)
+      macros = null
+    }
+  } else if (backupHasMacros) {
+    notes.push('This keyboard has no macros, so the macros in this backup were left out.')
+  }
 
   return {
     changes,
     macros,
+    notes,
     layoutOptions: backup.layoutOptions !== -1 && kb.layoutOptionsValue !== -1 ? backup.layoutOptions : null,
     unknownKeys,
     sameKeyboard: backup.uid === kb.keyboardId,

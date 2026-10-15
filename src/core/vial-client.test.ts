@@ -118,6 +118,22 @@ describe('VialClient', () => {
     expect(t.sent.filter((r) => r[0] === 0x0e)).toHaveLength(1)
   })
 
+  it('handles a macro that ends exactly at the end of a chunk, and empty memory', async () => {
+    const buffer = [...Array(27).fill(0x61), 0, 0x62, 0]
+    const t = new FakeTransport((req) => {
+      const offset = (req[1] << 8) | req[2]
+      return [...req.slice(0, 4), ...buffer.slice(offset, offset + req[3])]
+    })
+    const one = await new VialClient(t).getMacroBuffer(30, 1)
+    expect(one).toHaveLength(28)
+    expect(t.sent).toHaveLength(1)
+    const two = await new VialClient(t).getMacroBuffer(30, 2)
+    expect(two).toHaveLength(30)
+
+    const empty = new FakeTransport((req) => [...req.slice(0, 4)])
+    expect([...(await new VialClient(empty).getMacroBuffer(4, 3))]).toEqual([0, 0, 0])
+  })
+
   it('writes the macro buffer in chunks (CMD_VIA_MACRO_SET_BUFFER)', async () => {
     const t = new FakeTransport((req) => [...req])
     await new VialClient(t).setMacroBuffer(Uint8Array.from({ length: 30 }, (_, i) => i + 1))

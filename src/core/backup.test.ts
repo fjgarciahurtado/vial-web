@@ -126,6 +126,25 @@ describe('planRestore', () => {
     expect(planRestore(parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [] })), source).macros).toBeNull()
   })
 
+  it('counts macro key names it cannot read', () => {
+    const backup = parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [], macro: [[['tap', 'KC_A', 'NOPE']]] }))
+    expect(planRestore(backup, source).unknownKeys).toBe(1)
+  })
+
+  it('skips macros that would corrupt macro memory, and says so', () => {
+    const backup = parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [], macro: [[['text', 'a\u0000b']]] }))
+    const plan = planRestore(backup, source)
+    expect(plan.macros).toBeNull()
+    expect(plan.notes).toEqual([expect.stringMatching(/macros/)])
+  })
+
+  it('says when the keyboard has no room for the backup’s macros', () => {
+    const backup = parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [], macro: [[['text', 'x']]] }))
+    const plan = planRestore(backup, { ...source, macros: [] })
+    expect(plan.macros).toBeNull()
+    expect(plan.notes).toEqual([expect.stringMatching(/no macros/)])
+  })
+
   it('notices backups from a different keyboard', () => {
     const other = parseBackup(JSON.stringify({ version: 1, uid: 5, layout: [] }))
     expect(planRestore(other, source).sameKeyboard).toBe(false)

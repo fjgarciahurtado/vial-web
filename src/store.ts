@@ -129,8 +129,9 @@ export const useApp = create<AppState>((set, get) => {
 
   // Lighting writes run one at a time; while one runs, newer values replace older waiting ones.
   let pendingLighting: LightingState | null = null
-  let writingLighting: Promise<void> | null = null
-  function flushLighting(): Promise<void> {
+  let writingLighting: Promise<boolean> | null = null
+  /** Sends queued lighting changes. Resolves to false if one failed; later queued values are dropped. */
+  function flushLighting(): Promise<boolean> {
     if (writingLighting) return writingLighting
     writingLighting = (async () => {
       try {
@@ -139,8 +140,11 @@ export const useApp = create<AppState>((set, get) => {
           pendingLighting = null
           await get().lights?.update(next)
         }
+        return true
       } catch (err) {
+        pendingLighting = null
         set({ notice: `The lighting change wasn't sent: ${err instanceof Error ? err.message : 'the keyboard did not answer.'}` })
+        return false
       } finally {
         writingLighting = null
       }
@@ -219,7 +223,7 @@ export const useApp = create<AppState>((set, get) => {
 
   /** Saves macros like vial-gui's macro recorder: unlock, then write the whole macro memory. */
   async function writeMacros(macros: Macro[]): Promise<string | null> {
-    const { keyboard, client } = get()
+    const { keyboard, client, macroDrafts: draftsAtStart } = get()
     if (!keyboard || !client) return null
     const data = serializeMacros(macros, keyboard.vialProtocol)
     if (data.length > keyboard.macroMemory) {
@@ -231,7 +235,11 @@ export const useApp = create<AppState>((set, get) => {
     } catch (err) {
       return `The macros weren't saved: ${err instanceof Error ? err.message : 'the keyboard did not answer.'}`
     }
-    set({ keyboard: { ...get().keyboard!, macros }, macroDrafts: macros })
+    // The keyboard may have been unplugged while saving, and edits made meanwhile must survive.
+    const now = get()
+    if (!now.keyboard) return null
+    const untouched = JSON.stringify(now.macroDrafts) === JSON.stringify(draftsAtStart)
+    set({ keyboard: { ...now.keyboard, macros }, ...(untouched && { macroDrafts: macros }) })
     return 'Macros saved.'
   }
 
@@ -254,6 +262,7 @@ export const useApp = create<AppState>((set, get) => {
         plan.unknownKeys && `${plan.unknownKeys} keys used names this app doesn't know, so they were left as they were.`,
         skippedBoot && 'The bootloader key was skipped because the keyboard is still locked.',
         notRestored.length && `This backup also has ${listOf(notRestored)}, which this app can't restore yet. Those stay as they are on the keyboard.`,
+        ...plan.notes,
       ].filter(Boolean)
       return ['Restored the backup. Use Undo change to go back.', ...notes].join(' ')
     })
@@ -341,10 +350,15 @@ export const useApp = create<AppState>((set, get) => {
     },
 
     async saveMacros() {
-      const { keyboard, macroDrafts } = get()
-      if (!keyboard) return
-      const notice = await writeMacros(macroDrafts)
-      if (notice) set({ notice })
+      const { keyboard, macroDrafts, busy } = get()
+      if (!keyboard || busy) return
+      set({ busy: true })
+      try {
+        const notice = await writeMacros(macroDrafts)
+        if (notice) set({ notice })
+      } finally {
+        set({ busy: false })
+      }
     },
 
     async disconnect() {
@@ -426,9 +440,14 @@ export const useApp = create<AppState>((set, get) => {
     async saveLighting() {
       const { lights } = get()
       if (!lights) return
-      await flushLighting()
-      await lights.save()
-      set({ notice: 'Lighting saved. It stays like this after unplugging.' })
+      // Saving after a failed write would store something other than what the screen shows.
+      if (!(await flushLighting())) return
+      try {
+        await lights.save()
+        set({ notice: 'Lighting saved. It stays like this after unplugging.' })
+      } catch (err) {
+        set({ notice: `The lighting wasn't saved: ${err instanceof Error ? err.message : 'the keyboard did not answer.'}` })
+      }
     },
 
     async lock() {
