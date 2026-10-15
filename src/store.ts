@@ -5,12 +5,16 @@ import { openDemoKeyboard } from './core/demo'
 import { loadKeyboard, type LoadedKeyboard } from './core/keyboard'
 import { KeymapEditor, type Target } from './core/keymap-editor'
 import { packLayoutChoices, unpackLayoutChoices } from './core/layout'
+import { LightingController, type LightingState } from './core/lighting'
 import type { HidTransport } from './core/transport'
 import { unlockKeyboard } from './core/unlock'
 import { VialClient } from './core/vial-client'
 import { isWebHidSupported, WebHidTransport } from './core/webhid-transport'
 
 type Status = 'idle' | 'connecting' | 'ready' | 'error'
+
+/** The main areas of the app once a keyboard is open. */
+export type View = 'keys' | 'lighting'
 
 /** The key or knob direction being edited, on the current layer. */
 export type Selection = { kind: 'key'; row: number; col: number } | { kind: 'encoder'; index: number; direction: number }
@@ -19,6 +23,8 @@ const KNOB_TURNS = ['Turn left', 'Turn right']
 
 /** State with no keyboard open. */
 const CLOSED = {
+  view: 'keys' as View,
+  lights: null,
   keyboard: null,
   transport: null,
   editor: null,
@@ -75,6 +81,13 @@ interface AppState {
   cancelRestore(): void
   /** Locks the keyboard again so it refuses risky changes. */
   lock(): Promise<void>
+  view: View
+  setView(view: View): void
+  lights: LightingController | null
+  /** Shows a lighting change on the keyboard right away. Fast slider moves send only the latest value. */
+  setLighting(next: LightingState): void
+  /** Keeps the current lighting after the keyboard is unplugged. */
+  saveLighting(): Promise<void>
 }
 
 export const useApp = create<AppState>((set, get) => {
@@ -98,6 +111,27 @@ export const useApp = create<AppState>((set, get) => {
     }
   }
 
+  // Lighting writes run one at a time; while one runs, newer values replace older waiting ones.
+  let pendingLighting: LightingState | null = null
+  let writingLighting: Promise<void> | null = null
+  function flushLighting(): Promise<void> {
+    if (writingLighting) return writingLighting
+    writingLighting = (async () => {
+      try {
+        while (pendingLighting) {
+          const next = pendingLighting
+          pendingLighting = null
+          await get().lights?.update(next)
+        }
+      } catch (err) {
+        set({ notice: `The lighting change wasn't sent: ${err instanceof Error ? err.message : 'the keyboard did not answer.'}` })
+      } finally {
+        writingLighting = null
+      }
+    })()
+    return writingLighting
+  }
+
   function opened(transport: HidTransport, keyboard: LoadedKeyboard, isDemo: boolean) {
     const client = new VialClient(transport)
     set({
@@ -112,6 +146,8 @@ export const useApp = create<AppState>((set, get) => {
       layer: 0,
       selected: null,
       editor: new KeymapEditor(client, keyboard.keymap, keyboard.encoderKeymap),
+      lights: new LightingController(client, keyboard.lighting),
+      view: 'keys',
       canUndo: false,
       canRedo: false,
       notice: null,
@@ -191,6 +227,8 @@ export const useApp = create<AppState>((set, get) => {
   return {
     status: 'idle',
     error: null,
+    view: 'keys',
+    lights: null,
     keyboard: null,
     isDemo: false,
     layer: 0,
@@ -306,6 +344,26 @@ export const useApp = create<AppState>((set, get) => {
 
     cancelRestore() {
       set({ pendingRestore: null, notice: 'Nothing was changed.' })
+    },
+
+    setView(view) {
+      set({ view, notice: null })
+    },
+
+    setLighting(next) {
+      const { keyboard } = get()
+      if (!keyboard) return
+      set({ keyboard: { ...keyboard, lighting: { ...keyboard.lighting, ...next } } })
+      pendingLighting = { ...pendingLighting, ...next }
+      if (!writingLighting) flushLighting()
+    },
+
+    async saveLighting() {
+      const { lights } = get()
+      if (!lights) return
+      await flushLighting()
+      await lights.save()
+      set({ notice: 'Lighting saved. It stays like this after unplugging.' })
     },
 
     async lock() {

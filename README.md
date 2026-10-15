@@ -21,8 +21,9 @@ tested against the built-in demo keyboard so far, not real hardware.
 - Build combined keys in plain words: shortcuts (Ctrl + C), tap for one key and hold for a
   modifier, or tap for one key and hold for a layer.
 
-Not yet: macros, lighting, key tester, tap dance, combos, firmware flashing, and the
-desktop app.
+- Lighting: backlight, RGB underglow and per-key VialRGB, with a live colour preview.
+
+Not yet: macros, key tester, tap dance, combos, firmware flashing, and the desktop app.
 
 ## Development
 

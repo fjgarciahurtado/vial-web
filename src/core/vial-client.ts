@@ -6,6 +6,9 @@ const CMD_VIA_GET_PROTOCOL_VERSION = 0x01
 const CMD_VIA_GET_KEYBOARD_VALUE = 0x02
 const CMD_VIA_SET_KEYBOARD_VALUE = 0x03
 const CMD_VIA_SET_KEYCODE = 0x05
+const CMD_VIA_LIGHTING_SET_VALUE = 0x07
+const CMD_VIA_LIGHTING_GET_VALUE = 0x08
+const CMD_VIA_LIGHTING_SAVE = 0x09
 const CMD_VIA_MACRO_GET_COUNT = 0x0c
 const CMD_VIA_GET_LAYER_COUNT = 0x11
 const CMD_VIA_KEYMAP_GET_BUFFER = 0x12
@@ -175,6 +178,20 @@ export class VialClient {
 
   async setEncoder(layer: number, index: number, direction: number, code: number): Promise<void> {
     await this.request([CMD_VIA_VIAL_PREFIX, CMD_VIAL_SET_ENCODER, layer, index, direction, (code >> 8) & 0xff, code & 0xff])
+  }
+
+  /** Reads a lighting value; returns the reply after the command and id bytes. */
+  async lightingGet(id: number, ...args: number[]): Promise<number[]> {
+    const data = await this.request([CMD_VIA_LIGHTING_GET_VALUE, id, ...args])
+    return [...new Uint8Array(data.buffer, data.byteOffset + 2, MSG_LEN - 2)]
+  }
+
+  async lightingSet(id: number, ...values: number[]): Promise<void> {
+    await this.request([CMD_VIA_LIGHTING_SET_VALUE, id, ...values])
+  }
+
+  async lightingSave(): Promise<void> {
+    await this.request([CMD_VIA_LIGHTING_SAVE])
   }
 
   async getKeymap(layers: number, rows: number, cols: number): Promise<Keymap> {

@@ -30,6 +30,10 @@ export class FakeKeyboard {
   unlocked: boolean
   unlockInProgress = false
   private unlockCounter = 0
+  /** QMK lighting values by VIA id, e.g. 0x09 backlight brightness. */
+  readonly lighting: Record<number, number[]> = {}
+  vialrgb = { maxBrightness: 255, effects: [] as number[], mode: 0, speed: 0, hsv: [0, 0, 0] }
+  lightingSaved = false
   readonly transport: FakeTransport
   private readonly definition: Uint8Array
   private readonly options: FakeKeyboardOptions
@@ -65,6 +69,20 @@ export class FakeKeyboard {
         this.keymap.set([req[4], req[5]], ((req[1] * rows + req[2]) * cols + req[3]) * 2)
         return [...req]
       }
+      case 0x07: // CMD_VIA_LIGHTING_SET_VALUE
+        if (req[1] === 0x41) {
+          this.vialrgb.mode = req[2] | (req[3] << 8)
+          this.vialrgb.speed = req[4]
+          this.vialrgb.hsv = [req[5], req[6], req[7]]
+        } else {
+          this.lighting[req[1]] = req[1] === 0x83 ? [req[2], req[3]] : [req[2]]
+        }
+        return [...req]
+      case 0x08: // CMD_VIA_LIGHTING_GET_VALUE
+        return [0x08, req[1], ...this.lightingValue(req)]
+      case 0x09: // CMD_VIA_LIGHTING_SAVE
+        this.lightingSaved = true
+        return [...req]
       case 0x0c: // CMD_VIA_MACRO_GET_COUNT
         return [0x0c, options.macroCount ?? 0]
       case 0x11: // CMD_VIA_GET_LAYER_COUNT
@@ -140,6 +158,24 @@ export class FakeKeyboard {
       }
     }
     return []
+  }
+
+  private lightingValue(req: Uint8Array): number[] {
+    const rgb = this.vialrgb
+    switch (req[1]) {
+      case 0x40: // VIALRGB_GET_INFO: protocol version 1, max brightness
+        return [1, 0, rgb.maxBrightness]
+      case 0x41: // VIALRGB_GET_MODE
+        return [rgb.mode & 0xff, rgb.mode >> 8, rgb.speed, ...rgb.hsv]
+      case 0x42: {
+        // VIALRGB_GET_SUPPORTED: up to 15 effects above the given one, then 0xFFFF
+        const after = req[2] | (req[3] << 8)
+        const next = rgb.effects.filter((e) => e > after).slice(0, 15)
+        while (next.length < 15) next.push(0xffff)
+        return next.flatMap((e) => [e & 0xff, e >> 8])
+      }
+    }
+    return this.lighting[req[1]] ?? [0, 0]
   }
 
   /** Reads a keycode straight from the fake EEPROM. */

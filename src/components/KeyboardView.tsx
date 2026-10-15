@@ -24,6 +24,8 @@ interface Props {
   onSelect?(selection: Selection): void
   /** Size classes for the drawing; it keeps its shape and centres inside them. */
   className?: string
+  /** Light around the case, like underglow: a CSS colour, or "rainbow". */
+  glow?: string
 }
 
 const TONES = {
@@ -53,6 +55,7 @@ export function KeyboardView({
   highlighted = [],
   onSelect,
   className = 'w-full max-w-5xl',
+  glow,
 }: Props) {
   const placed = placeKeys<LayoutKey | LayoutEncoder>([...keys, ...encoders], layoutChoices)
   const width = Math.max(...placed.map((k) => k.x + k.w)) * U + PAD * 2
@@ -61,7 +64,8 @@ export function KeyboardView({
   return (
     <svg
       viewBox={`0 0 ${width} ${height}`}
-      className={`${className} drop-shadow-[0_16px_24px_rgba(29,39,49,0.28)]`}
+      className={`${className} overflow-visible transition-[filter] duration-300`}
+      style={{ filter: glowFilter(glow) }}
       role={onSelect ? 'group' : 'img'}
       aria-label="Keyboard layout"
     >
@@ -192,3 +196,17 @@ function fitText(text: string, width: number, charWidth = 7.5): string {
   const max = Math.max(1, Math.floor(width / charWidth))
   return text.length > max ? `${text.slice(0, max - 1)}…` : text
 }
+
+const SHADOW = 'drop-shadow(0 16px 24px rgb(29 39 49 / 0.28))'
+const RAINBOW_GLOW = [
+  'drop-shadow(-14px -6px 16px hsl(0 90% 60% / 0.7))',
+  'drop-shadow(14px -6px 16px hsl(120 90% 50% / 0.7))',
+  'drop-shadow(0 12px 16px hsl(230 90% 60% / 0.7))',
+].join(' ')
+
+function glowFilter(glow: string | undefined): string {
+  if (!glow) return SHADOW
+  if (glow === 'rainbow') return RAINBOW_GLOW
+  return `drop-shadow(0 0 18px ${glow}) drop-shadow(0 10px 20px ${glow})`
+}
+

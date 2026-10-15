@@ -43,6 +43,7 @@ export async function openDemoKeyboard(): Promise<{ transport: HidTransport; key
       name: 'Demo 60% keyboard',
       matrix: { rows: ROWS.length, cols: COLS },
       layouts: { labels: ['Split Backspace'], keymap: kleRows() },
+      lighting: 'vialrgb',
     },
     layers: 2,
     vialProtocol: 6,
@@ -69,6 +70,7 @@ export async function openDemoKeyboard(): Promise<{ transport: HidTransport; key
   put(1, 0, SPLIT_COL, ___)
   fake.encoders[0][0] = [0xaa, 0xa9] // Volume Down / Up
   fake.encoders[1][0] = [0xac, 0xab] // Previous / Next Track
+  fake.vialrgb = { maxBrightness: 200, effects: [1, 2, 6, 13, 24, 29, 39], mode: 6, speed: 128, hsv: [150, 220, 160] }
 
   const keyboard = await loadKeyboard(fake.transport, 'Demo keyboard', { decompress: async (bytes) => bytes })
   return { transport: fake.transport, keyboard }

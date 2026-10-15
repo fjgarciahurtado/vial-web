@@ -5,6 +5,7 @@ import { BackupControls, RestoreConfirmation } from '@/components/BackupControls
 import { KeyPicker } from '@/components/KeyPicker'
 import { KeyboardView } from '@/components/KeyboardView'
 import { LayoutOptions } from '@/components/LayoutOptions'
+import { LightingPanel, lightingGlow } from '@/components/LightingPanel'
 import { UnlockDialog } from '@/components/UnlockDialog'
 import { Button } from '@/components/ui/button'
 import { openDemoKeyboard } from '@/core/demo'
@@ -14,6 +15,7 @@ import { useApp } from '@/store'
 
 export default function App() {
   const keyboard = useApp((s) => s.keyboard)
+  const view = useApp((s) => s.view)
 
   return (
     // With a keyboard open, the page fills the window exactly: the keyboard and the
@@ -24,13 +26,12 @@ export default function App() {
           <KeyboardIcon className="size-5" aria-hidden />
           Vial
         </span>
+        {keyboard && <ViewNav />}
         {keyboard && <ConnectedBadge />}
       </header>
       {keyboard ? (
         <main className="min-h-0 flex-1 overflow-y-auto">
-          <div className="mx-auto h-full max-w-6xl px-6">
-            <Editor />
-          </div>
+          <div className="mx-auto h-full max-w-6xl px-6">{view === 'lighting' ? <LightingView /> : <Editor />}</div>
         </main>
       ) : (
         <main className="mx-auto max-w-6xl px-6 pb-16">
@@ -160,6 +161,58 @@ function ConnectedBadge() {
   )
 }
 
+/** Switches between changing keys and changing lights. Lighting shows only on keyboards that have it. */
+function ViewNav() {
+  const { keyboard, view, setView } = useApp()
+  if (!keyboard) return null
+  const { backlight, rgblight, vialrgb } = keyboard.lightingKind
+  const views = [
+    { id: 'keys' as const, title: 'Keys' },
+    ...(backlight || rgblight || vialrgb ? [{ id: 'lighting' as const, title: 'Lighting' }] : []),
+  ]
+  if (views.length < 2) return null
+  return (
+    <nav aria-label="Sections" className="flex gap-1 rounded-xl bg-panel p-1">
+      {views.map((v) => (
+        <button
+          key={v.id}
+          aria-current={view === v.id ? 'page' : undefined}
+          onClick={() => setView(v.id)}
+          className={`rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-pick ${
+            view === v.id ? 'bg-ink text-desk' : 'text-ink-soft hover:text-ink'
+          }`}
+        >
+          {v.title}
+        </button>
+      ))}
+    </nav>
+  )
+}
+
+function LightingView() {
+  const { keyboard, notice } = useApp()
+  if (!keyboard) return null
+  return (
+    <div className="flex flex-col items-center gap-4 pb-10">
+      <h1 className="w-full text-2xl font-bold tracking-tight">{keyboard.name}</h1>
+      <KeyboardView
+        keys={keyboard.keys}
+        encoders={keyboard.encoders}
+        keycodes={keyboard.keymap[0]}
+        encoderCodes={keyboard.encoderKeymap[0]}
+        layoutChoices={keyboard.layoutChoices}
+        catalog={keyboard.catalog}
+        className="max-h-[32svh] w-full flex-none"
+        glow={lightingGlow(keyboard.lighting)}
+      />
+      <p className="min-h-6 w-full" aria-live="polite">
+        {notice}
+      </p>
+      <LightingPanel />
+    </div>
+  )
+}
+
 function Editor() {
   const { keyboard, layer, setLayer, selected, select, assign, undo, redo, canUndo, canRedo, notice, busy, setLayoutChoice } =
     useApp()
@@ -214,6 +267,7 @@ function Editor() {
         selected={selected}
         onSelect={select}
         className="max-h-[38svh] w-full flex-none"
+        glow={lightingGlow(keyboard.lighting)}
       />
 
       <RestoreConfirmation />
