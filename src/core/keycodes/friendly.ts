@@ -123,3 +123,41 @@ export function maskedKeyName(outerId: string, inner: string): string | undefine
   const mods = MODIFIERS[prefix]
   return mods && `${mods} + ${inner}`
 }
+
+const LAYER_LEGENDS: Record<string, string> = {
+  MO: 'hold',
+  TG: 'toggle',
+  TO: 'switch',
+  DF: 'default',
+  PDF: 'default',
+  TT: 'hold/tap',
+  OSL: 'next key',
+}
+
+/** Keycap legend for layer keys such as MO(1): ["L1", "hold"]. */
+export function layerKeyLegend(id: string): string[] | undefined {
+  const match = /^([A-Z]+)\((\d+)\)$/.exec(id)
+  const action = match && LAYER_LEGENDS[match[1]]
+  return action ? [`L${match[2]}`, action] : undefined
+}
+
+/** Short modifier names from QMK modifier bits (Ctrl 1, Shift 2, Alt 4, Win 8, right side 16). */
+export function modsShort(bits: number): string {
+  const mods = bits & 0x0f
+  if (mods === 0x0f) return 'Hyper'
+  if (mods === 0x07 && !(bits & 0x10)) return 'Meh'
+  const side = bits & 0x10 ? 'R' : ''
+  return ['Ctrl', 'Shift', 'Alt', 'Win']
+    .filter((_, i) => mods & (1 << i))
+    .map((m) => side + m)
+    .join('+')
+}
+
+/** Keycap legend for combined keys, given the outer keycode and the inner key's legend. */
+export function maskedKeyLegend(outerId: string, outerCode: number, inner: string): string[] {
+  const layerTap = /^LT(\d+)\(kc\)$/.exec(outerId)
+  if (layerTap) return [inner, `hold L${layerTap[1]}`]
+  const mods = modsShort((outerCode >> 8) & 0x1f)
+  return outerId.endsWith('_T(kc)') ? [inner, `hold ${mods}`] : [`${mods} +`, inner]
+}
+

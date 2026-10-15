@@ -85,8 +85,7 @@ export function KeyboardView({
         const w = item.w * U - GAP
         const h = item.h * U - GAP
         const { angle, x: rx, y: ry } = item.rotation
-        const lines = legendLines(legend, w)
-        const fontSize = lines.length > 2 ? 10 : 13
+        const { lines, fontSize } = legendLines(legend, w)
         const lineHeight = fontSize + 2
         const radius = Math.min(w, h) / 2
 
@@ -166,14 +165,27 @@ function sameSelection(a: Selection | null | undefined, b: Selection): boolean {
     : a.kind === 'encoder' && b.kind === 'encoder' && a.index === b.index && a.direction === b.direction
 }
 
-/** Fits legend lines to the cap width; one long word becomes two lines ("Right Shift"). */
-function legendLines(legend: string[], width: number): string[] {
-  const max = Math.floor((width - 16) / 7.5)
-  if (legend.length === 1 && legend[0].length > max && legend[0].includes(' ')) {
-    const space = legend[0].indexOf(' ')
-    return [fitText(legend[0].slice(0, space), width - 16), fitText(legend[0].slice(space + 1), width - 16)]
+/** Average glyph width as a share of the font size, for the legend font. */
+const CHAR_WIDTH = 0.58
+const MAX_FONT = 13
+const MIN_FONT = 8
+
+/**
+ * Fits legend lines to the cap: a long single legend splits at its first space
+ * ("Right Shift"), then the font shrinks until the longest line fits. Only text
+ * that still doesn't fit at the smallest size is shortened.
+ */
+function legendLines(legend: string[], width: number): { lines: string[]; fontSize: number } {
+  const room = width - 16
+  let lines = legend.slice(0, 3)
+  if (lines.length === 1 && lines[0].length * CHAR_WIDTH * MAX_FONT > room && lines[0].includes(' ')) {
+    const space = lines[0].indexOf(' ')
+    lines = [lines[0].slice(0, space), lines[0].slice(space + 1)]
   }
-  return legend.slice(0, 3).map((l) => fitText(l, width - 16))
+  const longest = Math.max(1, ...lines.map((l) => l.length))
+  const cap = lines.length > 2 ? 10 : MAX_FONT
+  const fontSize = Math.max(MIN_FONT, Math.min(cap, room / (longest * CHAR_WIDTH)))
+  return { lines: lines.map((l) => fitText(l, room, fontSize * CHAR_WIDTH)), fontSize }
 }
 
 function fitText(text: string, width: number, charWidth = 7.5): string {

@@ -115,9 +115,21 @@ describe('KeycodeCatalog.describe', () => {
 
   it('describes combined keys in words', () => {
     const catalog = v6()
-    expect(catalog.describe(0x0204)).toMatchObject({ name: 'Shift + A', legend: ['LSft', 'A'] })
+    expect(catalog.describe(0x0204)).toMatchObject({ name: 'Shift + A', legend: ['Shift +', 'A'] })
+    expect(catalog.describe(0x0306).legend).toEqual(['Ctrl+Shift +', 'C'])
+    expect(catalog.describe(0x2129).legend).toEqual(['Esc', 'hold Ctrl'])
+    expect(catalog.describe(0x3204).legend).toEqual(['A', 'hold RShift'])
+    expect(catalog.describe(0x412c).legend).toEqual(['Space', 'hold L1'])
+    expect(catalog.describe(0x0f04).legend).toEqual(['Hyper +', 'A'])
     expect(catalog.describe(0x422c).name).toBe('Hold for layer 2, tap for Space')
     expect(catalog.describe(0x5221).name).toBe('Hold for layer 1')
+  })
+
+  it('gives layer keys short legends that say what they do', () => {
+    const catalog = v6()
+    expect(catalog.describe(0x5221).legend).toEqual(['L1', 'hold'])
+    expect(catalog.describe(catalog.deserialize('TG(2)')!).legend).toEqual(['L2', 'toggle'])
+    expect(catalog.describe(catalog.deserialize('TO(0)')!).legend).toEqual(['L0', 'switch'])
   })
 
   it('falls back to the hex code for unknown values', () => {

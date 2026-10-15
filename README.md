@@ -18,8 +18,11 @@ tested against the built-in demo keyboard so far, not real hardware.
 - Light and dark mode, following the system.
 - Try everything without hardware using the demo keyboard.
 
-Not yet: combined keys such as Shift + key or mod-tap, macros, lighting, tap dance, combos,
-firmware flashing, and the desktop app.
+- Build combined keys in plain words: shortcuts (Ctrl + C), tap for one key and hold for a
+  modifier, or tap for one key and hold for a layer.
+
+Not yet: macros, lighting, key tester, tap dance, combos, firmware flashing, and the
+desktop app.
 
 ## Development
 

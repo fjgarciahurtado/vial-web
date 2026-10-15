@@ -6,7 +6,7 @@
  * so names and numeric values match vial-gui exactly. This module adds the
  * per-keyboard filtering, plain-language names and search.
  */
-import { KEYWORDS, NAMES, layerKeyName, maskedKeyName } from './friendly'
+import { KEYWORDS, NAMES, layerKeyLegend, layerKeyName, maskedKeyLegend, maskedKeyName } from './friendly'
 
 export type KeycodeGroup =
   | 'special'
@@ -105,6 +105,11 @@ export class KeycodeCatalog {
     this.visible = this.entries.filter((entry) => isAvailable(entry, caps))
   }
 
+  /** The table entry for an exact code, if there is one. */
+  entry(code: number): KeycodeEntry | undefined {
+    return this.byCode.get(code)
+  }
+
   /** Keycodes this keyboard can use, in vial-gui's order. */
   available(): KeycodeEntry[] {
     return this.visible
@@ -151,7 +156,7 @@ export class KeycodeCatalog {
           code,
           id: this.serialize(code),
           name: maskedKeyName(outer.id, innerName) ?? `${firstLine(outer.label)} + ${innerName}`,
-          legend: [firstLine(outer.label), ...innerLegend.slice(-1)],
+          legend: maskedKeyLegend(outer.id, outer.code, innerLegend.at(-1) ?? ''),
           tooltip: outer.tooltip?.replaceAll('kc', innerName),
           group: outer.group,
         }
@@ -242,7 +247,7 @@ function nameOf(entry: KeycodeEntry): string {
 }
 
 function legendOf(entry: KeycodeEntry): string[] {
-  return entry.label ? entry.label.split('\n') : []
+  return layerKeyLegend(entry.id) ?? (entry.label ? entry.label.split('\n') : [])
 }
 
 function firstLine(label: string): string {
