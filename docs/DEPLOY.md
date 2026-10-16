@@ -27,7 +27,7 @@ including on custom domains.
 | Deploy previews | Every pull request gets its own preview site, so changes can be tried on a real keyboard before merging. |
 | `/*` → `/index.html` | The app is one page; unknown paths load it instead of a 404. |
 | `Permissions-Policy` | Allows WebHID for this site only, and turns off camera, microphone, location, WebUSB and Web Serial, which the app doesn't use. |
-| `Content-Security-Policy` | Only files from this site may load; no inline scripts or styles, no framing by other sites. |
+| `Content-Security-Policy` | Only files from this site may load; no inline scripts or styles, no framing by other sites. `'wasm-unsafe-eval'` lets the xz decoder, which is WebAssembly, unpack each keyboard's definition. |
 | `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy` | Standard hardening. |
 | `Cache-Control` | Files in `/assets/` have a content hash in their name, so they are cached for a year; `index.html` is always revalidated so releases show up straight away. |
 
@@ -35,7 +35,8 @@ including on custom domains.
 
 `npm run test:csp` builds the site and replays the main flows (demo keyboard, key
 picker, lighting, macros) with the exact `Content-Security-Policy` from
-`netlify.toml`, failing on any violation. Run it whenever the policy or the way the
+`netlify.toml`, failing on any violation. It also compiles a WebAssembly module,
+because the demo keyboard skips the xz decoder that real keyboards need. Run it whenever the policy or the way the
 app loads files changes.
 
 ## Deploying from Claude Code (optional)
