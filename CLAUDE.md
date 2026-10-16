@@ -33,6 +33,8 @@ Desktop wrapper (Tauri 2 + Rust `hidapi`) is planned, not started.
     `macros.ts` (byte format tested against vial-gui's own fixtures), `qmk-settings.ts` (QMK settings,
     with plain-language names; qsid, bit, width and limits from vial-gui's `qmk_settings.json`),
     `combos.ts`, `tap-dance.ts`, `key-overrides.ts` and `alt-repeat.ts` (read and written through the dynamic entry commands in `vial-client.ts`).
+  - `midi.ts` — MIDI notes, chord keys (read from custom keycode descriptions) and plain names for
+    MIDI keys; drawn as a piano by `components/MidiPicker.tsx`.
   - `fake-keyboard.ts` — firmware simulator for tests. `demo.ts` uses it for "Try a demo keyboard".
 - `src/store.ts` — app state. `src/components/` — UI.
 

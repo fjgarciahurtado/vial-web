@@ -35,6 +35,8 @@ done, and add new ones as they come up.
   redeploy automatically and pull requests get preview sites.
 - [ ] **Phase 3** (below): all features built. QMK settings, combos, tap dance and key
   overrides tested on a real keyboard; alt repeat keys wait for newer firmware (below).
+- [ ] **Test the MIDI piano on real hardware** (Phase 3.5): kb8knob/midi, with its six
+  chord keys.
 - [ ] **Test alt repeat keys on real hardware.** The fjgh firmware is an older Vial build
   without them, so it needs a firmware update from upstream vial-qmk first.
 
@@ -126,6 +128,26 @@ keys.
 
 These all use the dynamic entry commands (`CMD_VIAL_DYNAMIC_ENTRY_OP`), so they
 share one protocol module. Each feature can ship on its own.
+
+## Phase 3.5: MIDI piano
+
+For keyboards that play music. Asked for by the project's owner, who builds MIDI pads.
+
+Status: built; what changed is described in [MIDI.md](MIDI.md).
+
+- The MIDI tab of the key picker draws a piano instead of a grid of keycaps. Clicking
+  a piano key puts that note on the selected key.
+- The keyboard's chord keys (custom keycodes whose description lists notes, such as
+  "Acorde Do Mayor (C4 - E4 - G4)") are shown as chords, with their notes lit on the
+  piano.
+- Note names as C D E or Do Re Mi.
+- The other MIDI keys (octave, transpose, velocity, channel, pedals) grouped with
+  plain names.
+- MIDI keys are named after the note they play ("MIDI C4") everywhere.
+
+Later, if wanted: making new chords from the app. QMK has no chord keycodes, so this
+needs firmware support first; today chords are written into each keyboard's
+firmware.
 
 ## Phase 4: Desktop app
 

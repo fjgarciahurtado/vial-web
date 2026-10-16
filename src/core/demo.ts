@@ -49,6 +49,14 @@ export async function openDemoKeyboard(): Promise<{
       matrix: { rows: ROWS.length, cols: COLS },
       layouts: { labels: ['Split Backspace'], keymap: kleRows() },
       lighting: 'vialrgb',
+      vial: { midi: 'advanced' },
+      // Chord keys, as a MIDI keyboard's firmware might add them. Their notes are in the description.
+      customKeycodes: [
+        { name: 'C_MAJ', title: 'C major chord (C4 - E4 - G4)', shortName: 'C' },
+        { name: 'A_MIN', title: 'A minor chord (A3 - C4 - E4)', shortName: 'Am' },
+        { name: 'F_MAJ', title: 'F major chord (F3 - A3 - C4)', shortName: 'F' },
+        { name: 'G_MAJ', title: 'G major chord (G3 - B3 - D4)', shortName: 'G' },
+      ],
     },
     layers: 2,
     vialProtocol: 6,

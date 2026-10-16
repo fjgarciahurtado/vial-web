@@ -28,6 +28,9 @@ full plan and the list of open issues are in [docs/ROADMAP.md](docs/ROADMAP.md).
 
 - Macros: type text and press keys, built from plain steps, saved to the keyboard and in backups.
 
+- MIDI keyboards: the MIDI tab is a piano. Click a note to put it on a key, see the keyboard's
+  chord keys with their notes lit, and switch note names between C D E and Do Re Mi.
+
 - Advanced: tap dance (one key that acts differently when tapped, held or tapped twice), combos
   (press keys together for another key), key overrides (Shift + Backspace sends Delete), Alt Repeat
   pairs (after Up, Alt Repeat sends Down), and QMK settings such as tap-hold timing, key swaps and
