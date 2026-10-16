@@ -39,9 +39,6 @@ done, and add new ones as they come up.
   redeploy automatically and pull requests get preview sites.
 - [ ] **Phase 3** (below): QMK settings done; tap dance, combos, key overrides and alt
   repeat key still to do.
-- [ ] **Test QMK settings on real hardware.** Only tested against the demo keyboard.
-  The fjgh firmware is an older Vial build, so it has the older tap-hold settings
-  (qsid 8) rather than the newer ones (22 to 27); check both kinds show up right.
 
 ## Phase 0: Foundation (done)
 
