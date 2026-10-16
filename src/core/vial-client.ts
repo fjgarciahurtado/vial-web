@@ -31,6 +31,14 @@ const CMD_VIAL_QMK_SETTINGS_SET = 0x0b
 const CMD_VIAL_QMK_SETTINGS_RESET = 0x0c
 const CMD_VIAL_DYNAMIC_ENTRY_OP = 0x0d
 const DYNAMIC_VIAL_GET_NUMBER_OF_ENTRIES = 0x00
+export const DYNAMIC_VIAL_TAP_DANCE_GET = 0x01
+export const DYNAMIC_VIAL_TAP_DANCE_SET = 0x02
+export const DYNAMIC_VIAL_COMBO_GET = 0x03
+export const DYNAMIC_VIAL_COMBO_SET = 0x04
+export const DYNAMIC_VIAL_KEY_OVERRIDE_GET = 0x05
+export const DYNAMIC_VIAL_KEY_OVERRIDE_SET = 0x06
+export const DYNAMIC_VIAL_ALT_REPEAT_KEY_GET = 0x07
+export const DYNAMIC_VIAL_ALT_REPEAT_KEY_SET = 0x08
 
 /** Optional firmware features reported in the last byte of the dynamic entry count reply. */
 const FEATURE_BITS: [number, string][] = [
@@ -149,6 +157,22 @@ export class VialClient {
       altRepeatKey: data.getUint8(3),
       features: FEATURE_BITS.filter(([bit]) => flags & (1 << bit)).map(([, name]) => name),
     }
+  }
+
+  /**
+   * Reads one tap dance, combo, key override or alt repeat key entry; returns its bytes
+   * after the status byte. Ported from _retrieve_dynamic_entries() in protocol/base_protocol.py.
+   */
+  async getDynamicEntry(op: number, index: number): Promise<Uint8Array> {
+    const data = await this.request([CMD_VIA_VIAL_PREFIX, CMD_VIAL_DYNAMIC_ENTRY_OP, op, index])
+    if (data.getUint8(0) !== 0) throw new Error(`the keyboard couldn't read entry ${index}`)
+    return new Uint8Array(data.buffer, data.byteOffset + 1, MSG_LEN - 1)
+  }
+
+  /** Writes one dynamic entry (combo_set() and friends). */
+  async setDynamicEntry(op: number, index: number, bytes: number[]): Promise<void> {
+    const data = await this.request([CMD_VIA_VIAL_PREFIX, CMD_VIAL_DYNAMIC_ENTRY_OP, op, index, ...bytes])
+    if (data.getUint8(0) !== 0) throw new Error(`the keyboard refused entry ${index}`)
   }
 
   /** Setting ids greater than `after`, padded with 0xFFFF once the list ends (reload_settings). */

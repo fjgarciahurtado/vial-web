@@ -3,10 +3,11 @@
  * Keymap backups in vial-gui's .vil format (save_layout / restore_layout in
  * protocol/keyboard_comm.py), so files move freely between the two apps.
  *
- * vial-web writes only what it manages: keys, knobs, layout options, macros and
- * QMK settings. vial-gui skips missing sections when restoring, so a vial-web
- * backup never clears tap dance, combos or other features in vial-gui.
+ * vial-web writes only what it manages: keys, knobs, layout options, macros,
+ * combos and QMK settings. vial-gui skips missing sections when restoring, so a
+ * vial-web backup never clears tap dance or other features in vial-gui.
  */
+import { isEmptyCombo, loadSavedCombo, saveCombo, type Combo } from './combos'
 import type { KeycodeCatalog } from './keycodes/catalog'
 import type { EncoderKeymap, Target } from './keymap-editor'
 import type { LayoutEncoder, LayoutKey } from './layout'
@@ -29,6 +30,7 @@ export interface BackupSource {
   layoutOptionsValue: number
   macros: Macro[]
   qmkSettings: QmkSettings
+  combos: Combo[]
   catalog: KeycodeCatalog
 }
 
@@ -41,6 +43,8 @@ export interface Backup {
   layoutOptions: number
   /** The "macro" section, still in .vil form, or null when the file has none. */
   macros: unknown[][] | null
+  /** The "combo" section, still in .vil form, or null when the file has none. */
+  combos: unknown[] | null
   /** The "settings" section by qsid, or null when the file has none. */
   settings: Record<string, unknown> | null
   /** Saved sections this app can't restore yet, in plain words. */
@@ -52,6 +56,8 @@ export interface RestorePlan {
   layoutOptions: number | null
   /** Every macro, ready to write, or null when the backup has no macros to restore. */
   macros: Macro[] | null
+  /** Every combo slot, as it should be after restoring, or null when the backup has none. */
+  combos: Combo[] | null
   /** The backup's QMK settings that this keyboard has, or null when there are none to restore. */
   settings: QmkSettingValues | null
   /** Plain-language notes about parts of the backup that won't be restored. */
@@ -67,7 +73,6 @@ const NOT_A_BACKUP = "This file isn't a Vial keymap backup."
 /** Sections vial-gui saves that later phases will restore, with names people understand. */
 const OTHER_SECTIONS: [string, string][] = [
   ['tap_dance', 'tap dance'],
-  ['combo', 'combos'],
   ['key_override', 'key overrides'],
   ['alt_repeat_key', 'alt repeat keys'],
 ]
@@ -90,6 +95,7 @@ export function createBackup(kb: BackupSource): string {
       encoder_layout: encoderLayout,
       layout_options: kb.layoutOptionsValue,
       ...(kb.macros.length && { macro: kb.macros.map((m) => saveMacro(m, kb.catalog)) }),
+      ...(kb.combos.length && { combo: kb.combos.map((c) => saveCombo(c, kb.catalog)) }),
       ...(Object.keys(kb.qmkSettings.values).length && { settings: kb.qmkSettings.values }),
       vial_protocol: kb.vialProtocol,
       via_protocol: kb.viaProtocol,
@@ -116,6 +122,7 @@ export function parseBackup(text: string): Backup {
     encoderLayout: Array.isArray(data.encoder_layout) ? (data.encoder_layout as SavedCode[][][]) : [],
     layoutOptions: typeof data.layout_options === 'number' ? data.layout_options : -1,
     macros: Array.isArray(data.macro) ? (data.macro as unknown[]).map((m) => (Array.isArray(m) ? m : [])) : null,
+    combos: Array.isArray(data.combo) ? data.combo : null,
     settings: isRecord(data.settings) ? data.settings : null,
     notRestored: OTHER_SECTIONS.filter(([key]) => hasContent(data[key])).map(([, name]) => name),
   }
@@ -169,6 +176,24 @@ export function planRestore(backup: Backup, kb: BackupSource): RestorePlan {
     notes.push('This keyboard has no macros, so the macros in this backup were left out.')
   }
 
+  // Like restore_combo in vial-gui: fill slots from the backup, keep the rest.
+  let combos: Combo[] | null = null
+  const savedCombos = backup.combos ?? []
+  const usedCombos = savedCombos.filter((c) => !isEmptyCombo(loadSavedCombo(c, kb.catalog, () => {})))
+  if (savedCombos.length && kb.combos.length) {
+    combos = kb.combos.map((current, i) =>
+      i < savedCombos.length ? loadSavedCombo(savedCombos[i], kb.catalog, () => unknownKeys++) : current,
+    )
+    const extra = savedCombos.slice(kb.combos.length).filter((c) => !isEmptyCombo(loadSavedCombo(c, kb.catalog, () => {}))).length
+    if (extra) {
+      notes.push(
+        `${extra} combo${extra === 1 ? '' : 's'} in this backup didn't fit, because this keyboard has room for ${kb.combos.length}.`,
+      )
+    }
+  } else if (usedCombos.length) {
+    notes.push('This keyboard has no combos, so the combos in this backup were left out.')
+  }
+
   // Like restore_layout in vial-gui: set each saved setting the keyboard has, leave the rest.
   let settings: QmkSettingValues | null = null
   const saved = Object.entries(backup.settings ?? {})
@@ -195,6 +220,7 @@ export function planRestore(backup: Backup, kb: BackupSource): RestorePlan {
   return {
     changes,
     macros,
+    combos,
     settings,
     notes,
     layoutOptions: backup.layoutOptions !== -1 && kb.layoutOptionsValue !== -1 ? backup.layoutOptions : null,

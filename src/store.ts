@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 import { create } from 'zustand'
+import { describeCombo, writeCombo, type Combo } from './core/combos'
 import { createBackup, parseBackup, planRestore, type RestorePlan } from './core/backup'
 import { openDemoKeyboard, pressDemoKey } from './core/demo'
 import { serializeMacros, type Macro } from './core/macros'
@@ -113,6 +114,8 @@ interface AppState {
   saveSettings(): Promise<void>
   /** Puts every QMK setting back to the firmware's defaults. */
   resetSettings(): Promise<void>
+  /** Writes one combo to the keyboard straight away, as vial-gui does. */
+  setCombo(index: number, combo: Combo): Promise<void>
 }
 
 export const useApp = create<AppState>((set, get) => {
@@ -282,6 +285,34 @@ export const useApp = create<AppState>((set, get) => {
     return error ? `The settings weren't all saved: ${describe(error)}` : 'Settings saved.'
   }
 
+  /**
+   * Writes the combos that differ from the keyboard's. A combo that gives the bootloader
+   * key needs the keyboard unlocked (combo_set in protocol/combo.py); without it, that
+   * combo is skipped. Returns a note about anything skipped, or null.
+   */
+  async function writeCombos(combos: Combo[]): Promise<string | null> {
+    const { keyboard, client } = get()
+    if (!keyboard || !client) return null
+    const boot = keyboard.catalog.deserialize('QK_BOOT')
+    const changed = combos.flatMap((combo, i) =>
+      JSON.stringify(combo) !== JSON.stringify(keyboard.combos[i]) ? [{ i, combo }] : [],
+    )
+    const needsUnlock = changed.some(({ combo }) => combo.output === boot)
+    const unlocked = !needsUnlock || (await ensureUnlocked())
+    let skipped = false
+    for (const { i, combo } of changed) {
+      if (combo.output === boot && !unlocked) {
+        skipped = true
+        continue
+      }
+      await writeCombo(client, i, combo)
+      const now = get().keyboard
+      if (!now) return null
+      set({ keyboard: { ...now, combos: now.combos.map((c, j) => (j === i ? combo : c)) } })
+    }
+    return skipped ? 'A combo with the bootloader key was skipped because the keyboard is still locked.' : null
+  }
+
   async function restore(plan: RestorePlan) {
     const keyboard = get().keyboard!
     const boot = keyboard.catalog.deserialize('QK_BOOT')
@@ -312,6 +343,14 @@ export const useApp = create<AppState>((set, get) => {
       if (plan.macros && JSON.stringify(plan.macros) !== JSON.stringify(get().keyboard?.macros)) {
         const result = await writeMacros(plan.macros)
         if (result && result !== 'Macros saved.') set((s) => ({ notice: `${s.notice ?? ''} ${result}`.trim() }))
+      }
+      if (plan.combos) {
+        try {
+          const result = await writeCombos(plan.combos)
+          if (result) set((s) => ({ notice: `${s.notice ?? ''} ${result}`.trim() }))
+        } catch (err) {
+          set((s) => ({ notice: `${s.notice ?? ''} The combos weren't all restored: ${describe(err)}`.trim() }))
+        }
       }
       const live = get().keyboard?.qmkSettings.values
       if (plan.settings && live) {
@@ -517,6 +556,22 @@ export const useApp = create<AppState>((set, get) => {
       try {
         const notice = await writeSettings(settingsDraft)
         if (notice) set({ notice })
+      } finally {
+        set({ busy: false })
+      }
+    },
+
+    async setCombo(index, combo) {
+      const { keyboard, busy } = get()
+      if (!keyboard || busy) return
+      set({ busy: true })
+      try {
+        const skipped = await writeCombos(keyboard.combos.map((c, i) => (i === index ? combo : c)))
+        const saved = get().keyboard?.combos[index]
+        if (!saved) return
+        set({ notice: skipped ?? `Saved. Combo ${index + 1}: ${describeCombo(saved, keyboard.catalog)}.` })
+      } catch (err) {
+        set({ notice: `The combo wasn't saved: ${describe(err)}` })
       } finally {
         set({ busy: false })
       }

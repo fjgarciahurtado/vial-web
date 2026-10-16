@@ -27,6 +27,10 @@ const source: BackupSource = {
   layoutOptionsValue: -1,
   macros: [[{ type: 'text', text: 'hi' }], []],
   qmkSettings: { supported: [2, 7, 21, 999], values: { 2: 50, 7: 200, 21: 0x80 } },
+  combos: [
+    { keys: [0x04, 0x16, 0, 0], output: 0x29 },
+    { keys: [0, 0, 0, 0], output: 0 },
+  ],
   catalog,
 }
 
@@ -57,8 +61,15 @@ describe('createBackup', () => {
     expect(json.settings).toEqual({ 2: 50, 7: 200, 21: 0x80 })
   })
 
+  it('saves every combo slot, as vial-gui does', () => {
+    expect(json.combo).toEqual([
+      ['KC_A', 'KC_S', 'KC_NO', 'KC_NO', 'KC_ESCAPE'],
+      ['KC_NO', 'KC_NO', 'KC_NO', 'KC_NO', 'KC_NO'],
+    ])
+  })
+
   it('leaves out sections it does not manage, so vial-gui keeps them on restore', () => {
-    for (const section of ['tap_dance', 'combo', 'key_override', 'alt_repeat_key']) {
+    for (const section of ['tap_dance', 'key_override', 'alt_repeat_key']) {
       expect(json).not.toHaveProperty(section)
     }
   })
@@ -83,9 +94,9 @@ describe('parseBackup', () => {
 
   it('lists saved sections this app cannot restore yet', () => {
     const backup = parseBackup(
-      JSON.stringify({ version: 1, uid: 1, layout: [], macro: [[['text', 'hi']]], combo: [['KC_A', 'KC_B', 'KC_NO', 'KC_NO', 'KC_C']], settings: { 2: 1 } }),
+      JSON.stringify({ version: 1, uid: 1, layout: [], macro: [[['text', 'hi']]], combo: [['KC_A', 'KC_B', 'KC_NO', 'KC_NO', 'KC_C']], key_override: [{ trigger: 'KC_A' }] }),
     )
-    expect(backup.notRestored).toEqual(['combos'])
+    expect(backup.notRestored).toEqual(['key overrides'])
   })
 
   it('rejects files that are not keymap backups', () => {
@@ -172,6 +183,31 @@ describe('planRestore', () => {
     const plan = planRestore(backup, { ...source, qmkSettings: { supported: [], values: {} } })
     expect(plan.settings).toBeNull()
     expect(plan.notes).toEqual([expect.stringMatching(/no QMK settings/)])
+  })
+
+  it('restores combos into the slots the keyboard has', () => {
+    const backup = parseBackup(
+      JSON.stringify({ version: 1, uid: 1, layout: [], combo: [['KC_B', 'KC_C', 'KC_NO', 'KC_NO', 'KC_D']] }),
+    )
+    // Slot 2 isn't in the backup, so it keeps what the keyboard has.
+    expect(planRestore(backup, source).combos).toEqual([{ keys: [0x05, 0x06, 0, 0], output: 0x07 }, source.combos[1]])
+    expect(planRestore(parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [] })), source).combos).toBeNull()
+  })
+
+  it('says when combos in the backup do not fit', () => {
+    const combo = ['KC_B', 'KC_C', 'KC_NO', 'KC_NO', 'KC_D']
+    const backup = parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [], combo: [combo, combo, combo] }))
+    expect(planRestore(backup, source).notes).toEqual([
+      "1 combo in this backup didn't fit, because this keyboard has room for 2.",
+    ])
+    const plan = planRestore(backup, { ...source, combos: [] })
+    expect(plan.combos).toBeNull()
+    expect(plan.notes).toEqual(['This keyboard has no combos, so the combos in this backup were left out.'])
+  })
+
+  it('counts combo key names it cannot read', () => {
+    const backup = parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [], combo: [['KC_A', 'NOPE', 'KC_NO', 'KC_NO', 'KC_D']] }))
+    expect(planRestore(backup, source).unknownKeys).toBe(1)
   })
 
   it('notices backups from a different keyboard', () => {
