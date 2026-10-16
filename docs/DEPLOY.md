@@ -31,11 +31,21 @@ including on custom domains.
 | `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy` | Standard hardening. |
 | `Cache-Control` | Files in `/assets/` have a content hash in their name, so they are cached for a year; `index.html` is always revalidated so releases show up straight away. |
 
+## Trying the built site locally
+
+`npm run preview:netlify` builds the site and opens it at `http://localhost:4173`,
+served with the same headers as on Netlify (security policy, caching, and the
+fallback to `index.html`). Chrome treats `localhost` as secure, so WebHID works there:
+plug in a keyboard and connect it to check a release without deploying it.
+
+`vite.config.ts` reads the `[[headers]]` from `netlify.toml` for this, so the two
+can't drift apart.
+
 ## Checking a policy change
 
-`npm run test:csp` builds the site and replays the main flows (demo keyboard, key
-picker, lighting, macros) with the exact `Content-Security-Policy` from
-`netlify.toml`, failing on any violation. It also compiles a WebAssembly module,
+`npm run test:csp` builds the site, serves it like `npm run preview:netlify`, and
+replays the main flows (demo keyboard, key picker, lighting, macros), failing on any
+security-policy violation. It also compiles a WebAssembly module,
 because the demo keyboard skips the xz decoder that real keyboards need. Run it whenever the policy or the way the
 app loads files changes.
 

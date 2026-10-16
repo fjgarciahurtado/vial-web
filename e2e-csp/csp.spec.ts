@@ -5,6 +5,8 @@ import { expect, test } from '@playwright/test'
 const toml = readFileSync(new URL('../netlify.toml', import.meta.url), 'utf8')
 const csp = /Content-Security-Policy = "([^"]+)"/.exec(toml)?.[1]
 
+// `vite preview` sends the headers from netlify.toml (see netlifyHeaders in vite.config.ts),
+// so this runs the production build exactly as Netlify would serve it.
 test('the app works under the Content-Security-Policy in netlify.toml', async ({ page }) => {
   expect(csp, 'netlify.toml should set a Content-Security-Policy').toBeTruthy()
 
@@ -12,13 +14,10 @@ test('the app works under the Content-Security-Policy in netlify.toml', async ({
   page.on('console', (m) => {
     if (/Content Security Policy|Refused to/i.test(m.text())) violations.push(m.text())
   })
-  // vite preview doesn't read netlify.toml, so add the header to every response here.
-  await page.route('**/*', async (route) => {
-    const response = await route.fetch()
-    await route.fulfill({ response, headers: { ...response.headers(), 'content-security-policy': csp! } })
-  })
 
-  await page.goto('/')
+  const response = await page.goto('/')
+  expect(response?.headers()['content-security-policy']).toBe(csp)
+
   await page.getByRole('button', { name: 'Try a demo keyboard' }).click()
   await page.getByRole('group', { name: 'Keyboard layout' }).getByRole('button', { name: 'Key Q', exact: true }).click()
   const sections = page.getByRole('navigation', { name: 'Sections' })

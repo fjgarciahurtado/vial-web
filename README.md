@@ -37,6 +37,7 @@ npm ci
 npm run dev        # http://localhost:5173
 npm test           # unit tests
 npm run test:e2e   # browser tests
+npm run preview:netlify  # built site with Netlify's headers, http://localhost:4173
 ```
 
 On Linux, the browser needs the Vial udev rules to open the keyboard:
