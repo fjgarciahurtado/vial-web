@@ -60,6 +60,8 @@ export interface LoadedKeyboard {
   macros: Macro[]
   /** QMK settings the firmware lets people change (timing, key swaps...). */
   qmkSettings: QmkSettings
+  /** Features the keyboard has but that couldn't be read, in plain words. */
+  unreadable: string[]
   /** Key override slots the firmware has. */
   keyOverrides: KeyOverride[]
   /** Tap dance slots the firmware has. */
@@ -100,10 +102,16 @@ export async function loadKeyboard(
   const kind = lightingKind(definition)
   const lighting = await readLighting(client, kind)
   const qmkSettings = await readQmkSettings(client, vialProtocol)
-  // Combos are optional: a keyboard that can't report them still opens, without them.
-  const combos = await readCombos(client, comboCount).catch((): Combo[] => [])
-  const tapDances = await readTapDances(client, capabilities.tapDanceCount).catch((): TapDance[] => [])
-  const keyOverrides = await readKeyOverrides(client, keyOverrideCount).catch((): KeyOverride[] => [])
+  // These are optional: a keyboard that can't report one still opens, without it, and says so.
+  const unreadable: string[] = []
+  const optional = <T,>(read: Promise<T[]>, name: string) =>
+    read.catch((): T[] => {
+      unreadable.push(name)
+      return []
+    })
+  const combos = await optional<Combo>(readCombos(client, comboCount), 'combos')
+  const tapDances = await optional<TapDance>(readTapDances(client, capabilities.tapDanceCount), 'tap dance')
+  const keyOverrides = await optional<KeyOverride>(readKeyOverrides(client, keyOverrideCount), 'key overrides')
   const keymap = await client.getKeymap(layers, rows, cols)
 
   const encoderCount = encoders.length ? Math.max(...encoders.map((e) => e.index)) + 1 : 0
@@ -141,6 +149,7 @@ export async function loadKeyboard(
     combos,
     tapDances,
     keyOverrides,
+    unreadable,
     catalog,
   }
 }

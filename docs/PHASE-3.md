@@ -156,8 +156,8 @@ bottom:
   afterwards.
 
 A new override starts on, on every layer, with QMK's default ways of starting.
-Problems are explained: turned off, nothing that starts it, no layer, or no way
-to start. Each change is written straight away and queued like tap dance, so
+Problems are explained: turned off, nothing that starts it, or no layer. (No
+way of starting chosen isn't a problem: QMK then uses every way.) Each change is written straight away and queued like tap dance, so
 fast clicks are never lost. A replacement that is the bootloader key unlocks
 the keyboard first.
 

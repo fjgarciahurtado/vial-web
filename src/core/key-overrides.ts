@@ -203,6 +203,5 @@ export function keyOverrideProblem(ko: KeyOverride, layers: number): string | nu
   if (!(ko.options & OPTION.enabled)) return 'This override is turned off.'
   if (ko.trigger === 0 && ko.triggerMods === 0) return 'Choose the key or modifiers that start it.'
   if ((ko.layers & ((1 << layers) - 1)) === 0) return 'Choose at least one layer for it to work on.'
-  if (!(ko.options & DEFAULT_ACTIVATION)) return 'Choose at least one way for it to start, under More options.'
   return null
 }

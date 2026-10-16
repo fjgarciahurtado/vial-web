@@ -125,12 +125,12 @@ export function KeyOverridesPanel() {
           <ModPicker
             title="Hold these modifiers"
             mods={ko.triggerMods}
-            onChange={(triggerMods) =>
+            onToggle={(bit) =>
               // Let go of the same modifiers too, unless someone chose differently: Shift + Backspace sends plain Delete.
               edit((k) => ({
-                triggerMods,
+                triggerMods: k.triggerMods ^ bit,
                 ...(k.suppressedMods === k.triggerMods && {
-                  suppressedMods: triggerMods,
+                  suppressedMods: k.triggerMods ^ bit,
                 }),
               }))
             }
@@ -176,12 +176,12 @@ export function KeyOverridesPanel() {
             title="Let go of these modifiers while sending it"
             help="Usually the same as the ones you hold, so the new key is sent on its own."
             mods={ko.suppressedMods}
-            onChange={(suppressedMods) => edit(() => ({ suppressedMods }))}
+            onToggle={(bit) => edit((k) => ({ suppressedMods: k.suppressedMods ^ bit }))}
           />
           <ModPicker
             title="Don't override while holding"
             mods={ko.negativeMods}
-            onChange={(negativeMods) => edit(() => ({ negativeMods }))}
+            onToggle={(bit) => edit((k) => ({ negativeMods: k.negativeMods ^ bit }))}
           />
 
           <fieldset className="flex flex-col gap-2">
@@ -268,12 +268,13 @@ function ModPicker({
   title,
   help,
   mods,
-  onChange,
+  onToggle,
 }: {
   title: string
   help?: string
   mods: number
-  onChange(mods: number): void
+  /** Gets the modifier's bit; the change is applied to the latest value, so quick clicks all count. */
+  onToggle(bit: number): void
 }) {
   return (
     <fieldset className="flex flex-col gap-2">
@@ -291,7 +292,7 @@ function ModPicker({
                   type="button"
                   aria-pressed={on}
                   aria-label={`${side} ${m.name}`}
-                  onClick={() => onChange(on ? mods & ~(1 << m.bit) : mods | (1 << m.bit))}
+                  onClick={() => onToggle(1 << m.bit)}
                   className={`rounded-md border-b-[3px] px-2.5 py-1 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pick ${
                     on ? 'border-pick-skirt bg-pick text-white' : 'border-cap-skirt bg-cap text-legend'
                   }`}

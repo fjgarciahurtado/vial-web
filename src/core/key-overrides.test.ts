@@ -104,6 +104,7 @@ describe('describing key overrides', () => {
     expect(keyOverrideProblem({ ...shiftBksp, options: 0x07 }, 4)).toMatch(/turned off/)
     expect(keyOverrideProblem({ ...NEW_KEY_OVERRIDE, replacement: 0x4c }, 4)).toMatch(/key or modifiers/)
     expect(keyOverrideProblem({ ...shiftBksp, layers: 0b10000 }, 4)).toMatch(/layer/)
-    expect(keyOverrideProblem({ ...shiftBksp, options: OPTION.enabled }, 4)).toMatch(/way for it to start/)
+    // QMK uses every way of starting when none is chosen (check_activation_event).
+    expect(keyOverrideProblem({ ...shiftBksp, options: OPTION.enabled }, 4)).toBeNull()
   })
 })

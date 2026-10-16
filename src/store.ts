@@ -193,7 +193,9 @@ export const useApp = create<AppState>((set, get) => {
       view: 'keys',
       canUndo: false,
       canRedo: false,
-      notice: null,
+      notice: keyboard.unreadable.length
+        ? `The keyboard has ${listOf(keyboard.unreadable)}, but didn't report them, so they're hidden. Unplug it and connect again to retry.`
+        : null,
     })
     // An unlock started earlier (for example before a page reload) must be finished first, as in vial-gui.
     client.getUnlockStatus().then((status) => {

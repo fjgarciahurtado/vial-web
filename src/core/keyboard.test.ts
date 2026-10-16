@@ -59,6 +59,15 @@ describe('loadKeyboard', () => {
     ])
   })
 
+  it('still opens when an optional feature cannot be read, and says which', async () => {
+    const fake = new FakeKeyboard({ definition, layers: 1, comboCount: 1 })
+    const send = fake.transport.send.bind(fake.transport)
+    fake.transport.send = async (report) => (report[1] === 0x0d && report[2] === 0x03 ? new Uint8Array(32).fill(1) : send(report))
+    const kb = await loadKeyboard(fake.transport, 'fallback', { decompress: identity })
+    expect(kb.combos).toEqual([])
+    expect(kb.unreadable).toEqual(['combos'])
+  })
+
   it('reads the combos', async () => {
     const fake = new FakeKeyboard({ definition, layers: 1, comboCount: 2 })
     fake.combos[1] = { keys: [0x04, 0x16, 0, 0], output: 0x29 }
