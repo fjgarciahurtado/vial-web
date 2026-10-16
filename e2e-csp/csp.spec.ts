@@ -27,5 +27,17 @@ test('the app works under the Content-Security-Policy in netlify.toml', async ({
   await sections.getByRole('button', { name: 'Macros' }).click()
   await expect(page.getByRole('heading', { name: 'Macros' })).toBeVisible()
 
+  // Real keyboards send their definition xz-compressed, and the xz decoder is
+  // WebAssembly. The demo skips it, so compile a module here the same way.
+  const wasm = await page.evaluate(async () => {
+    try {
+      await WebAssembly.instantiate(new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0]))
+      return 'ok'
+    } catch (err) {
+      return String(err)
+    }
+  })
+  expect(wasm).toBe('ok')
+
   expect(violations).toEqual([])
 })
