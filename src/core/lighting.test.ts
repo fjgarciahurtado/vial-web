@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 import { describe, expect, it } from 'vitest'
 import { FakeKeyboard } from './fake-keyboard'
-import { lightingKind, LightingController, readLighting } from './lighting'
+import { lightingKind, LightingController, readLighting, RGBLIGHT_EFFECTS } from './lighting'
 import { VialClient } from './vial-client'
 
 const definition = { matrix: { rows: 1, cols: 1 }, layouts: { keymap: [['0,0']] } }
@@ -15,6 +15,15 @@ describe('lightingKind (vial.json "lighting")', () => {
     expect(lightingKind({ lighting: 'qmk_backlight_rgblight' })).toEqual({ backlight: true, rgblight: true, vialrgb: false })
     expect(lightingKind({ lighting: 'vialrgb' })).toEqual({ backlight: false, rgblight: false, vialrgb: true })
     expect(lightingKind({})).toEqual({ backlight: false, rgblight: false, vialrgb: false })
+  })
+})
+
+describe('RGBLIGHT_EFFECTS', () => {
+  it('numbers effects as QMK rgblight_modes.h does, up to Twinkle', () => {
+    expect(RGBLIGHT_EFFECTS[36].name).toBe('Alternating')
+    expect(RGBLIGHT_EFFECTS[37].name).toBe('Twinkle 1')
+    expect(RGBLIGHT_EFFECTS[42].name).toBe('Twinkle 6')
+    expect(RGBLIGHT_EFFECTS).toHaveLength(43)
   })
 })
 

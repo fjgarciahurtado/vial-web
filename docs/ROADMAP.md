@@ -19,15 +19,18 @@ done, and add new ones as they come up.
 - [ ] **Flash the kb8knob firmware with lighting turned on.** `kb8knob/midi`'s
   `vial.json` now declares `"lighting": "qmk_rgblight"`, and the firmware is built
   (`fjgh_kb8knob_midi_vial.uf2` in vial-qmk), but not yet flashed and tried.
-- [ ] **kb16knob lighting.** rev1, rev2 and rev3 build RGB in (`RGBLIGHT_ENABLE = yes`)
-  but their `vial.json` says `"lighting": "none"`, so no Lighting section appears.
-  Decide whether to change them to `"qmk_rgblight"`.
+- [ ] **Flash the kb16knob firmware with lighting turned on.** rev1, rev2 and rev3
+  (including rev3's `vial_midi` keymap) now declare `"lighting": "qmk_rgblight"` in
+  their `vial.json`, and the firmware is built (`fjgh_kb16knob_*.uf2` in vial-qmk). Flash
+  them, then check the Lighting section appears.
 - [ ] **Keyboard firmware isn't backed up.** `keyboards/fjgh` in vial-qmk is untracked,
   and the vial-qmk checkout points at the upstream repo. Consider a fork of
   vial-kb/vial-qmk (needs `git config --global --add safe.directory
   C:/Users/fjgar/vial-qmk` first).
-- [ ] **Twinkle effect missing from the light strip list.** vial-gui's rgblight effect
-  list (and so vial-web's) ends at "Alternating"; kb8knob builds Twinkle too.
+- [ ] **Light strip effect numbers assume every effect is built in.** QMK numbers
+  rgblight effects only among the ones the firmware enables, so on a keyboard that
+  leaves some out, names after the gap are wrong (vial-gui has the same problem). The
+  fjgh keyboards enable all of them, including Twinkle, so they are fine.
 - [ ] **Redeploy to Netlify and check the live site.** The first deploy's security
   policy blocked WebAssembly, so keyboards couldn't be opened; fixed in PR #3 and
   confirmed with a real keyboard through `npm run preview:netlify`, which uses the same
