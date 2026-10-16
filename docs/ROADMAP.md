@@ -37,11 +37,10 @@ done, and add new ones as they come up.
   headers. Waiting for Netlify credits to redeploy. If the site was uploaded by hand,
   connect it to the repository instead (see [DEPLOY.md](DEPLOY.md)) so merges to `main`
   redeploy automatically and pull requests get preview sites.
-- [ ] **Phase 3** (below): all features built; waiting for hardware tests.
+- [ ] **Phase 3** (below): all features built. QMK settings, combos, tap dance and key
+  overrides tested on a real keyboard; alt repeat keys wait for newer firmware (below).
 - [ ] **Test alt repeat keys on real hardware.** The fjgh firmware is an older Vial build
   without them, so it needs a firmware update from upstream vial-qmk first.
-- [ ] **Test combos and tap dance on real hardware.** Only tested against the demo
-  keyboard. (Key overrides were tested on a real keyboard.)
 
 ## Phase 0: Foundation (done)
 
