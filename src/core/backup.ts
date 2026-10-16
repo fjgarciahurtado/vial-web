@@ -179,18 +179,22 @@ export function planRestore(backup: Backup, kb: BackupSource): RestorePlan {
   // Like restore_combo in vial-gui: fill slots from the backup, keep the rest.
   let combos: Combo[] | null = null
   const savedCombos = backup.combos ?? []
-  const usedCombos = savedCombos.filter((c) => !isEmptyCombo(loadSavedCombo(c, kb.catalog, () => {})))
+  const inUse = (c: unknown) => {
+    const combo = loadSavedCombo(c, kb.catalog, () => {})
+    return combo === null || !isEmptyCombo(combo)
+  }
   if (savedCombos.length && kb.combos.length) {
+    // A slot with a key this app can't read keeps what the keyboard has.
     combos = kb.combos.map((current, i) =>
-      i < savedCombos.length ? loadSavedCombo(savedCombos[i], kb.catalog, () => unknownKeys++) : current,
+      i < savedCombos.length ? (loadSavedCombo(savedCombos[i], kb.catalog, () => unknownKeys++) ?? current) : current,
     )
-    const extra = savedCombos.slice(kb.combos.length).filter((c) => !isEmptyCombo(loadSavedCombo(c, kb.catalog, () => {}))).length
+    const extra = savedCombos.slice(kb.combos.length).filter(inUse).length
     if (extra) {
       notes.push(
         `${extra} combo${extra === 1 ? '' : 's'} in this backup didn't fit, because this keyboard has room for ${kb.combos.length}.`,
       )
     }
-  } else if (usedCombos.length) {
+  } else if (savedCombos.some(inUse)) {
     notes.push('This keyboard has no combos, so the combos in this backup were left out.')
   }
 

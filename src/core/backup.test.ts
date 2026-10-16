@@ -205,9 +205,11 @@ describe('planRestore', () => {
     expect(plan.notes).toEqual(['This keyboard has no combos, so the combos in this backup were left out.'])
   })
 
-  it('counts combo key names it cannot read', () => {
+  it('keeps the keyboard combo when the saved one has a name it cannot read', () => {
     const backup = parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [], combo: [['KC_A', 'NOPE', 'KC_NO', 'KC_NO', 'KC_D']] }))
-    expect(planRestore(backup, source).unknownKeys).toBe(1)
+    const plan = planRestore(backup, source)
+    expect(plan.unknownKeys).toBe(1)
+    expect(plan.combos![0]).toEqual(source.combos[0])
   })
 
   it('notices backups from a different keyboard', () => {

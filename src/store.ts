@@ -114,8 +114,8 @@ interface AppState {
   saveSettings(): Promise<void>
   /** Puts every QMK setting back to the firmware's defaults. */
   resetSettings(): Promise<void>
-  /** Writes one combo to the keyboard straight away, as vial-gui does. */
-  setCombo(index: number, combo: Combo): Promise<void>
+  /** Writes one combo to the keyboard straight away, as vial-gui does. Resolves to whether it was saved. */
+  setCombo(index: number, combo: Combo): Promise<boolean>
 }
 
 export const useApp = create<AppState>((set, get) => {
@@ -291,14 +291,19 @@ export const useApp = create<AppState>((set, get) => {
    * combo is skipped. Returns a note about anything skipped, or null.
    */
   async function writeCombos(combos: Combo[]): Promise<string | null> {
+    const before = get()
+    if (!before.keyboard || !before.client) return null
+    const boot = before.keyboard.catalog.deserialize('QK_BOOT')
+    const needsUnlock = combos.some(
+      (combo, i) => combo.output === boot && JSON.stringify(combo) !== JSON.stringify(before.keyboard!.combos[i]),
+    )
+    const unlocked = !needsUnlock || (await ensureUnlocked())
+    // Unlocking can take a while; the keyboard may have been unplugged or swapped meanwhile.
     const { keyboard, client } = get()
-    if (!keyboard || !client) return null
-    const boot = keyboard.catalog.deserialize('QK_BOOT')
+    if (!keyboard || !client || client !== before.client) return null
     const changed = combos.flatMap((combo, i) =>
       JSON.stringify(combo) !== JSON.stringify(keyboard.combos[i]) ? [{ i, combo }] : [],
     )
-    const needsUnlock = changed.some(({ combo }) => combo.output === boot)
-    const unlocked = !needsUnlock || (await ensureUnlocked())
     let skipped = false
     for (const { i, combo } of changed) {
       if (combo.output === boot && !unlocked) {
@@ -307,7 +312,7 @@ export const useApp = create<AppState>((set, get) => {
       }
       await writeCombo(client, i, combo)
       const now = get().keyboard
-      if (!now) return null
+      if (!now || get().client !== client) return null
       set({ keyboard: { ...now, combos: now.combos.map((c, j) => (j === i ? combo : c)) } })
     }
     return skipped ? 'A combo with the bootloader key was skipped because the keyboard is still locked.' : null
@@ -563,15 +568,17 @@ export const useApp = create<AppState>((set, get) => {
 
     async setCombo(index, combo) {
       const { keyboard, busy } = get()
-      if (!keyboard || busy) return
+      if (!keyboard || busy) return false
       set({ busy: true })
       try {
         const skipped = await writeCombos(keyboard.combos.map((c, i) => (i === index ? combo : c)))
         const saved = get().keyboard?.combos[index]
-        if (!saved) return
+        if (!saved) return false
         set({ notice: skipped ?? `Saved. Combo ${index + 1}: ${describeCombo(saved, keyboard.catalog)}.` })
+        return JSON.stringify(saved) === JSON.stringify(combo)
       } catch (err) {
         set({ notice: `The combo wasn't saved: ${describe(err)}` })
+        return false
       } finally {
         set({ busy: false })
       }

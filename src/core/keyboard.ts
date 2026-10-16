@@ -94,7 +94,8 @@ export async function loadKeyboard(
   const kind = lightingKind(definition)
   const lighting = await readLighting(client, kind)
   const qmkSettings = await readQmkSettings(client, vialProtocol)
-  const combos = await readCombos(client, comboCount)
+  // Combos are optional: a keyboard that can't report them still opens, without them.
+  const combos = await readCombos(client, comboCount).catch((): Combo[] => [])
   const keymap = await client.getKeymap(layers, rows, cols)
 
   const encoderCount = encoders.length ? Math.max(...encoders.map((e) => e.index)) + 1 : 0

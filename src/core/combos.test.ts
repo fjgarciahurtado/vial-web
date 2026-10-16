@@ -71,17 +71,15 @@ describe('combos in backups (save_combo / restore_combo)', () => {
     expect(loadSavedCombo([4, 0x16, 0, 0, 0x29], catalog, () => {})).toEqual(escCombo)
   })
 
-  it('counts names it cannot read and leaves those keys empty', () => {
+  it('gives up on a combo with a name it cannot read, and counts the name', () => {
     let unknown = 0
-    expect(loadSavedCombo(['KC_A', 'NOPE', 'KC_NO', 'KC_NO', 'KC_B'], catalog, () => unknown++)).toEqual({
-      keys: [0x04, 0, 0, 0],
-      output: 0x05,
-    })
+    expect(loadSavedCombo(['KC_A', 'NOPE', 'KC_NO', 'KC_NO', 'KC_B'], catalog, () => unknown++)).toBeNull()
     expect(unknown).toBe(1)
   })
 
-  it('treats anything else as an empty combo', () => {
-    expect(loadSavedCombo('nonsense', catalog, () => {})).toEqual(EMPTY_COMBO)
+  it('gives up on anything that is not a combo', () => {
+    expect(loadSavedCombo('nonsense', catalog, () => {})).toBeNull()
+    expect(loadSavedCombo([4, 5, 0, 0, 70000], catalog, () => {})).toBeNull()
   })
 })
 

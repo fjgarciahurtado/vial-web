@@ -26,10 +26,10 @@ export function CombosPanel() {
   const problem = comboProblem(combo)
   const slotName = slot === RESULT ? 'what the combo does' : `key ${slot + 1}`
 
-  const put = (value: number) => {
+  const put = async (value: number) => {
     const next: Combo =
       slot === RESULT ? { ...combo, output: value } : { ...combo, keys: combo.keys.map((k, i) => (i === slot ? value : k)) }
-    setCombo(current, next)
+    if (!(await setCombo(current, next))) return
     // Move on to the next empty slot, so building a combo is a few clicks in a row.
     if (value !== 0 && slot !== RESULT) {
       const nextEmpty = next.keys.findIndex((k, i) => i > slot && k === 0)
@@ -122,7 +122,8 @@ export function CombosPanel() {
       </div>
 
       <p className="font-semibold">Choose {slotName}:</p>
-      <div className="flex h-[28rem] flex-col">
+      {/* Picks wait for the previous write, so none is lost. */}
+      <div className={`flex h-[28rem] flex-col ${busy ? 'pointer-events-none opacity-70' : ''}`} inert={busy} aria-busy={busy}>
         <KeyPicker catalog={catalog} current={code} onPick={put} />
       </div>
     </div>

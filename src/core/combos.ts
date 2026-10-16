@@ -46,18 +46,34 @@ export function saveCombo(combo: Combo, catalog: KeycodeCatalog): (string | numb
   return [...combo.keys, combo.output].map((code) => catalog.serialize(code))
 }
 
-/** Reads a combo saved by vial-gui or vial-web. Keys it can't read are left empty and counted. */
-export function loadSavedCombo(saved: unknown, catalog: KeycodeCatalog, onUnknown: () => void): Combo {
-  if (!Array.isArray(saved)) return { ...EMPTY_COMBO, keys: [...EMPTY_COMBO.keys] }
+/**
+ * Reads a combo saved by vial-gui or vial-web. Returns null, after counting each key
+ * it can't read, when any part is unreadable, so the caller can keep what the
+ * keyboard has instead of writing half a combo.
+ */
+export function loadSavedCombo(saved: unknown, catalog: KeycodeCatalog, onUnknown: () => void): Combo | null {
+  if (!Array.isArray(saved)) {
+    onUnknown()
+    return null
+  }
+  let readable = true
   const codes = Array.from({ length: KEYS + 1 }, (_, i) => {
-    const value: unknown = saved[i]
-    if (typeof value === 'number') return Number.isInteger(value) && value >= 0 && value <= 0xffff ? value : 0
-    if (typeof value !== 'string') return 0
-    const code = catalog.deserialize(value)
-    if (code === undefined) onUnknown()
+    const value: unknown = saved[i] ?? 0
+    const code =
+      typeof value === 'number'
+        ? Number.isInteger(value) && value >= 0 && value <= 0xffff
+          ? value
+          : undefined
+        : typeof value === 'string'
+          ? catalog.deserialize(value)
+          : undefined
+    if (code === undefined) {
+      readable = false
+      onUnknown()
+    }
     return code ?? 0
   })
-  return { keys: codes.slice(0, KEYS), output: codes[KEYS] }
+  return readable ? { keys: codes.slice(0, KEYS), output: codes[KEYS] } : null
 }
 
 export function isEmptyCombo(combo: Combo): boolean {
