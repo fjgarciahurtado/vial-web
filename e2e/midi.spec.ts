@@ -14,7 +14,10 @@ test.beforeEach(async ({ page }) => {
 
 test('pick a note on the piano', async ({ page }) => {
   const piano = page.getByRole('group', { name: 'Notes' })
-  await expect(piano.getByRole('button', { name: 'Note C4' })).toBeVisible()
+  await expect(piano.getByRole('button', { name: 'Note C4' })).toHaveText('C4')
+  // Every key shows its name, not only the C keys.
+  await expect(piano.getByRole('button', { name: 'Note D4' })).toHaveText('D')
+  await expect(piano.getByRole('button', { name: 'Note G#4' })).toHaveText('G#')
   await piano.getByRole('button', { name: 'Note E4' }).click()
   await expect(page.getByText('Saved. This key is now MIDI E4.')).toBeVisible()
   await expect(piano.getByRole('button', { name: 'Note E4' })).toHaveAttribute('aria-pressed', 'true')

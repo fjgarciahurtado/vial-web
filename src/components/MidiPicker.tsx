@@ -204,7 +204,8 @@ function Piano({
               style={{ left: `${i * WHITE}rem`, width: `${WHITE}rem` }}
               className={`absolute top-0 flex h-36 flex-col items-center justify-end rounded-b-md border border-b-4 pb-1.5 text-[10px] font-semibold focus-visible:z-20 focus-visible:outline-2 focus-visible:outline-pick disabled:opacity-60 ${style(note)}`}
             >
-              {note % 12 === 0 || note === currentNote || lit.has(note) ? noteName(note, names) : ''}
+              {/* Every key is named; C keys, the chosen note and chord notes also show the octave. */}
+              {note % 12 === 0 || note === currentNote || lit.has(note) ? noteName(note, names) : pitchName(note, names)}
             </button>
           ))}
           {notes.filter(isBlackKey).map((note) => {
@@ -221,7 +222,7 @@ function Piano({
                 style={{ left: `${whitesBefore * WHITE - BLACK / 2}rem`, width: `${BLACK}rem` }}
                 className={`absolute top-0 z-10 flex h-22 items-end justify-center rounded-b-md border border-b-4 pb-1 text-[9px] font-semibold focus-visible:outline-2 focus-visible:outline-pick disabled:opacity-60 ${style(note)}`}
               >
-                {note === currentNote || lit.has(note) ? noteName(note, names).replace(/\d+$/, '') : ''}
+                {pitchName(note, names)}
               </button>
             )
           })}
@@ -232,6 +233,11 @@ function Piano({
       </p>
     </section>
   )
+}
+
+/** "C#" or "Do#": the note's name without its octave. */
+function pitchName(note: number, names: NoteNames): string {
+  return noteName(note, names).replace(/-?\d+$/, '')
 }
 
 function readNames(): NoteNames {
