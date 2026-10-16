@@ -29,11 +29,11 @@ full plan and the list of open issues are in [docs/ROADMAP.md](docs/ROADMAP.md).
 - Macros: type text and press keys, built from plain steps, saved to the keyboard and in backups.
 
 - Advanced: tap dance (one key that acts differently when tapped, held or tapped twice), combos
-  (press keys together for another key), key overrides (Shift + Backspace sends Delete), and QMK
-  settings such as tap-hold timing, key swaps and Auto Shift, each explained in plain words. All
-  are saved in backups.
+  (press keys together for another key), key overrides (Shift + Backspace sends Delete), Alt Repeat
+  pairs (after Up, Alt Repeat sends Down), and QMK settings such as tap-hold timing, key swaps and
+  Auto Shift, each explained in plain words. All are saved in backups.
 
-Not yet: alt repeat keys, firmware flashing, and the desktop app.
+Not yet: firmware flashing and the desktop app.
 
 ## Development
 
