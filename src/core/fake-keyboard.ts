@@ -47,6 +47,8 @@ export class FakeKeyboard {
   readonly macroBuffer: Uint8Array
   /** Tap dance slots, as the firmware stores them. */
   readonly tapDances: { onTap: number; onHold: number; onDoubleTap: number; onTapHold: number; tappingTerm: number }[]
+  /** Alt repeat key slots, as the 6 bytes the firmware stores. */
+  readonly altRepeats: number[][]
   /** Key override slots, as the 10 bytes the firmware stores. */
   readonly keyOverrides: number[][]
   /** Combo slots: four trigger keys and a result each. */
@@ -80,6 +82,7 @@ export class FakeKeyboard {
       onTapHold: 0,
       tappingTerm: 200,
     }))
+    this.altRepeats = Array.from({ length: options.altRepeatKeyCount ?? 0 }, () => new Array(6).fill(0))
     this.keyOverrides = Array.from({ length: options.keyOverrideCount ?? 0 }, () => new Array(10).fill(0))
     this.combos = Array.from({ length: options.comboCount ?? 0 }, () => ({ keys: [0, 0, 0, 0], output: 0 }))
     this.transport = new FakeTransport((req) => this.handle(req))
@@ -236,7 +239,7 @@ export class FakeKeyboard {
         reply[0] = this.tapDances.length
         reply[1] = this.combos.length
         reply[2] = this.keyOverrides.length
-        reply[3] = options.altRepeatKeyCount ?? 0
+        reply[3] = this.altRepeats.length
         reply[31] = options.featureFlags ?? 0
         return reply
       }
@@ -266,6 +269,21 @@ export class FakeKeyboard {
         // vial_keycode_firewall: the bootloader key only goes in as a replacement while unlocked.
         if (word(6) === QK_BOOT && !this.unlocked) entry.splice(2, 2, 0, 0)
         this.keyOverrides[req[3]] = entry
+        return [0]
+      }
+      case 0x07: {
+        // DYNAMIC_VIAL_ALT_REPEAT_KEY_GET: index
+        const entry = this.altRepeats[req[3]]
+        return entry ? [0, ...entry] : [1]
+      }
+      case 0x08: {
+        // DYNAMIC_VIAL_ALT_REPEAT_KEY_SET: index, then the entry's 6 bytes
+        if (!this.altRepeats[req[3]]) return [1]
+        const entry = [...req.slice(4, 10)]
+        // vial_keycode_firewall: the bootloader key only goes in while unlocked.
+        if (word(4) === QK_BOOT && !this.unlocked) entry.splice(0, 2, 0, 0)
+        if (word(6) === QK_BOOT && !this.unlocked) entry.splice(2, 2, 0, 0)
+        this.altRepeats[req[3]] = entry
         return [0]
       }
       case 0x03: {

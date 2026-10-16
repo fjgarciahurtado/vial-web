@@ -6,7 +6,8 @@ request and is described here as it lands.
 
 The **Advanced** section appears in the section switcher only on keyboards that
 have at least one of these features. Inside it, tabs switch between the features
-the keyboard has: **Tap dance**, **Combos**, **Key overrides** and **Typing settings**.
+the keyboard has: **Tap dance**, **Combos**, **Key overrides**, **Alt Repeat** and
+**Typing settings**.
 
 ## QMK settings
 
@@ -178,3 +179,39 @@ The option meanings come from vial-qmk
 and 5 are swapped; vial-web uses the firmware's meanings: bit 4 means the key
 is not pressed again after the override ends, and bit 5 means the override keeps
 going when another key is pressed.
+
+## Alt repeat keys
+
+**What users see.** The **Alt Repeat** tab explains that the Alt Repeat key sends
+the opposite of the last key pressed (after Up it sends Down, after Undo it can
+send Redo), and that each pair says what the opposite of a key is. Until Alt
+Repeat is on a key, it also says where to find it: Keys, under Special.
+
+A list shows each pair ("Up arrow ↔ Down arrow", "Off: …", "Not set up"), with
+**New pair**. The selected pair has:
+
+- **Turned on**.
+- **After this key → Alt Repeat sends**, filled with the usual key picker.
+- **Works both ways**, spelled out with the chosen keys ("after Right arrow, Alt
+  Repeat sends Left arrow").
+- **Use this pair after any key that has no pair of its own**.
+- **Modifiers that may be held** when the first key was pressed, with a note that
+  modifiers built into the key (the Ctrl in Ctrl + Z) always count.
+- **Left and right modifiers count the same**.
+
+A new pair starts turned on. Problems are explained: turned off, nothing to
+send, or no key (unless it's the default pair). Changes are queued like key
+overrides; a key that is the bootloader key unlocks the keyboard first. Backups
+save every slot under `alt_repeat_key` with vial-gui's field names. With this,
+vial-web restores every section vial-gui saves.
+
+**How it works.** `src/core/alt-repeat.ts` ports `AltRepeatKeyEntry` and
+`reload/set/save/restore_alt_repeat_key()` from `protocol/alt_repeat_key.py`,
+with `DYNAMIC_VIAL_ALT_REPEAT_KEY_GET` (0x07) and `DYNAMIC_VIAL_ALT_REPEAT_KEY_SET`
+(0x08). An entry is six bytes, `"<HHBB"`: the key and the key sent, as
+little-endian 16-bit numbers, then the allowed modifiers and the option bits
+(default 0, both ways 1, ignore sides 2, on 3). How the keyboard picks a pair is
+in `get_alt_repeat_key_keycode_user()` in upstream vial-qmk `quantum/vial.c`;
+the explanations in the app follow it. The fjgh keyboards' firmware predates
+this feature, so their Advanced section has no Alt Repeat tab until they are
+rebuilt on a newer vial-qmk.

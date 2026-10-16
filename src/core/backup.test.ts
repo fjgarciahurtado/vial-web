@@ -28,6 +28,7 @@ const source: BackupSource = {
   macros: [[{ type: 'text', text: 'hi' }], []],
   qmkSettings: { supported: [2, 7, 21, 999], values: { 2: 50, 7: 200, 21: 0x80 } },
   tapDances: [{ onTap: 0x29, onHold: 0xe0, onDoubleTap: 0, onTapHold: 0, tappingTerm: 180 }],
+  altRepeats: [{ keycode: 0x52, altKeycode: 0x51, allowedMods: 0, options: 0b1010 }],
   keyOverrides: [{ trigger: 0x2a, replacement: 0x4c, layers: 0xffff, triggerMods: 0x22, negativeMods: 0, suppressedMods: 0x22, options: 0x87 }],
   combos: [
     { keys: [0x04, 0x16, 0, 0], output: 0x29 },
@@ -80,10 +81,8 @@ describe('createBackup', () => {
     ])
   })
 
-  it('leaves out sections it does not manage, so vial-gui keeps them on restore', () => {
-    for (const section of ['alt_repeat_key']) {
-      expect(json).not.toHaveProperty(section)
-    }
+  it('saves every alt repeat key slot, as vial-gui does', () => {
+    expect(json.alt_repeat_key).toEqual([{ keycode: 'KC_UP', alt_keycode: 'KC_DOWN', allowed_mods: 0, options: 0b1010 }])
   })
 
   it('leaves out settings when the keyboard has none', () => {
@@ -104,11 +103,22 @@ describe('parseBackup', () => {
     expect(backup.notRestored).toEqual([])
   })
 
-  it('lists saved sections this app cannot restore yet', () => {
+  it('restores every section vial-gui saves', () => {
     const backup = parseBackup(
       JSON.stringify({ version: 1, uid: 1, layout: [], macro: [[['text', 'hi']]], alt_repeat_key: [{ keycode: 'KC_A' }] }),
     )
-    expect(backup.notRestored).toEqual(['alt repeat keys'])
+    expect(backup.notRestored).toEqual([])
+  })
+
+  it('restores alt repeat keys, keeping slots it cannot read', () => {
+    const saved = { keycode: 'KC_LEFT', alt_keycode: 'KC_RIGHT', allowed_mods: 0, options: 0b1000 }
+    const plan = planRestore(parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [], alt_repeat_key: [saved] })), source)
+    expect(plan.altRepeats).toEqual([{ keycode: 0x50, altKeycode: 0x4f, allowedMods: 0, options: 0b1000 }])
+    const bad = planRestore(
+      parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [], alt_repeat_key: [{ ...saved, keycode: 'NOPE' }] })),
+      source,
+    )
+    expect(bad.altRepeats).toEqual(source.altRepeats)
   })
 
   it('rejects files that are not keymap backups', () => {

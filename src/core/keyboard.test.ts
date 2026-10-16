@@ -68,6 +68,13 @@ describe('loadKeyboard', () => {
     expect(kb.unreadable).toEqual(['combos'])
   })
 
+  it('reads the alt repeat keys', async () => {
+    const fake = new FakeKeyboard({ definition, layers: 1, altRepeatKeyCount: 1 })
+    fake.altRepeats[0] = [0x52, 0, 0x51, 0, 0, 0b1010]
+    const kb = await loadKeyboard(fake.transport, 'fallback', { decompress: identity })
+    expect(kb.altRepeats).toEqual([{ keycode: 0x52, altKeycode: 0x51, allowedMods: 0, options: 0b1010 }])
+  })
+
   it('reads the combos', async () => {
     const fake = new FakeKeyboard({ definition, layers: 1, comboCount: 2 })
     fake.combos[1] = { keys: [0x04, 0x16, 0, 0], output: 0x29 }

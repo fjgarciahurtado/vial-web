@@ -138,7 +138,8 @@ export function TapDancePanel() {
       </div>
 
       <p className="font-semibold">Choose what {ACTION_TITLES[action].toLowerCase()} does:</p>
-      {/* Picks made while a change is being written wait their turn, so none is lost. */}
+      {/* Picks made while one is being written wait their turn. A change made while the keyboard is busy with
+          something else, such as a restore, isn't saved, and the notice says so. */}
       <div className="flex h-[28rem] flex-col" aria-busy={busy}>
         <KeyPicker catalog={catalog} current={td[action]} onPick={(value) => setTapDance(current, { [action]: value })} />
       </div>

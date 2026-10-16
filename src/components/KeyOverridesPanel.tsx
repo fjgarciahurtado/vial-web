@@ -3,13 +3,13 @@ import { ArrowRight, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { KeyPicker } from '@/components/KeyPicker'
 import { KeySlot } from '@/components/KeySlot'
+import { ModPicker } from '@/components/ModPicker'
 import { Button } from '@/components/ui/button'
 import {
   describeKeyOverride,
   EMPTY_KEY_OVERRIDE,
   isEmptyKeyOverride,
   keyOverrideProblem,
-  MODS,
   NEW_KEY_OVERRIDE,
   OPTION,
   type KeyOverride,
@@ -111,12 +111,7 @@ export function KeyOverridesPanel() {
                 type="checkbox"
                 className="size-5 accent-pick"
                 checked={(ko.options & OPTION.enabled) !== 0}
-                onChange={(e) => {
-                  const checked = e.target.checked
-                  edit((k) => ({
-                    options: checked ? k.options | OPTION.enabled : k.options & ~OPTION.enabled,
-                  }))
-                }}
+                onChange={() => edit((k) => ({ options: k.options ^ OPTION.enabled }))}
               />
               Turned on
             </label>
@@ -141,12 +136,7 @@ export function KeyOverridesPanel() {
                 type="checkbox"
                 className="size-5 accent-pick"
                 checked={(ko.options & OPTION.oneMod) !== 0}
-                onChange={(e) => {
-                  const checked = e.target.checked
-                  edit((k) => ({
-                    options: checked ? k.options | OPTION.oneMod : k.options & ~OPTION.oneMod,
-                  }))
-                }}
+                onChange={() => edit((k) => ({ options: k.options ^ OPTION.oneMod }))}
               />
               Any one of them is enough
             </label>
@@ -193,12 +183,7 @@ export function KeyOverridesPanel() {
                     type="checkbox"
                     className="size-5 accent-pick"
                     checked={(ko.layers & (1 << i)) !== 0}
-                    onChange={(e) => {
-                      const checked = e.target.checked
-                      edit((k) => ({
-                        layers: checked ? k.layers | (1 << i) : k.layers & ~(1 << i),
-                      }))
-                    }}
+                    onChange={() => edit((k) => ({ layers: k.layers ^ (1 << i) }))}
                   />
                   {i === 0 ? 'Main layer' : `Layer ${i}`}
                 </label>
@@ -218,12 +203,7 @@ export function KeyOverridesPanel() {
                     type="checkbox"
                     className="size-5 accent-pick"
                     checked={(ko.options & bit) !== 0}
-                    onChange={(e) => {
-                      const checked = e.target.checked
-                      edit((k) => ({
-                        options: checked ? k.options | bit : k.options & ~bit,
-                      }))
-                    }}
+                    onChange={() => edit((k) => ({ options: k.options ^ bit }))}
                   />
                   {title}
                 </label>
@@ -255,55 +235,11 @@ export function KeyOverridesPanel() {
       </div>
 
       <p className="font-semibold">{slot === 'trigger' ? 'Choose the key:' : 'Choose what it sends instead:'}</p>
-      {/* Picks made while a change is being written wait their turn, so none is lost. */}
+      {/* Picks made while one is being written wait their turn. A change made while the keyboard is busy with
+          something else, such as a restore, isn't saved, and the notice says so. */}
       <div className="flex h-[28rem] flex-col" aria-busy={busy}>
         <KeyPicker catalog={catalog} current={ko[slot]} onPick={(code) => edit(() => ({ [slot]: code }))} />
       </div>
     </div>
-  )
-}
-
-/** Eight modifier switches, left and right side. */
-function ModPicker({
-  title,
-  help,
-  mods,
-  onToggle,
-}: {
-  title: string
-  help?: string
-  mods: number
-  /** Gets the modifier's bit; the change is applied to the latest value, so quick clicks all count. */
-  onToggle(bit: number): void
-}) {
-  return (
-    <fieldset className="flex flex-col gap-2">
-      <legend className="mb-2 font-semibold">{title}</legend>
-      {help && <p className="-mt-1 text-sm text-ink-soft">{help}</p>}
-      <div className="flex flex-wrap gap-x-6 gap-y-2">
-        {(['Left', 'Right'] as const).map((side) => (
-          <div key={side} className="flex flex-wrap items-center gap-1.5">
-            <span className="w-10 text-sm text-ink-soft">{side}</span>
-            {MODS.filter((m) => m.side === side).map((m) => {
-              const on = (mods & (1 << m.bit)) !== 0
-              return (
-                <button
-                  key={m.bit}
-                  type="button"
-                  aria-pressed={on}
-                  aria-label={`${side} ${m.name}`}
-                  onClick={() => onToggle(1 << m.bit)}
-                  className={`rounded-md border-b-[3px] px-2.5 py-1 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pick ${
-                    on ? 'border-pick-skirt bg-pick text-white' : 'border-cap-skirt bg-cap text-legend'
-                  }`}
-                >
-                  {m.name}
-                </button>
-              )
-            })}
-          </div>
-        ))}
-      </div>
-    </fieldset>
   )
 }

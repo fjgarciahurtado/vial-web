@@ -3,6 +3,7 @@ import { create } from 'zustand'
 import { describeCombo, writeCombo, type Combo } from './core/combos'
 import { describeTapDance, TAP_DANCE_ACTIONS, writeTapDance, type TapDance } from './core/tap-dance'
 import { describeKeyOverride, writeKeyOverride, type KeyOverride } from './core/key-overrides'
+import { describeAltRepeat, writeAltRepeat, type AltRepeat } from './core/alt-repeat'
 import { createBackup, parseBackup, planRestore, type RestorePlan } from './core/backup'
 import { openDemoKeyboard, pressDemoKey } from './core/demo'
 import { serializeMacros, type Macro } from './core/macros'
@@ -125,6 +126,8 @@ interface AppState {
   setTapDance(index: number, change: Partial<TapDance>): Promise<boolean>
   /** Like setTapDance, for key overrides. `change` gets the latest value of the override. */
   setKeyOverride(index: number, change: (current: KeyOverride) => KeyOverride): Promise<boolean>
+  /** Like setKeyOverride, for alt repeat keys. */
+  setAltRepeat(index: number, change: (current: AltRepeat) => AltRepeat): Promise<boolean>
 }
 
 export const useApp = create<AppState>((set, get) => {
@@ -302,7 +305,7 @@ export const useApp = create<AppState>((set, get) => {
    * without it, that one is skipped. Returns a note about anything skipped, or null.
    */
   async function writeEntries<T>(
-    kind: { field: 'combos' | 'tapDances' | 'keyOverrides'; name: string },
+    kind: { field: 'combos' | 'tapDances' | 'keyOverrides' | 'altRepeats'; name: string },
     entries: T[],
     usesBoot: (entry: T, boot: number | undefined) => boolean,
     write: (client: VialClient, index: number, entry: T) => Promise<void>,
@@ -345,7 +348,7 @@ export const useApp = create<AppState>((set, get) => {
    * Runs inside the entry queue.
    */
   async function applyEntry<T extends object>(
-    kind: { field: 'tapDances' | 'keyOverrides'; name: string },
+    kind: { field: 'tapDances' | 'keyOverrides' | 'altRepeats'; name: string },
     index: number,
     change: (current: T) => T,
     writeAll: (entries: T[]) => Promise<string | null>,
@@ -376,6 +379,14 @@ export const useApp = create<AppState>((set, get) => {
 
   const writeKeyOverrides = (overrides: KeyOverride[]) =>
     writeEntries({ field: 'keyOverrides', name: 'key override' }, overrides, (k, boot) => k.replacement === boot, writeKeyOverride)
+
+  const writeAltRepeats = (entries: AltRepeat[]) =>
+    writeEntries(
+      { field: 'altRepeats', name: 'alt repeat pair' },
+      entries,
+      (a, boot) => a.keycode === boot || a.altKeycode === boot,
+      writeAltRepeat,
+    )
 
   const writeCombos = (combos: Combo[]) =>
     writeEntries({ field: 'combos', name: 'combo' }, combos, (c, boot) => c.output === boot, writeCombo)
@@ -433,6 +444,14 @@ export const useApp = create<AppState>((set, get) => {
           if (result) set((s) => ({ notice: `${s.notice ?? ''} ${result}`.trim() }))
         } catch (err) {
           set((s) => ({ notice: `${s.notice ?? ''} The key overrides weren't all restored: ${describe(err)}`.trim() }))
+        }
+      }
+      if (plan.altRepeats) {
+        try {
+          const result = await writeAltRepeats(plan.altRepeats)
+          if (result) set((s) => ({ notice: `${s.notice ?? ''} ${result}`.trim() }))
+        } catch (err) {
+          set((s) => ({ notice: `${s.notice ?? ''} The alt repeat keys weren't all restored: ${describe(err)}`.trim() }))
         }
       }
       if (plan.combos) {
@@ -678,6 +697,18 @@ export const useApp = create<AppState>((set, get) => {
           (current) => ({ ...current, ...change }),
           writeTapDances,
           (td, kb) => describeTapDance(td, kb.catalog),
+        ),
+      )
+    },
+
+    setAltRepeat(index, change) {
+      return inEntryQueue(() =>
+        applyEntry<AltRepeat>(
+          { field: 'altRepeats', name: 'alt repeat pair' },
+          index,
+          change,
+          writeAltRepeats,
+          (a, kb) => describeAltRepeat(a, kb.catalog),
         ),
       )
     },
