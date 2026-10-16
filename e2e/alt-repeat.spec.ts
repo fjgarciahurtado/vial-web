@@ -45,6 +45,15 @@ test('pair Left with Right both ways, then put Alt Repeat on a key', async ({ pa
   await expect(page.getByText('To use it, put Alt Repeat on a key in Keys, under Special.')).toHaveCount(0)
 })
 
+test('quick clicks on an option all count', async ({ page }) => {
+  const sides = page.getByRole('checkbox', { name: 'Left and right modifiers count the same' })
+  // Three clicks without waiting for the keyboard: on, off, on.
+  await sides.click()
+  await sides.click()
+  await sides.click()
+  await expect(sides).toBeChecked()
+})
+
 test('turn a pair off and delete it', async ({ page }) => {
   await page.getByRole('checkbox', { name: 'Turned on' }).click()
   await expect(list(page).getByRole('button', { name: /Pair 1/ })).toContainText('Off: Up arrow ↔ Down arrow')

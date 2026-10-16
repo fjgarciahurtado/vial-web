@@ -111,12 +111,7 @@ export function KeyOverridesPanel() {
                 type="checkbox"
                 className="size-5 accent-pick"
                 checked={(ko.options & OPTION.enabled) !== 0}
-                onChange={(e) => {
-                  const checked = e.target.checked
-                  edit((k) => ({
-                    options: checked ? k.options | OPTION.enabled : k.options & ~OPTION.enabled,
-                  }))
-                }}
+                onChange={() => edit((k) => ({ options: k.options ^ OPTION.enabled }))}
               />
               Turned on
             </label>
@@ -141,12 +136,7 @@ export function KeyOverridesPanel() {
                 type="checkbox"
                 className="size-5 accent-pick"
                 checked={(ko.options & OPTION.oneMod) !== 0}
-                onChange={(e) => {
-                  const checked = e.target.checked
-                  edit((k) => ({
-                    options: checked ? k.options | OPTION.oneMod : k.options & ~OPTION.oneMod,
-                  }))
-                }}
+                onChange={() => edit((k) => ({ options: k.options ^ OPTION.oneMod }))}
               />
               Any one of them is enough
             </label>
@@ -193,12 +183,7 @@ export function KeyOverridesPanel() {
                     type="checkbox"
                     className="size-5 accent-pick"
                     checked={(ko.layers & (1 << i)) !== 0}
-                    onChange={(e) => {
-                      const checked = e.target.checked
-                      edit((k) => ({
-                        layers: checked ? k.layers | (1 << i) : k.layers & ~(1 << i),
-                      }))
-                    }}
+                    onChange={() => edit((k) => ({ layers: k.layers ^ (1 << i) }))}
                   />
                   {i === 0 ? 'Main layer' : `Layer ${i}`}
                 </label>
@@ -218,12 +203,7 @@ export function KeyOverridesPanel() {
                     type="checkbox"
                     className="size-5 accent-pick"
                     checked={(ko.options & bit) !== 0}
-                    onChange={(e) => {
-                      const checked = e.target.checked
-                      edit((k) => ({
-                        options: checked ? k.options | bit : k.options & ~bit,
-                      }))
-                    }}
+                    onChange={() => edit((k) => ({ options: k.options ^ bit }))}
                   />
                   {title}
                 </label>
@@ -255,7 +235,8 @@ export function KeyOverridesPanel() {
       </div>
 
       <p className="font-semibold">{slot === 'trigger' ? 'Choose the key:' : 'Choose what it sends instead:'}</p>
-      {/* Picks made while a change is being written wait their turn, so none is lost. */}
+      {/* Picks made while one is being written wait their turn. A change made while the keyboard is busy with
+          something else, such as a restore, isn't saved, and the notice says so. */}
       <div className="flex h-[28rem] flex-col" aria-busy={busy}>
         <KeyPicker catalog={catalog} current={ko[slot]} onPick={(code) => edit(() => ({ [slot]: code }))} />
       </div>

@@ -41,7 +41,8 @@ export function AltRepeatPanel() {
       const base = isEmptyAltRepeat(latest) && latest.options === 0 ? NEW_ALT_REPEAT : latest
       return { ...base, ...change(base) }
     })
-  const option = (bit: number, on: boolean) => edit((a) => ({ options: on ? a.options | bit : a.options & ~bit }))
+  // Each click flips the option on the latest value, so quick clicks all count even while one is being saved.
+  const toggle = (bit: number) => edit((a) => ({ options: a.options ^ bit }))
 
   const open = (i: number) => {
     setCurrent(i)
@@ -87,7 +88,7 @@ export function AltRepeatPanel() {
           className="flex min-w-0 flex-1 flex-col gap-5 self-start rounded-2xl bg-panel p-4 sm:p-5"
         >
           {!isEmptyAltRepeat(entry) && (
-            <Check label="Turned on" checked={(entry.options & AREP_OPTION.enabled) !== 0} bold onChange={(on) => option(AREP_OPTION.enabled, on)} />
+            <Check label="Turned on" checked={(entry.options & AREP_OPTION.enabled) !== 0} bold onToggle={() => toggle(AREP_OPTION.enabled)} />
           )}
 
           <div className="flex flex-wrap items-center gap-2">
@@ -114,12 +115,12 @@ export function AltRepeatPanel() {
             <Check
               label={`Works both ways: after ${name(entry.altKeycode, 'the second key')}, Alt Repeat sends ${name(entry.keycode, 'the first')}`}
               checked={(entry.options & AREP_OPTION.bidirectional) !== 0}
-              onChange={(on) => option(AREP_OPTION.bidirectional, on)}
+              onToggle={() => toggle(AREP_OPTION.bidirectional)}
             />
             <Check
               label="Use this pair after any key that has no pair of its own"
               checked={(entry.options & AREP_OPTION.defaultToThis) !== 0}
-              onChange={(on) => option(AREP_OPTION.defaultToThis, on)}
+              onToggle={() => toggle(AREP_OPTION.defaultToThis)}
             />
           </div>
 
@@ -132,7 +133,7 @@ export function AltRepeatPanel() {
           <Check
             label="Left and right modifiers count the same"
             checked={(entry.options & AREP_OPTION.ignoreModHandedness) !== 0}
-            onChange={(on) => option(AREP_OPTION.ignoreModHandedness, on)}
+            onToggle={() => toggle(AREP_OPTION.ignoreModHandedness)}
           />
 
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -155,7 +156,8 @@ export function AltRepeatPanel() {
       </div>
 
       <p className="font-semibold">{slot === 'keycode' ? 'Choose the key:' : 'Choose what Alt Repeat sends after it:'}</p>
-      {/* Picks made while a change is being written wait their turn, so none is lost. */}
+      {/* Picks made while one is being written wait their turn. A change made while the keyboard is busy with
+          something else, such as a restore, isn't saved, and the notice says so. */}
       <div className="flex h-[28rem] flex-col" aria-busy={busy}>
         <KeyPicker catalog={catalog} current={entry[slot]} onPick={(code) => edit(() => ({ [slot]: code }))} />
       </div>
@@ -163,21 +165,21 @@ export function AltRepeatPanel() {
   )
 }
 
-/** A checkbox whose new state is read straight away, before the change is queued. */
+/** A checkbox that reports clicks as toggles, applied to the latest value in the store. */
 function Check({
   label,
   checked,
   bold = false,
-  onChange,
+  onToggle,
 }: {
   label: string
   checked: boolean
   bold?: boolean
-  onChange(on: boolean): void
+  onToggle(): void
 }) {
   return (
     <label className={`flex items-center gap-3 ${bold ? 'font-semibold' : ''}`}>
-      <input type="checkbox" className="size-5 flex-none accent-pick" checked={checked} onChange={(e) => onChange(e.target.checked)} />
+      <input type="checkbox" className="size-5 flex-none accent-pick" checked={checked} onChange={onToggle} />
       {label}
     </label>
   )
