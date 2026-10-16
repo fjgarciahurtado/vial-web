@@ -33,7 +33,8 @@ firmware's defaults. Numbers stay within each setting's limits.
 
 Settings are saved in `.vil` backups under `settings`, keyed by setting id, as
 vial-gui does, and restored from them. Settings the keyboard doesn't have are left
-out, and the restore message says how many.
+out, and the restore message says how many. Values outside a setting's limits are
+brought within them, so a hand-edited backup can't write nonsense.
 
 **How it works.** `src/core/qmk-settings.ts` ports `reload_settings()`,
 `qmk_settings_set()` and `qmk_settings_reset()` from

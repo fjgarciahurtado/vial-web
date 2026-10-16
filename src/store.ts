@@ -277,7 +277,7 @@ export const useApp = create<AppState>((set, get) => {
     const untouched = JSON.stringify(now.settingsDraft) === JSON.stringify(draftAtStart)
     set({
       keyboard: { ...now.keyboard, qmkSettings: { ...now.keyboard.qmkSettings, values: saved } },
-      ...(untouched || error ? { settingsDraft: saved } : {}),
+      ...(untouched ? { settingsDraft: saved } : {}),
     })
     return error ? `The settings weren't all saved: ${describe(error)}` : 'Settings saved.'
   }
@@ -305,14 +305,22 @@ export const useApp = create<AppState>((set, get) => {
       ].filter(Boolean)
       return ['Restored the backup. Use Undo change to go back.', ...notes].join(' ')
     })
-    // Macros aren't part of undo, as in vial-gui; they're written only when they differ.
-    if (plan.macros && JSON.stringify(plan.macros) !== JSON.stringify(get().keyboard?.macros)) {
-      const result = await writeMacros(plan.macros)
-      if (result && result !== 'Macros saved.') set((s) => ({ notice: `${s.notice ?? ''} ${result}`.trim() }))
-    }
-    if (plan.settings) {
-      const result = await writeSettings(plan.settings)
-      if (result && result !== 'Settings saved.') set((s) => ({ notice: `${s.notice ?? ''} ${result}`.trim() }))
+    // Macros and settings aren't part of undo, as in vial-gui; they're written only when they differ.
+    // Busy stays on so Save or Reset can't run in between.
+    set({ busy: true })
+    try {
+      if (plan.macros && JSON.stringify(plan.macros) !== JSON.stringify(get().keyboard?.macros)) {
+        const result = await writeMacros(plan.macros)
+        if (result && result !== 'Macros saved.') set((s) => ({ notice: `${s.notice ?? ''} ${result}`.trim() }))
+      }
+      const live = get().keyboard?.qmkSettings.values
+      if (plan.settings && live) {
+        // Merged with the keyboard's values now, not when the plan was made, so saves since then stay.
+        const result = await writeSettings({ ...live, ...plan.settings })
+        if (result && result !== 'Settings saved.') set((s) => ({ notice: `${s.notice ?? ''} ${result}`.trim() }))
+      }
+    } finally {
+      set({ busy: false })
     }
   }
 
@@ -519,18 +527,27 @@ export const useApp = create<AppState>((set, get) => {
       if (!keyboard || !client || busy) return
       set({ busy: true })
       try {
-        await client.qmkSettingsReset()
-        const { values } = await readQmkSettings(client, keyboard.vialProtocol)
-        const now = get().keyboard
-        if (now) {
+        try {
+          await client.qmkSettingsReset()
+        } catch (err) {
+          set({ notice: `The settings weren't reset: ${describe(err)}` })
+          return
+        }
+        try {
+          const { values } = await readQmkSettings(client, keyboard.vialProtocol)
+          const now = get().keyboard
+          if (now) {
+            set({
+              keyboard: { ...now, qmkSettings: { ...now.qmkSettings, values } },
+              settingsDraft: values,
+              notice: "Every setting is back to the keyboard's default.",
+            })
+          }
+        } catch (err) {
           set({
-            keyboard: { ...now, qmkSettings: { ...now.qmkSettings, values } },
-            settingsDraft: values,
-            notice: "Every setting is back to the keyboard's default.",
+            notice: `The keyboard reset its settings, but they couldn't be read back: ${describe(err)} Reconnect the keyboard to see them.`,
           })
         }
-      } catch (err) {
-        set({ notice: `The settings weren't reset: ${describe(err)}` })
       } finally {
         set({ busy: false })
       }

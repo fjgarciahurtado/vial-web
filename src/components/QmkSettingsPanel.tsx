@@ -170,8 +170,15 @@ function NumberInput({
       aria-label={label}
       aria-describedby={describedBy}
       onChange={(e) => {
-        setText(e.target.value)
-        if (e.target.value.trim() !== '' && Number.isFinite(Number(e.target.value))) onChange(Number(e.target.value))
+        const typed = e.target.value
+        const n = Number(typed)
+        if (typed.trim() === '' || !Number.isFinite(n)) {
+          setText(typed)
+          return
+        }
+        // Out of range: show the limit the setting will actually get, not what was typed.
+        setText(n > max ? String(max) : n < min ? String(min) : typed)
+        onChange(n)
       }}
       onBlur={() => setText(String(value))}
       className="h-10 w-32 rounded-lg border border-line bg-field px-3 focus-visible:outline-2 focus-visible:outline-pick"

@@ -197,10 +197,14 @@ export async function readQmkSettings(client: VialClient, vialProtocol: number):
   let after = 0
   while (after !== END) {
     const ids = await client.qmkSettingsQuery(after)
+    const before = after
     for (const id of ids) {
+      if (id <= before || supported.includes(id)) continue
       after = Math.max(after, id)
       if (id !== END) supported.push(id)
     }
+    // A firmware that lists no new ids would otherwise be asked forever.
+    if (after === before) break
   }
 
   for (const qsid of supported) {
@@ -209,6 +213,20 @@ export async function readQmkSettings(client: VialClient, vialProtocol: number):
     if (reply) values[qsid] = decodeSetting(qsid, reply)
   }
   return { supported, values }
+}
+
+/**
+ * Brings a value from a backup within what the setting allows: numbers within their
+ * limits, on/off settings only in the bits that mean something. Returns null for
+ * settings this app doesn't know.
+ */
+export function clampSetting(qsid: number, value: number): number | null {
+  const fields = QMK_SETTING_GROUPS.flatMap((g) => g.fields).filter((f) => f.qsid === qsid)
+  if (!fields.length) return null
+  const field = fields[0]
+  if (field.type === 'integer') return Math.min(field.max ?? Infinity, Math.max(field.min ?? 0, Math.round(value)))
+  const mask = fields.reduce((m, f) => m | (1 << (f.bit ?? 0)), 0)
+  return (value & mask) >>> 0
 }
 
 /** Ids whose value differs between two sets of values. */

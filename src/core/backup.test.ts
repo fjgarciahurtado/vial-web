@@ -156,10 +156,13 @@ describe('planRestore', () => {
   })
 
   it('restores the QMK settings this keyboard has', () => {
-    const backup = parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [], settings: { 2: 60, 7: 'x', 21: 1, 30: 5 } }))
+    const backup = parseBackup(
+      JSON.stringify({ version: 1, uid: 1, layout: [], settings: { 2: 99999, 7: 'x', 21: 0xf001, 30: 5 } }),
+    )
     const plan = planRestore(backup, source)
-    // 7 isn't a number and 30 isn't on this keyboard, so both keep their current value.
-    expect(plan.settings).toEqual({ 2: 60, 7: 200, 21: 1 })
+    // 7 isn't a number and 30 isn't on this keyboard, so both are left out.
+    // 2 is kept within its limit, and 21 keeps only the bits that mean something.
+    expect(plan.settings).toEqual({ 2: 10000, 21: 1 })
     expect(plan.notes).toEqual(["2 settings in this backup don't fit this keyboard, so they were left out."])
     expect(planRestore(parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [] })), source).settings).toBeNull()
   })

@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { FakeKeyboard } from './fake-keyboard'
 import {
   changedSettings,
+  clampSetting,
   decodeSetting,
   encodeSetting,
   fieldValue,
@@ -61,6 +62,17 @@ describe('readQmkSettings (reload_settings in protocol/keyboard_comm.py)', () =>
     expect(settings.values).toEqual({ 7: 200 })
   })
 
+  it('stops when the keyboard lists no new ids', async () => {
+    const { fake, client } = setup({ 7: 200 })
+    // Broken firmware: always the same full reply, with no 0xFFFF end marker.
+    const send = fake.transport.send.bind(fake.transport)
+    fake.transport.send = async (report) => {
+      if (report[1] !== 0x09) return send(report)
+      return new Uint8Array(32).fill(7).map((b, i) => (i % 2 ? 0 : b))
+    }
+    expect((await readQmkSettings(client, 6)).supported).toEqual([7])
+  })
+
   it('reads nothing from keyboards older than Vial protocol 4', async () => {
     const { client } = setup({ 7: 200 }, 3)
     expect(await readQmkSettings(client, 3)).toEqual({ supported: [], values: {} })
@@ -107,6 +119,12 @@ describe('settings fields', () => {
     const groups = settingGroups([7, 2])
     expect(groups.map((g) => g.id)).toEqual(['tap-hold', 'combo'])
     expect(groups[0].fields.map((f) => f.qsid)).toEqual([7])
+  })
+
+  it('brings backup values within what each setting allows', () => {
+    expect(clampSetting(7, 99999)).toBe(10000)
+    expect(clampSetting(21, 0xf081)).toBe(0x81) // only bits 0-9 mean something
+    expect(clampSetting(999, 1)).toBeNull()
   })
 
   it('finds what changed', () => {

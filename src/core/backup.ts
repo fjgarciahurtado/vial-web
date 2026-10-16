@@ -11,7 +11,7 @@ import type { KeycodeCatalog } from './keycodes/catalog'
 import type { EncoderKeymap, Target } from './keymap-editor'
 import type { LayoutEncoder, LayoutKey } from './layout'
 import { loadSavedMacro, macroProblem, saveMacro, type Macro } from './macros'
-import type { QmkSettings, QmkSettingValues } from './qmk-settings'
+import { clampSetting, type QmkSettings, type QmkSettingValues } from './qmk-settings'
 import type { Keymap } from './vial-client'
 
 export interface BackupSource {
@@ -52,7 +52,7 @@ export interface RestorePlan {
   layoutOptions: number | null
   /** Every macro, ready to write, or null when the backup has no macros to restore. */
   macros: Macro[] | null
-  /** Every QMK setting the keyboard has, as the backup sets them, or null when there are none to restore. */
+  /** The backup's QMK settings that this keyboard has, or null when there are none to restore. */
   settings: QmkSettingValues | null
   /** Plain-language notes about parts of the backup that won't be restored. */
   notes: string[]
@@ -173,11 +173,13 @@ export function planRestore(backup: Backup, kb: BackupSource): RestorePlan {
   let settings: QmkSettingValues | null = null
   const saved = Object.entries(backup.settings ?? {})
   if (saved.length && Object.keys(kb.qmkSettings.values).length) {
-    settings = { ...kb.qmkSettings.values }
+    settings = {}
     let skipped = 0
-    for (const [qsid, value] of saved) {
-      if (Number(qsid) in settings && Number.isInteger(value) && (value as number) >= 0) settings[Number(qsid)] = value as number
-      else skipped++
+    for (const [key, value] of saved) {
+      const qsid = Number(key)
+      const clamped = typeof value === 'number' && qsid in kb.qmkSettings.values ? clampSetting(qsid, value) : null
+      if (clamped === null) skipped++
+      else settings[qsid] = clamped
     }
     if (skipped) {
       notes.push(
