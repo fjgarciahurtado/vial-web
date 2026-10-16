@@ -37,7 +37,8 @@ done, and add new ones as they come up.
   headers. Waiting for Netlify credits to redeploy. If the site was uploaded by hand,
   connect it to the repository instead (see [DEPLOY.md](DEPLOY.md)) so merges to `main`
   redeploy automatically and pull requests get preview sites.
-- [ ] **Phase 3** (below) not started.
+- [ ] **Phase 3** (below): QMK settings done; tap dance, combos, key overrides and alt
+  repeat key still to do.
 
 ## Phase 0: Foundation (done)
 
@@ -114,12 +115,15 @@ keyboards with different lighting systems.
 
 Hidden behind an "Advanced" section, each with a short explanation and example.
 
+Status: in progress, one feature per pull request; what changed is described in
+[PHASE-3.md](PHASE-3.md). Done: QMK settings.
+
 - **Tap dance** (`editor/tap_dance.py`, `protocol/tap_dance.py`).
 - **Combos** (`editor/combos.py`, `protocol/combo.py`).
 - **Key overrides** (`editor/key_override.py`, `protocol/key_override.py`).
 - **Alt repeat key** (`editor/alt_repeat_key.py`,
   `protocol/alt_repeat_key.py`).
-- **QMK settings** (`editor/qmk_settings.py`, `../resources/base/qmk_settings.json`).
+- **QMK settings** (`editor/qmk_settings.py`, `../resources/base/qmk_settings.json`). Done.
 
 These all use the dynamic entry commands (`CMD_VIAL_DYNAMIC_ENTRY_OP`), so they
 share one protocol module. Each feature can ship on its own.

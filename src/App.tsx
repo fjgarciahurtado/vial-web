@@ -8,6 +8,7 @@ import { KeyboardView } from '@/components/KeyboardView'
 import { LayoutOptions } from '@/components/LayoutOptions'
 import { MacroEditor } from '@/components/MacroEditor'
 import { LightingPanel, lightingGlow } from '@/components/LightingPanel'
+import { QmkSettingsPanel } from '@/components/QmkSettingsPanel'
 import { UnlockDialog } from '@/components/UnlockDialog'
 import { Button } from '@/components/ui/button'
 import { openDemoKeyboard } from '@/core/demo'
@@ -33,7 +34,17 @@ export default function App() {
       </header>
       {keyboard ? (
         <main className="min-h-0 flex-1 overflow-y-auto">
-          <div className="mx-auto h-full max-w-6xl px-6">{view === 'lighting' ? <LightingView /> : view === 'tester' ? <KeyTester /> : view === 'macros' ? <MacroEditor /> : <Editor />}</div>
+          <div className="mx-auto h-full max-w-6xl px-6">{view === 'lighting' ? (
+              <LightingView />
+            ) : view === 'tester' ? (
+              <KeyTester />
+            ) : view === 'macros' ? (
+              <MacroEditor />
+            ) : view === 'advanced' ? (
+              <AdvancedView />
+            ) : (
+              <Editor />
+            )}</div>
         </main>
       ) : (
         <main className="mx-auto max-w-6xl px-6 pb-16">
@@ -163,7 +174,7 @@ function ConnectedBadge() {
   )
 }
 
-/** Switches between changing keys and changing lights. Lighting shows only on keyboards that have it. */
+/** Switches between the app's sections. Lighting, Macros and Advanced show only on keyboards that have them. */
 function ViewNav() {
   const { keyboard, view, setView } = useApp()
   if (!keyboard) return null
@@ -173,6 +184,7 @@ function ViewNav() {
     ...(backlight || rgblight || vialrgb ? [{ id: 'lighting' as const, title: 'Lighting' }] : []),
     ...(keyboard.macros.length ? [{ id: 'macros' as const, title: 'Macros' }] : []),
     { id: 'tester' as const, title: 'Key tester' },
+    ...(keyboard.qmkSettings.supported.length ? [{ id: 'advanced' as const, title: 'Advanced' }] : []),
   ]
   if (views.length < 2) return null
   return (
@@ -213,6 +225,26 @@ function LightingView() {
         {notice}
       </p>
       <LightingPanel />
+    </div>
+  )
+}
+
+/** Features most people never need, each explained in plain words. */
+function AdvancedView() {
+  const { keyboard, notice } = useApp()
+  if (!keyboard) return null
+  return (
+    <div className="flex flex-col gap-4 pb-10">
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-bold tracking-tight">Advanced</h1>
+        <p className="text-ink-soft">
+          Fine-tune how {keyboard.name} behaves. The defaults suit most people, so change these only if something feels off.
+        </p>
+      </div>
+      <p className="min-h-6 w-full" aria-live="polite">
+        {notice}
+      </p>
+      <QmkSettingsPanel />
     </div>
   )
 }

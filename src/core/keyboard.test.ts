@@ -37,6 +37,12 @@ describe('loadKeyboard', () => {
     expect([...kb.capabilities.features].sort()).toEqual(['caps_word', 'persistent_default_layer', 'repeat_key'])
   })
 
+  it('reads the QMK settings the firmware has', async () => {
+    const fake = new FakeKeyboard({ definition, layers: 1, qmkSettings: { 7: 200, 21: 0x80 } })
+    const kb = await loadKeyboard(fake.transport, 'fallback', { decompress: identity })
+    expect(kb.qmkSettings).toEqual({ supported: [7, 21], values: { 7: 200, 21: 0x80 } })
+  })
+
   it('skips dynamic entries on keyboards older than Vial protocol 4', async () => {
     const fake = new FakeKeyboard({ definition, layers: 1, vialProtocol: 3, tapDanceCount: 5, featureFlags: 0b11 })
     const kb = await loadKeyboard(fake.transport, 'fallback', { decompress: identity })

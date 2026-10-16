@@ -18,6 +18,8 @@ export interface FakeKeyboardOptions {
   unlockKeys?: { row: number; col: number }[]
   /** Polls it takes to unlock once started, as if someone holds the keys. 0 never unlocks. */
   holdPolls?: number
+  /** QMK settings the firmware has, by qsid, with their default values. */
+  qmkSettings?: Record<number, number>
 }
 
 /**
@@ -38,6 +40,8 @@ export class FakeKeyboard {
   lightingSaved = false
   /** Macro memory: macros separated by zero bytes. */
   readonly macroBuffer: Uint8Array
+  /** QMK setting values by qsid. */
+  qmkSettings: Record<number, number>
   /** Switches held down right now, as "row,col". */
   readonly pressed = new Set<string>()
   readonly transport: FakeTransport
@@ -57,6 +61,7 @@ export class FakeKeyboard {
     this.layoutOptions = options.layoutOptions ?? 0
     this.macroBuffer = new Uint8Array(options.macroMemory ?? 0)
     this.unlocked = options.unlocked ?? false
+    this.qmkSettings = { ...options.qmkSettings }
     this.transport = new FakeTransport((req) => this.handle(req))
   }
 
@@ -168,6 +173,32 @@ export class FakeKeyboard {
       case 0x08: // CMD_VIAL_LOCK
         this.unlocked = false
         return []
+      case 0x09: {
+        // CMD_VIAL_QMK_SETTINGS_QUERY: up to 16 ids above the given one, then 0xFFFF
+        const after = req[2] | (req[3] << 8)
+        const ids = Object.keys(this.qmkSettings)
+          .map(Number)
+          .filter((id) => id > after)
+          .sort((a, b) => a - b)
+          .slice(0, 16)
+        while (ids.length < 16) ids.push(0xffff)
+        return ids.flatMap((id) => [id & 0xff, id >> 8])
+      }
+      case 0x0a: {
+        // CMD_VIAL_QMK_SETTINGS_GET: status 0, then the value (little-endian)
+        const value = this.qmkSettings[req[2] | (req[3] << 8)]
+        return value === undefined ? [0xff] : [0, ...u32le(value)]
+      }
+      case 0x0b: {
+        // CMD_VIAL_QMK_SETTINGS_SET: qsid, value (little-endian, unused bytes are zero)
+        const qsid = req[2] | (req[3] << 8)
+        if (!(qsid in this.qmkSettings)) return [0xff]
+        this.qmkSettings[qsid] = (req[4] | (req[5] << 8) | (req[6] << 16) | (req[7] << 24)) >>> 0
+        return [0]
+      }
+      case 0x0c: // CMD_VIAL_QMK_SETTINGS_RESET
+        this.qmkSettings = { ...options.qmkSettings }
+        return []
       case 0x0d: {
         // CMD_VIAL_DYNAMIC_ENTRY_OP, get number of entries
         const reply = new Array(32).fill(0)
@@ -217,6 +248,10 @@ export class FakeKeyboard {
     const offset = ((layer * rows + row) * cols + col) * 2
     return (this.keymap[offset] << 8) | this.keymap[offset + 1]
   }
+}
+
+function u32le(value: number): number[] {
+  return [value & 0xff, (value >>> 8) & 0xff, (value >>> 16) & 0xff, (value >>> 24) & 0xff]
 }
 
 function u32be(value: number): number[] {

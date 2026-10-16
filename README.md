@@ -28,7 +28,10 @@ full plan and the list of open issues are in [docs/ROADMAP.md](docs/ROADMAP.md).
 
 - Macros: type text and press keys, built from plain steps, saved to the keyboard and in backups.
 
-Not yet: tap dance, combos, key overrides, QMK settings, firmware flashing, and the desktop app.
+- Advanced: QMK settings such as tap-hold timing, key swaps and Auto Shift, each explained in
+  plain words, and saved in backups.
+
+Not yet: tap dance, combos, key overrides, alt repeat keys, firmware flashing, and the desktop app.
 
 ## Development
 

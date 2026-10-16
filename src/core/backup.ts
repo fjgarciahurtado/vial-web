@@ -3,14 +3,15 @@
  * Keymap backups in vial-gui's .vil format (save_layout / restore_layout in
  * protocol/keyboard_comm.py), so files move freely between the two apps.
  *
- * vial-web writes only what it manages: keys, knobs and layout options. vial-gui
- * skips missing sections when restoring, so a vial-web backup never clears
- * macros or other settings in vial-gui.
+ * vial-web writes only what it manages: keys, knobs, layout options, macros and
+ * QMK settings. vial-gui skips missing sections when restoring, so a vial-web
+ * backup never clears tap dance, combos or other features in vial-gui.
  */
 import type { KeycodeCatalog } from './keycodes/catalog'
 import type { EncoderKeymap, Target } from './keymap-editor'
 import type { LayoutEncoder, LayoutKey } from './layout'
 import { loadSavedMacro, macroProblem, saveMacro, type Macro } from './macros'
+import { clampSetting, type QmkSettings, type QmkSettingValues } from './qmk-settings'
 import type { Keymap } from './vial-client'
 
 export interface BackupSource {
@@ -27,6 +28,7 @@ export interface BackupSource {
   /** Packed layout options, or -1 when the keyboard has none (as in vial-gui). */
   layoutOptionsValue: number
   macros: Macro[]
+  qmkSettings: QmkSettings
   catalog: KeycodeCatalog
 }
 
@@ -39,6 +41,8 @@ export interface Backup {
   layoutOptions: number
   /** The "macro" section, still in .vil form, or null when the file has none. */
   macros: unknown[][] | null
+  /** The "settings" section by qsid, or null when the file has none. */
+  settings: Record<string, unknown> | null
   /** Saved sections this app can't restore yet, in plain words. */
   notRestored: string[]
 }
@@ -48,6 +52,8 @@ export interface RestorePlan {
   layoutOptions: number | null
   /** Every macro, ready to write, or null when the backup has no macros to restore. */
   macros: Macro[] | null
+  /** The backup's QMK settings that this keyboard has, or null when there are none to restore. */
+  settings: QmkSettingValues | null
   /** Plain-language notes about parts of the backup that won't be restored. */
   notes: string[]
   /** Keycode names in the backup this app doesn't recognise. */
@@ -64,7 +70,6 @@ const OTHER_SECTIONS: [string, string][] = [
   ['combo', 'combos'],
   ['key_override', 'key overrides'],
   ['alt_repeat_key', 'alt repeat keys'],
-  ['settings', 'QMK settings'],
 ]
 
 export function createBackup(kb: BackupSource): string {
@@ -85,6 +90,7 @@ export function createBackup(kb: BackupSource): string {
       encoder_layout: encoderLayout,
       layout_options: kb.layoutOptionsValue,
       ...(kb.macros.length && { macro: kb.macros.map((m) => saveMacro(m, kb.catalog)) }),
+      ...(Object.keys(kb.qmkSettings.values).length && { settings: kb.qmkSettings.values }),
       vial_protocol: kb.vialProtocol,
       via_protocol: kb.viaProtocol,
     },
@@ -110,6 +116,7 @@ export function parseBackup(text: string): Backup {
     encoderLayout: Array.isArray(data.encoder_layout) ? (data.encoder_layout as SavedCode[][][]) : [],
     layoutOptions: typeof data.layout_options === 'number' ? data.layout_options : -1,
     macros: Array.isArray(data.macro) ? (data.macro as unknown[]).map((m) => (Array.isArray(m) ? m : [])) : null,
+    settings: isRecord(data.settings) ? data.settings : null,
     notRestored: OTHER_SECTIONS.filter(([key]) => hasContent(data[key])).map(([, name]) => name),
   }
 }
@@ -162,14 +169,42 @@ export function planRestore(backup: Backup, kb: BackupSource): RestorePlan {
     notes.push('This keyboard has no macros, so the macros in this backup were left out.')
   }
 
+  // Like restore_layout in vial-gui: set each saved setting the keyboard has, leave the rest.
+  let settings: QmkSettingValues | null = null
+  const saved = Object.entries(backup.settings ?? {})
+  if (saved.length && Object.keys(kb.qmkSettings.values).length) {
+    settings = {}
+    let skipped = 0
+    for (const [key, value] of saved) {
+      const qsid = Number(key)
+      const clamped = typeof value === 'number' && qsid in kb.qmkSettings.values ? clampSetting(qsid, value) : null
+      if (clamped === null) skipped++
+      else settings[qsid] = clamped
+    }
+    if (skipped) {
+      notes.push(
+        skipped === 1
+          ? "1 setting in this backup doesn't fit this keyboard, so it was left out."
+          : `${skipped} settings in this backup don't fit this keyboard, so they were left out.`,
+      )
+    }
+  } else if (saved.length) {
+    notes.push('This keyboard has no QMK settings, so the settings in this backup were left out.')
+  }
+
   return {
     changes,
     macros,
+    settings,
     notes,
     layoutOptions: backup.layoutOptions !== -1 && kb.layoutOptionsValue !== -1 ? backup.layoutOptions : null,
     unknownKeys,
     sameKeyboard: backup.uid === kb.keyboardId,
   }
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
 /**

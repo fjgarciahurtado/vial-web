@@ -8,6 +8,7 @@ import { loadKeyboard, type LoadedKeyboard } from './core/keyboard'
 import { KeymapEditor, type Target } from './core/keymap-editor'
 import { packLayoutChoices, unpackLayoutChoices } from './core/layout'
 import { LightingController, type LightingState } from './core/lighting'
+import { readQmkSettings, withFieldValue, writeQmkSettings, type QmkSettingValues, type SettingField } from './core/qmk-settings'
 import type { HidTransport } from './core/transport'
 import { unlockKeyboard } from './core/unlock'
 import { VialClient } from './core/vial-client'
@@ -16,7 +17,7 @@ import { isWebHidSupported, WebHidTransport } from './core/webhid-transport'
 type Status = 'idle' | 'connecting' | 'ready' | 'error'
 
 /** The main areas of the app once a keyboard is open. */
-export type View = 'keys' | 'lighting' | 'tester' | 'macros'
+export type View = 'keys' | 'lighting' | 'tester' | 'macros' | 'advanced'
 
 /** The key or knob direction being edited, on the current layer. */
 export type Selection = { kind: 'key'; row: number; col: number } | { kind: 'encoder'; index: number; direction: number }
@@ -26,6 +27,7 @@ const KNOB_TURNS = ['Turn left', 'Turn right']
 /** State with no keyboard open. */
 const CLOSED = {
   macroDrafts: [],
+  settingsDraft: {},
   demo: null,
   view: 'keys' as View,
   lights: null,
@@ -104,6 +106,13 @@ interface AppState {
   setLighting(next: LightingState): void
   /** Keeps the current lighting after the keyboard is unplugged. */
   saveLighting(): Promise<void>
+  /** QMK settings as edited in the app, not yet saved to the keyboard. */
+  settingsDraft: QmkSettingValues
+  setSettingDraft(field: SettingField, value: number | boolean): void
+  discardSettingsDraft(): void
+  saveSettings(): Promise<void>
+  /** Puts every QMK setting back to the firmware's defaults. */
+  resetSettings(): Promise<void>
 }
 
 export const useApp = create<AppState>((set, get) => {
@@ -168,6 +177,7 @@ export const useApp = create<AppState>((set, get) => {
       editor: new KeymapEditor(client, keyboard.keymap, keyboard.encoderKeymap),
       lights: new LightingController(client, keyboard.lighting),
       macroDrafts: keyboard.macros,
+      settingsDraft: keyboard.qmkSettings.values,
       view: 'keys',
       canUndo: false,
       canRedo: false,
@@ -243,6 +253,35 @@ export const useApp = create<AppState>((set, get) => {
     return 'Macros saved.'
   }
 
+  /** Writes QMK settings that differ from the keyboard's. Returns a notice, or null if the keyboard went away. */
+  async function writeSettings(values: QmkSettingValues): Promise<string | null> {
+    const { keyboard, client, settingsDraft: draftAtStart } = get()
+    if (!keyboard || !client) return null
+    let error: unknown = null
+    try {
+      await writeQmkSettings(client, keyboard.qmkSettings.values, values)
+    } catch (err) {
+      error = err
+    }
+    // After a failure some settings may be written and others not, so ask the keyboard.
+    let saved = values
+    if (error) {
+      try {
+        saved = (await readQmkSettings(client, keyboard.vialProtocol)).values
+      } catch {
+        return `The settings weren't all saved: ${describe(error)}`
+      }
+    }
+    const now = get()
+    if (!now.keyboard) return null
+    const untouched = JSON.stringify(now.settingsDraft) === JSON.stringify(draftAtStart)
+    set({
+      keyboard: { ...now.keyboard, qmkSettings: { ...now.keyboard.qmkSettings, values: saved } },
+      ...(untouched ? { settingsDraft: saved } : {}),
+    })
+    return error ? `The settings weren't all saved: ${describe(error)}` : 'Settings saved.'
+  }
+
   async function restore(plan: RestorePlan) {
     const keyboard = get().keyboard!
     const boot = keyboard.catalog.deserialize('QK_BOOT')
@@ -266,10 +305,22 @@ export const useApp = create<AppState>((set, get) => {
       ].filter(Boolean)
       return ['Restored the backup. Use Undo change to go back.', ...notes].join(' ')
     })
-    // Macros aren't part of undo, as in vial-gui; they're written only when they differ.
-    if (plan.macros && JSON.stringify(plan.macros) !== JSON.stringify(get().keyboard?.macros)) {
-      const result = await writeMacros(plan.macros)
-      if (result && result !== 'Macros saved.') set((s) => ({ notice: `${s.notice ?? ''} ${result}`.trim() }))
+    // Macros and settings aren't part of undo, as in vial-gui; they're written only when they differ.
+    // Busy stays on so Save or Reset can't run in between.
+    set({ busy: true })
+    try {
+      if (plan.macros && JSON.stringify(plan.macros) !== JSON.stringify(get().keyboard?.macros)) {
+        const result = await writeMacros(plan.macros)
+        if (result && result !== 'Macros saved.') set((s) => ({ notice: `${s.notice ?? ''} ${result}`.trim() }))
+      }
+      const live = get().keyboard?.qmkSettings.values
+      if (plan.settings && live) {
+        // Merged with the keyboard's values now, not when the plan was made, so saves since then stay.
+        const result = await writeSettings({ ...live, ...plan.settings })
+        if (result && result !== 'Settings saved.') set((s) => ({ notice: `${s.notice ?? ''} ${result}`.trim() }))
+      }
+    } finally {
+      set({ busy: false })
     }
   }
 
@@ -280,6 +331,7 @@ export const useApp = create<AppState>((set, get) => {
     lights: null,
     demo: null,
     macroDrafts: [],
+    settingsDraft: {},
     keyboard: null,
     isDemo: false,
     layer: 0,
@@ -450,6 +502,57 @@ export const useApp = create<AppState>((set, get) => {
       }
     },
 
+    setSettingDraft(field, value) {
+      set((s) => ({ settingsDraft: withFieldValue(s.settingsDraft, field, value), notice: null }))
+    },
+
+    discardSettingsDraft() {
+      set((s) => ({ settingsDraft: s.keyboard?.qmkSettings.values ?? {}, notice: 'Changes to settings were discarded.' }))
+    },
+
+    async saveSettings() {
+      const { keyboard, settingsDraft, busy } = get()
+      if (!keyboard || busy) return
+      set({ busy: true })
+      try {
+        const notice = await writeSettings(settingsDraft)
+        if (notice) set({ notice })
+      } finally {
+        set({ busy: false })
+      }
+    },
+
+    async resetSettings() {
+      const { keyboard, client, busy } = get()
+      if (!keyboard || !client || busy) return
+      set({ busy: true })
+      try {
+        try {
+          await client.qmkSettingsReset()
+        } catch (err) {
+          set({ notice: `The settings weren't reset: ${describe(err)}` })
+          return
+        }
+        try {
+          const { values } = await readQmkSettings(client, keyboard.vialProtocol)
+          const now = get().keyboard
+          if (now) {
+            set({
+              keyboard: { ...now, qmkSettings: { ...now.qmkSettings, values } },
+              settingsDraft: values,
+              notice: "Every setting is back to the keyboard's default.",
+            })
+          }
+        } catch (err) {
+          set({
+            notice: `The keyboard reset its settings, but they couldn't be read back: ${describe(err)} Reconnect the keyboard to see them.`,
+          })
+        }
+      } finally {
+        set({ busy: false })
+      }
+    },
+
     async lock() {
       const { client } = get()
       if (!client) return
@@ -479,6 +582,10 @@ function friendlyError(err: unknown): string {
     return "The keyboard answered, but it doesn't look like Vial firmware. VIA-only keyboards aren't supported yet."
   }
   return err instanceof Error ? err.message : 'Something went wrong while reading the keyboard.'
+}
+
+function describe(err: unknown): string {
+  return err instanceof Error ? err.message : 'the keyboard did not answer.'
 }
 
 /** "a", "a and b", "a, b and c" */
