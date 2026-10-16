@@ -39,8 +39,8 @@ done, and add new ones as they come up.
   redeploy automatically and pull requests get preview sites.
 - [ ] **Phase 3** (below): QMK settings, combos, tap dance and key overrides done; alt
   repeat key still to do.
-- [ ] **Test combos, tap dance and key overrides on real hardware.** Only tested against
-  the demo keyboard.
+- [ ] **Test combos and tap dance on real hardware.** Only tested against the demo
+  keyboard. (Key overrides were tested on a real keyboard.)
 
 ## Phase 0: Foundation (done)
 
