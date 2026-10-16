@@ -28,11 +28,12 @@ done, and add new ones as they come up.
   C:/Users/fjgar/vial-qmk` first).
 - [ ] **Twinkle effect missing from the light strip list.** vial-gui's rgblight effect
   list (and so vial-web's) ends at "Alternating"; kb8knob builds Twinkle too.
-- [ ] **Check the Netlify site with a real keyboard.** The site is deployed. The first
-  version's security policy blocked WebAssembly, so keyboards couldn't be opened; fixed
-  in PR #3. Confirm the fix is live and a keyboard connects. If the site was uploaded by
-  hand rather than connected to the repository, connect it (see [DEPLOY.md](DEPLOY.md))
-  so merges to `main` redeploy automatically and pull requests get preview sites.
+- [ ] **Redeploy to Netlify and check the live site.** The first deploy's security
+  policy blocked WebAssembly, so keyboards couldn't be opened; fixed in PR #3 and
+  confirmed with a real keyboard through `npm run preview:netlify`, which uses the same
+  headers. Waiting for Netlify credits to redeploy. If the site was uploaded by hand,
+  connect it to the repository instead (see [DEPLOY.md](DEPLOY.md)) so merges to `main`
+  redeploy automatically and pull requests get preview sites.
 - [ ] **Phase 3** (below) not started.
 
 ## Phase 0: Foundation (done)
