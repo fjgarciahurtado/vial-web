@@ -47,15 +47,31 @@ const STEPS: Record<string, number> = {
   C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11,
   DO: 0, RE: 2, MI: 4, FA: 5, SOL: 7, LA: 9, SI: 11,
 }
-const NOTE_PATTERN = /\b(Sol|Do|Re|Mi|Fa|La|Si|[A-G])(#|♯|b|♭)?(-?\d)\b/gi
+/** Letter names are capitals only, so "b1" or "a2" in ordinary text isn't taken for a note. */
+const LETTER_NOTE = /^([A-G])(#|♯|b|♭)?(\d)$/
+const SOLFEGE_NOTE = /^(sol|do|re|mi|fa|la|si)(#|♯|b|♭)?(\d)$/i
 
-/** The notes named in a text like "(C4 - E4 - G4)" or "Sol3 Si3 Re4". Fewer than two isn't a chord. */
+function parseNote(token: string): number | null {
+  const m = LETTER_NOTE.exec(token) ?? SOLFEGE_NOTE.exec(token)
+  if (!m) return null
+  const [, name, accidental, octave] = m
+  const shift = accidental === '#' || accidental === '♯' ? 1 : accidental ? -1 : 0
+  return (Number(octave) + 1) * 12 + STEPS[name.toUpperCase()] + shift
+}
+
+/**
+ * The notes of a chord written like "(C4 - E4 - G4)" or "Sol3 Si3 Re4". Only text in
+ * brackets, or the whole text, made of nothing but two or more notes counts, so
+ * "Ctrl+F1 or F2" is not a chord.
+ */
 export function parseChordNotes(text: string): number[] {
-  const notes = [...text.matchAll(NOTE_PATTERN)].map(([, name, accidental, octave]) => {
-    const shift = accidental === '#' || accidental === '♯' ? 1 : accidental ? -1 : 0
-    return (Number(octave) + 1) * 12 + STEPS[name.toUpperCase()] + shift
-  })
-  return notes.length >= 2 ? notes : []
+  const parts = [...[...text.matchAll(/\(([^)]*)\)/g)].map((m) => m[1]), text]
+  for (const part of parts) {
+    const tokens = part.split(/[\s,;·+/–—-]+/).filter(Boolean)
+    const notes = tokens.map(parseNote)
+    if (notes.length >= 2 && notes.every((n) => n !== null)) return notes as number[]
+  }
+  return []
 }
 
 export interface ChordKey {
@@ -75,7 +91,9 @@ export function chordKeys(catalog: KeycodeCatalog): ChordKey[] {
     .flatMap((e) => {
       const title = e.tooltip ?? ''
       const notes = parseChordNotes(title)
-      return notes.length ? [{ code: e.code, name: e.label.replaceAll('\n', ' '), title, notes }] : []
+      // Keycodes without a short name are labelled with their id ("USER00"); use their name instead.
+      const name = e.label && e.label !== e.id ? e.label.replaceAll('\n', ' ') : (e.alias?.[0] ?? title)
+      return notes.length ? [{ code: e.code, name, title, notes }] : []
     })
 }
 

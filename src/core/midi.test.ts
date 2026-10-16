@@ -56,7 +56,12 @@ describe('chords', () => {
     expect(parseChordNotes('F#3 A#3 C#4')).toEqual([54, 58, 61])
     expect(parseChordNotes('Bb2, D3, F3')).toEqual([46, 50, 53])
     expect(parseChordNotes('Sol3 Si3 Re4')).toEqual([55, 59, 62])
+    expect(parseChordNotes('Acorde Sol Mayor (sol3 - si3 - re4)')).toEqual([55, 59, 62])
     expect(parseChordNotes('Not a chord')).toEqual([])
+    // Text that only happens to contain note-like words.
+    expect(parseChordNotes('Ctrl+F1 or F2')).toEqual([])
+    expect(parseChordNotes('Macro (B1 then B2 twice)')).toEqual([])
+    expect(parseChordNotes('Opens a2 and b3')).toEqual([])
     // One note isn't a chord.
     expect(parseChordNotes('Just C4')).toEqual([])
   })

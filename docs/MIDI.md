@@ -38,10 +38,12 @@ note, so the keyboard drawing matches the piano.
   note keys run to B8. Note names use the common numbering where 60 is C4 (middle C).
 - **Chords.** QMK has no chord keycodes. A keyboard adds them as custom keycodes in
   its firmware, and vial-web recognises them from the description in vial.json:
-  any custom keycode whose `title` names two or more notes, such as
-  `"Acorde Do Mayor (C4 - E4 - G4)"`, is a chord. Letters (C, F#, Bb) and Do Re Mi
-  (Do, Fa#, Sol) are both understood. Chord notes are absolute MIDI notes, as the
-  firmware sends them.
+  a custom keycode is a chord when its `title` has a part in brackets, or is as a
+  whole, made of nothing but two or more notes, such as
+  `"Acorde Do Mayor (C4 - E4 - G4)"` or `"Sol3 Si3 Re4"`. Letter names are capitals
+  (C, F#, Bb), so ordinary text like "Ctrl+F1 or F2" isn't taken for a chord; Do Re
+  Mi names (Do, Fa#, Sol) may be in any case. Chord notes are absolute MIDI notes,
+  as the firmware sends them. Notes outside the piano are named in a line above it.
 - **Controls.** `MIDI_CONTROL_GROUPS` lists every non-note MIDI key with a plain
   name; a test checks none is missing.
 

@@ -42,14 +42,14 @@ test('chords light their notes and can be put on a key', async ({ page }) => {
 })
 
 test('note names in Do Re Mi', async ({ page }) => {
-  await page.getByRole('radio', { name: 'Do Re Mi' }).click()
+  await page.getByRole('button', { name: 'Do Re Mi' }).click()
   await expect(page.getByRole('group', { name: 'Notes' }).getByRole('button', { name: 'Note Do4' })).toBeVisible()
   await page.reload()
   await page.getByRole('button', { name: 'Try a demo keyboard' }).click()
   await key(page, 'Q').click()
   await picker(page).getByRole('tab', { name: 'MIDI' }).click()
   // The choice is remembered.
-  await expect(page.getByRole('radio', { name: 'Do Re Mi' })).toHaveAttribute('aria-checked', 'true')
+  await expect(page.getByRole('button', { name: 'Do Re Mi' })).toHaveAttribute('aria-pressed', 'true')
 })
 
 test('other MIDI keys have plain names', async ({ page }) => {

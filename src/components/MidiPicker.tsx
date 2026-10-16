@@ -37,6 +37,7 @@ export function MidiPicker({ catalog, current, disabled, onPick }: Props) {
   const currentNote = current === null ? null : noteOfKeycode(current)
   const currentChord = chords.find((c) => c.code === current)
   const lit = new Set(preview ?? currentChord?.notes ?? [])
+  const offPiano = [...lit].filter((n) => n < PIANO_FIRST_NOTE || n > PIANO_LAST_NOTE)
 
   const chooseNames = (next: NoteNames) => {
     setNames(next)
@@ -57,7 +58,7 @@ export function MidiPicker({ catalog, current, disabled, onPick }: Props) {
               ? `This key plays ${noteName(currentNote, names)}. Click a piano key to change it.`
               : 'Click a piano key to make this key play that note.'}
         </p>
-        <div role="radiogroup" aria-label="Note names" className="flex gap-1 rounded-lg bg-field p-0.5 text-sm">
+        <div role="group" aria-label="Note names" className="flex gap-1 rounded-lg bg-field p-0.5 text-sm">
           {(
             [
               ['letters', 'C D E'],
@@ -66,8 +67,8 @@ export function MidiPicker({ catalog, current, disabled, onPick }: Props) {
           ).map(([value, label]) => (
             <button
               key={value}
-              role="radio"
-              aria-checked={names === value}
+              type="button"
+              aria-pressed={names === value}
               onClick={() => chooseNames(value)}
               className={`rounded-md px-2.5 py-1 font-semibold focus-visible:outline-2 focus-visible:outline-pick ${
                 names === value ? 'bg-ink text-desk' : 'text-ink-soft hover:text-ink'
@@ -109,6 +110,13 @@ export function MidiPicker({ catalog, current, disabled, onPick }: Props) {
             come from each chord's description.
           </p>
         </section>
+      )}
+
+      {offPiano.length > 0 && (
+        <p className="text-sm font-semibold">
+          {offPiano.map((n) => noteName(n, names)).join(', ')} {offPiano.length === 1 ? 'is' : 'are'} outside the piano
+          below, which shows the notes from {noteName(PIANO_FIRST_NOTE, names)} to {noteName(PIANO_LAST_NOTE, names)}.
+        </p>
       )}
 
       <Piano names={names} currentNote={currentNote} lit={lit} disabled={disabled} onPick={(note) => onPick(keycodeOfNote(note))} />
@@ -162,7 +170,8 @@ function Piano({
   const scroller = useRef<HTMLDivElement>(null)
   const notes = Array.from({ length: PIANO_LAST_NOTE - PIANO_FIRST_NOTE + 1 }, (_, i) => PIANO_FIRST_NOTE + i)
   const whites = notes.filter((n) => !isBlackKey(n))
-  const focusNote = currentNote ?? [...lit][0] ?? 60
+  // Only the key's own note moves the piano; pointing at chords must not yank it around.
+  const focusNote = currentNote ?? 60
 
   // Show the chosen note (or middle C) when the piano opens, since it is wider than the screen.
   useEffect(() => {
