@@ -62,6 +62,12 @@ export async function openDemoKeyboard(): Promise<{
       { row: 2, col: 12 },
     ],
     holdPolls: 12,
+    // Typical QMK defaults, as a recent Vial firmware reports them.
+    qmkSettings: {
+      1: 0, 2: 50, 3: 0, 4: 175, 5: 5, 6: 5000, 7: 200,
+      9: 10, 10: 16, 11: 8, 12: 10, 13: 30, 14: 10, 15: 80, 16: 8, 17: 40,
+      18: 0, 19: 80, 20: 5, 21: 0x80, 22: 0, 23: 0, 24: 0, 25: 200,
+    },
   })
 
   const put = (layer: number, r: number, c: number, code: number) =>

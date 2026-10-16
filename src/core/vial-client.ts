@@ -25,6 +25,10 @@ const CMD_VIAL_GET_UNLOCK_STATUS = 0x05
 const CMD_VIAL_UNLOCK_START = 0x06
 const CMD_VIAL_UNLOCK_POLL = 0x07
 const CMD_VIAL_LOCK = 0x08
+const CMD_VIAL_QMK_SETTINGS_QUERY = 0x09
+const CMD_VIAL_QMK_SETTINGS_GET = 0x0a
+const CMD_VIAL_QMK_SETTINGS_SET = 0x0b
+const CMD_VIAL_QMK_SETTINGS_RESET = 0x0c
 const CMD_VIAL_DYNAMIC_ENTRY_OP = 0x0d
 const DYNAMIC_VIAL_GET_NUMBER_OF_ENTRIES = 0x00
 
@@ -147,7 +151,30 @@ export class VialClient {
     }
   }
 
-  /** Ported from get_unlock_status(), get_unlock_in_progress() and get_unlock_keys() in vial-gui. */
+  /** Setting ids greater than `after`, padded with 0xFFFF once the list ends (reload_settings). */
+  async qmkSettingsQuery(after: number): Promise<number[]> {
+    const data = await this.request([CMD_VIA_VIAL_PREFIX, CMD_VIAL_QMK_SETTINGS_QUERY, ...u16le(after)])
+    return Array.from({ length: MSG_LEN / 2 }, (_, i) => data.getUint16(i * 2, true))
+  }
+
+  /** A setting's raw value bytes, or null if the keyboard doesn't have it. */
+  async qmkSettingsGet(qsid: number): Promise<Uint8Array | null> {
+    const data = await this.request([CMD_VIA_VIAL_PREFIX, CMD_VIAL_QMK_SETTINGS_GET, ...u16le(qsid)])
+    return data.getUint8(0) === 0 ? new Uint8Array(data.buffer, data.byteOffset + 1, MSG_LEN - 1) : null
+  }
+
+  /** Writes a setting's value bytes. Returns false if the keyboard refused it. */
+  async qmkSettingsSet(qsid: number, value: number[]): Promise<boolean> {
+    const data = await this.request([CMD_VIA_VIAL_PREFIX, CMD_VIAL_QMK_SETTINGS_SET, ...u16le(qsid), ...value])
+    return data.getUint8(0) === 0
+  }
+
+  /** Puts every QMK setting back to the firmware's defaults. */
+  async qmkSettingsReset(): Promise<void> {
+    await this.request([CMD_VIA_VIAL_PREFIX, CMD_VIAL_QMK_SETTINGS_RESET])
+  }
+
+  /** Ported from get_unlock_status(),get_unlock_in_progress() and get_unlock_keys() in vial-gui. */
   async getUnlockStatus(): Promise<UnlockStatus> {
     const data = await this.request([CMD_VIA_VIAL_PREFIX, CMD_VIAL_GET_UNLOCK_STATUS])
     const keys = []
@@ -256,6 +283,10 @@ export class VialClient {
       ),
     )
   }
+}
+
+function u16le(value: number): number[] {
+  return [value & 0xff, (value >> 8) & 0xff]
 }
 
 function u32be(value: number): number[] {

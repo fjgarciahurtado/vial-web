@@ -3,6 +3,7 @@ import { loadKeycodeCatalog, type CustomKeycode, type KeyboardCapabilities, type
 import type { EncoderKeymap } from './keymap-editor'
 import { deserializeMacros, type Macro } from './macros'
 import { lightingKind, readLighting, type LightingKind, type LightingState } from './lighting'
+import { readQmkSettings, type QmkSettings } from './qmk-settings'
 import {
   parseLayout,
   parseLayoutLabels,
@@ -54,6 +55,8 @@ export interface LoadedKeyboard {
   /** Bytes of macro memory, shared by all macros. */
   macroMemory: number
   macros: Macro[]
+  /** QMK settings the firmware lets people change (timing, key swaps...). */
+  qmkSettings: QmkSettings
   catalog: KeycodeCatalog
 }
 
@@ -87,6 +90,7 @@ export async function loadKeyboard(
     : Array.from({ length: capabilities.macroCount }, (): Macro => [])
   const kind = lightingKind(definition)
   const lighting = await readLighting(client, kind)
+  const qmkSettings = await readQmkSettings(client, vialProtocol)
   const keymap = await client.getKeymap(layers, rows, cols)
 
   const encoderCount = encoders.length ? Math.max(...encoders.map((e) => e.index)) + 1 : 0
@@ -120,6 +124,7 @@ export async function loadKeyboard(
     lighting,
     macroMemory,
     macros,
+    qmkSettings,
     catalog,
   }
 }

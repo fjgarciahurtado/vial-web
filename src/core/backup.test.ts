@@ -26,6 +26,7 @@ const source: BackupSource = {
   encoderKeymap: [[[0xaa, 0xa9]], [[0x01, 0x01]]],
   layoutOptionsValue: -1,
   macros: [[{ type: 'text', text: 'hi' }], []],
+  qmkSettings: { supported: [2, 7, 21, 999], values: { 2: 50, 7: 200, 21: 0x80 } },
   catalog,
 }
 
@@ -52,10 +53,19 @@ describe('createBackup', () => {
     expect(json.macro).toEqual([[['text', 'hi']], []])
   })
 
+  it('saves QMK settings by id, as vial-gui does', () => {
+    expect(json.settings).toEqual({ 2: 50, 7: 200, 21: 0x80 })
+  })
+
   it('leaves out sections it does not manage, so vial-gui keeps them on restore', () => {
-    for (const section of ['tap_dance', 'combo', 'key_override', 'alt_repeat_key', 'settings']) {
+    for (const section of ['tap_dance', 'combo', 'key_override', 'alt_repeat_key']) {
       expect(json).not.toHaveProperty(section)
     }
+  })
+
+  it('leaves out settings when the keyboard has none', () => {
+    const none = JSON.parse(createBackup({ ...source, qmkSettings: { supported: [], values: {} } }))
+    expect(none).not.toHaveProperty('settings')
   })
 })
 
@@ -71,11 +81,11 @@ describe('parseBackup', () => {
     expect(backup.notRestored).toEqual([])
   })
 
-  it('lists saved settings this app cannot restore yet', () => {
+  it('lists saved sections this app cannot restore yet', () => {
     const backup = parseBackup(
-      JSON.stringify({ version: 1, uid: 1, layout: [], macro: [[['text', 'hi']]], tap_dance: [], settings: { 2: 1 } }),
+      JSON.stringify({ version: 1, uid: 1, layout: [], macro: [[['text', 'hi']]], combo: [['KC_A', 'KC_B', 'KC_NO', 'KC_NO', 'KC_C']], settings: { 2: 1 } }),
     )
-    expect(backup.notRestored).toEqual(['QMK settings'])
+    expect(backup.notRestored).toEqual(['combos'])
   })
 
   it('rejects files that are not keymap backups', () => {
@@ -143,6 +153,22 @@ describe('planRestore', () => {
     const plan = planRestore(backup, { ...source, macros: [] })
     expect(plan.macros).toBeNull()
     expect(plan.notes).toEqual([expect.stringMatching(/no macros/)])
+  })
+
+  it('restores the QMK settings this keyboard has', () => {
+    const backup = parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [], settings: { 2: 60, 7: 'x', 21: 1, 30: 5 } }))
+    const plan = planRestore(backup, source)
+    // 7 isn't a number and 30 isn't on this keyboard, so both keep their current value.
+    expect(plan.settings).toEqual({ 2: 60, 7: 200, 21: 1 })
+    expect(plan.notes).toEqual(["2 settings in this backup don't fit this keyboard, so they were left out."])
+    expect(planRestore(parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [] })), source).settings).toBeNull()
+  })
+
+  it('says when the keyboard has no QMK settings for the backup’s', () => {
+    const backup = parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [], settings: { 2: 60 } }))
+    const plan = planRestore(backup, { ...source, qmkSettings: { supported: [], values: {} } })
+    expect(plan.settings).toBeNull()
+    expect(plan.notes).toEqual([expect.stringMatching(/no QMK settings/)])
   })
 
   it('notices backups from a different keyboard', () => {
