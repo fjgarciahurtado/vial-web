@@ -31,7 +31,8 @@ Desktop wrapper (Tauri 2 + Rust `hidapi`) is planned, not started.
   - `backup.ts` — `.vil` files, compatible with vial-gui. `unlock.ts` — unlock flow.
   - `keycodes/builders.ts` — combined keys (shortcuts, tap-hold). `lighting.ts`, `matrix.ts` (key tester),
     `macros.ts` (byte format tested against vial-gui's own fixtures), `qmk-settings.ts` (QMK settings,
-    with plain-language names; qsid, bit, width and limits from vial-gui's `qmk_settings.json`).
+    with plain-language names; qsid, bit, width and limits from vial-gui's `qmk_settings.json`),
+    `combos.ts` (combos, read and written through the dynamic entry commands in `vial-client.ts`).
   - `fake-keyboard.ts` — firmware simulator for tests. `demo.ts` uses it for "Try a demo keyboard".
 - `src/store.ts` — app state. `src/components/` — UI.
 

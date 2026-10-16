@@ -8,8 +8,13 @@ const nkro = (page: Page) => page.getByRole('checkbox', { name: /Report every ke
 test.beforeEach(async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: 'Try a demo keyboard' }).click()
-  await page.getByRole('navigation', { name: 'Sections' }).getByRole('button', { name: 'Advanced' }).click()
+  await openSettings(page)
 })
+
+async function openSettings(page: Page) {
+  await page.getByRole('navigation', { name: 'Sections' }).getByRole('button', { name: 'Advanced' }).click()
+  await page.getByRole('tab', { name: 'Typing settings' }).click()
+}
 
 test('change, save and discard QMK settings', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Advanced' })).toBeVisible()
@@ -60,6 +65,6 @@ test('a backup restores QMK settings', async ({ page }) => {
     .setInputFiles({ name: 'demo.vil', mimeType: 'application/json', buffer: Buffer.from(backup) })
   await expect(page.getByText(/Restored the backup/)).toBeVisible()
 
-  await page.getByRole('navigation', { name: 'Sections' }).getByRole('button', { name: 'Advanced' }).click()
+  await openSettings(page)
   await expect(holdTime(page)).toHaveValue('180')
 })

@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+import { readCombos, type Combo } from './combos'
 import { loadKeycodeCatalog, type CustomKeycode, type KeyboardCapabilities, type KeycodeCatalog } from './keycodes/catalog'
 import type { EncoderKeymap } from './keymap-editor'
 import { deserializeMacros, type Macro } from './macros'
@@ -57,6 +58,8 @@ export interface LoadedKeyboard {
   macros: Macro[]
   /** QMK settings the firmware lets people change (timing, key swaps...). */
   qmkSettings: QmkSettings
+  /** Combo slots the firmware has; empty slots are all zero. */
+  combos: Combo[]
   catalog: KeycodeCatalog
 }
 
@@ -82,7 +85,7 @@ export async function loadKeyboard(
   const { rows, cols } = definition.matrix
   const { keys, encoders } = parseLayout(definition.layouts.keymap)
   const layers = await client.getLayerCount()
-  const capabilities = await readCapabilities(client, vialProtocol, layers, definition)
+  const { capabilities, comboCount } = await readCapabilities(client, vialProtocol, layers, definition)
   const catalog = await loadKeycodeCatalog(vialProtocol, capabilities)
   const macroMemory = capabilities.macroCount ? await client.getMacroBufferSize() : 0
   const macros = macroMemory
@@ -91,6 +94,8 @@ export async function loadKeyboard(
   const kind = lightingKind(definition)
   const lighting = await readLighting(client, kind)
   const qmkSettings = await readQmkSettings(client, vialProtocol)
+  // Combos are optional: a keyboard that can't report them still opens, without them.
+  const combos = await readCombos(client, comboCount).catch((): Combo[] => [])
   const keymap = await client.getKeymap(layers, rows, cols)
 
   const encoderCount = encoders.length ? Math.max(...encoders.map((e) => e.index)) + 1 : 0
@@ -125,6 +130,7 @@ export async function loadKeyboard(
     macroMemory,
     macros,
     qmkSettings,
+    combos,
     catalog,
   }
 }
@@ -135,21 +141,23 @@ async function readCapabilities(
   vialProtocol: number,
   layers: number,
   definition: VialDefinition,
-): Promise<KeyboardCapabilities> {
+): Promise<{ capabilities: KeyboardCapabilities; comboCount: number }> {
   const macroCount = await client.getMacroCount()
   const features = new Set<string>()
   let tapDanceCount = 0
+  let comboCount = 0
 
   if (vialProtocol >= VIAL_PROTOCOL_DYNAMIC) {
     const counts = await client.getDynamicEntryCounts()
     tapDanceCount = counts.tapDance
+    comboCount = counts.combo
     counts.features.forEach((f) => features.add(f))
     // Unconditionally enabled in the QMK builds that shipped this protocol version.
     if (vialProtocol >= VIAL_PROTOCOL_KEY_OVERRIDE) features.add('persistent_default_layer')
     if (counts.altRepeatKey) features.add('repeat_key')
   }
 
-  return {
+  const capabilities = {
     layers,
     macroCount,
     tapDanceCount,
@@ -157,4 +165,5 @@ async function readCapabilities(
     midi: definition.vial?.midi ?? null,
     customKeycodes: definition.customKeycodes ?? null,
   }
+  return { capabilities, comboCount }
 }

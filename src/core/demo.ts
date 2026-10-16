@@ -53,6 +53,7 @@ export async function openDemoKeyboard(): Promise<{
     layers: 2,
     vialProtocol: 6,
     macroCount: 4,
+    comboCount: 8,
     macroMemory: 512,
     featureFlags: 0b11,
     encoders: 1,
@@ -98,6 +99,8 @@ export async function openDemoKeyboard(): Promise<{
       6,
     ),
   )
+  // Combo 1: press J and K together for Escape.
+  fake.combos[0] = { keys: [0x0d, 0x0e, 0, 0], output: 0x29 }
   fake.vialrgb = { maxBrightness: 200, effects: [1, 2, 6, 13, 24, 29, 39], mode: 6, speed: 128, hsv: [150, 220, 160] }
 
   const keyboard = await loadKeyboard(fake.transport, 'Demo keyboard', { decompress: async (bytes) => bytes })

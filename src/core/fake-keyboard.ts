@@ -1,12 +1,16 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 import { FakeTransport } from './fake-transport'
 
+/** QK_BOOT in Vial protocol 6 keycodes. */
+const QK_BOOT = 0x7c00
+
 export interface FakeKeyboardOptions {
   definition: object
   layers: number
   vialProtocol?: number
   macroCount?: number
   tapDanceCount?: number
+  comboCount?: number
   featureFlags?: number
   altRepeatKeyCount?: number
   layoutOptions?: number
@@ -40,6 +44,8 @@ export class FakeKeyboard {
   lightingSaved = false
   /** Macro memory: macros separated by zero bytes. */
   readonly macroBuffer: Uint8Array
+  /** Combo slots: four trigger keys and a result each. */
+  readonly combos: { keys: number[]; output: number }[]
   /** QMK setting values by qsid. */
   qmkSettings: Record<number, number>
   /** Switches held down right now, as "row,col". */
@@ -62,6 +68,7 @@ export class FakeKeyboard {
     this.macroBuffer = new Uint8Array(options.macroMemory ?? 0)
     this.unlocked = options.unlocked ?? false
     this.qmkSettings = { ...options.qmkSettings }
+    this.combos = Array.from({ length: options.comboCount ?? 0 }, () => ({ keys: [0, 0, 0, 0], output: 0 }))
     this.transport = new FakeTransport((req) => this.handle(req))
   }
 
@@ -199,13 +206,42 @@ export class FakeKeyboard {
       case 0x0c: // CMD_VIAL_QMK_SETTINGS_RESET
         this.qmkSettings = { ...options.qmkSettings }
         return []
-      case 0x0d: {
-        // CMD_VIAL_DYNAMIC_ENTRY_OP, get number of entries
+      case 0x0d:
+        return this.handleDynamic(req)
+    }
+    return []
+  }
+
+  /** CMD_VIAL_DYNAMIC_ENTRY_OP. Replies start with a status byte: 0 means it worked. */
+  private handleDynamic(req: Uint8Array): number[] {
+    const { options } = this
+    const word = (i: number) => req[i] | (req[i + 1] << 8)
+    switch (req[2]) {
+      case 0x00: {
+        // DYNAMIC_VIAL_GET_NUMBER_OF_ENTRIES
         const reply = new Array(32).fill(0)
         reply[0] = options.tapDanceCount ?? 0
+        reply[1] = this.combos.length
         reply[3] = options.altRepeatKeyCount ?? 0
         reply[31] = options.featureFlags ?? 0
         return reply
+      }
+      case 0x03: {
+        // DYNAMIC_VIAL_COMBO_GET: index
+        const combo = this.combos[req[3]]
+        if (!combo) return [1]
+        return [0, ...[...combo.keys, combo.output].flatMap((k) => [k & 0xff, k >> 8])]
+      }
+      case 0x04: {
+        // DYNAMIC_VIAL_COMBO_SET: index, 4 keys and output (little-endian)
+        if (!this.combos[req[3]]) return [1]
+        const output = word(12)
+        this.combos[req[3]] = {
+          keys: [word(4), word(6), word(8), word(10)],
+          // vial_keycode_firewall: the bootloader key only goes in while unlocked.
+          output: output === QK_BOOT && !this.unlocked ? 0 : output,
+        }
+        return [0]
       }
     }
     return []

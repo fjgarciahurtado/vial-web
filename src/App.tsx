@@ -2,6 +2,7 @@
 import { Keyboard as KeyboardIcon, Loader2, LockOpen, Redo2, Undo2, Unplug } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { BackupControls, RestoreConfirmation } from '@/components/BackupControls'
+import { CombosPanel } from '@/components/CombosPanel'
 import { KeyPicker } from '@/components/KeyPicker'
 import { KeyTester } from '@/components/KeyTester'
 import { KeyboardView } from '@/components/KeyboardView'
@@ -184,7 +185,7 @@ function ViewNav() {
     ...(backlight || rgblight || vialrgb ? [{ id: 'lighting' as const, title: 'Lighting' }] : []),
     ...(keyboard.macros.length ? [{ id: 'macros' as const, title: 'Macros' }] : []),
     { id: 'tester' as const, title: 'Key tester' },
-    ...(keyboard.qmkSettings.supported.length ? [{ id: 'advanced' as const, title: 'Advanced' }] : []),
+    ...(advancedTabs(keyboard).length ? [{ id: 'advanced' as const, title: 'Advanced' }] : []),
   ]
   if (views.length < 2) return null
   return (
@@ -229,22 +230,57 @@ function LightingView() {
   )
 }
 
+type AdvancedTab = 'combos' | 'settings'
+
+/** The Advanced features this keyboard has. */
+function advancedTabs(keyboard: LoadedKeyboard): { id: AdvancedTab; title: string }[] {
+  return [
+    ...(keyboard.combos.length ? [{ id: 'combos' as const, title: 'Combos' }] : []),
+    ...(keyboard.qmkSettings.supported.length ? [{ id: 'settings' as const, title: 'Typing settings' }] : []),
+  ]
+}
+
 /** Features most people never need, each explained in plain words. */
 function AdvancedView() {
   const { keyboard, notice } = useApp()
+  const [chosen, setChosen] = useState<AdvancedTab | null>(null)
   if (!keyboard) return null
+  const tabs = advancedTabs(keyboard)
+  const tab = tabs.find((t) => t.id === chosen)?.id ?? tabs[0]?.id
   return (
     <div className="flex flex-col gap-4 pb-10">
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold tracking-tight">Advanced</h1>
-        <p className="text-ink-soft">
-          Fine-tune how {keyboard.name} behaves. The defaults suit most people, so change these only if something feels off.
-        </p>
+        {tabs.length > 1 && (
+          <div role="tablist" aria-label="Advanced features" className="flex gap-1 rounded-xl bg-panel p-1">
+            {tabs.map((t) => (
+              <button
+                key={t.id}
+                role="tab"
+                aria-selected={tab === t.id}
+                onClick={() => setChosen(t.id)}
+                className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-pick ${
+                  tab === t.id ? 'bg-ink text-desk' : 'text-ink-soft hover:text-ink'
+                }`}
+              >
+                {t.title}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
       <p className="min-h-6 w-full" aria-live="polite">
         {notice}
       </p>
-      <QmkSettingsPanel />
+      {tab === 'combos' && <CombosPanel />}
+      {tab === 'settings' && (
+        <>
+          <p className="text-ink-soft">
+            Fine-tune how {keyboard.name} behaves. The defaults suit most people, so change these only if something feels off.
+          </p>
+          <QmkSettingsPanel />
+        </>
+      )}
     </div>
   )
 }
