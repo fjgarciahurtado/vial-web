@@ -49,6 +49,15 @@ test('set up a tap dance, change its timing, put it on a key', async ({ page }) 
   await expect(page.getByText('On 1 key of your keymap.')).toBeVisible()
 })
 
+test('a pick right after editing the wait time keeps both changes', async ({ page }) => {
+  await page.getByRole('spinbutton', { name: 'Wait time' }).fill('320')
+  // Clicking a key leaves the box, which saves the wait time while the pick waits its turn.
+  await page.getByRole('button', { name: 'Tap twice: empty' }).click()
+  await pick(page, 'B')
+  await expect(list(page).getByRole('button', { name: /Tap dance 1/ })).toContainText('double tap: B')
+  await expect(page.getByRole('spinbutton', { name: 'Wait time' })).toHaveValue('320')
+})
+
 test('delete a tap dance', async ({ page }) => {
   await page.getByRole('button', { name: 'Delete tap dance' }).click()
   await expect(list(page).getByRole('button', { name: /Tap dance 1/ })).toContainText('Not set up')

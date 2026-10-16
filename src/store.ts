@@ -117,8 +117,11 @@ interface AppState {
   resetSettings(): Promise<void>
   /** Writes one combo to the keyboard straight away, as vial-gui does. Resolves to whether it was saved. */
   setCombo(index: number, combo: Combo): Promise<boolean>
-  /** Writes one tap dance to the keyboard straight away. Resolves to whether it was saved. */
-  setTapDance(index: number, tapDance: TapDance): Promise<boolean>
+  /**
+   * Changes part of one tap dance and writes it straight away. Changes made while one is
+   * being written wait their turn, so none is lost. Resolves to whether it was saved.
+   */
+  setTapDance(index: number, change: Partial<TapDance>): Promise<boolean>
 }
 
 export const useApp = create<AppState>((set, get) => {
@@ -308,7 +311,7 @@ export const useApp = create<AppState>((set, get) => {
     const unlocked = !needsUnlock || (await ensureUnlocked())
     // Unlocking can take a while; the keyboard may have been unplugged or swapped meanwhile.
     const { keyboard, client } = get()
-    if (!keyboard || !client || client !== before.client) return null
+    if (!keyboard || !client || client !== before.client) throw new Error('the keyboard was disconnected.')
     let skipped = false
     for (const [i, entry] of entries.entries()) {
       if (!differs(entry, i, keyboard)) continue
@@ -318,10 +321,40 @@ export const useApp = create<AppState>((set, get) => {
       }
       await write(client, i, entry)
       const now = get().keyboard
-      if (!now || get().client !== client) return null
+      if (!now || get().client !== client) throw new Error('the keyboard was disconnected.')
       set({ keyboard: { ...now, [kind.field]: (now[kind.field] as unknown[]).map((e, j) => (j === i ? entry : e)) } })
     }
     return skipped ? `A ${kind.name} with the bootloader key was skipped because the keyboard is still locked.` : null
+  }
+
+  // Tap dance changes run one after another; each applies to the latest state, so none is lost.
+  let entryQueue: Promise<unknown> = Promise.resolve()
+  function inEntryQueue<T>(job: () => Promise<T>): Promise<T> {
+    const run = entryQueue.then(job, job)
+    entryQueue = run.catch(() => undefined)
+    return run
+  }
+
+  async function applyTapDance(index: number, change: Partial<TapDance>): Promise<boolean> {
+    const { keyboard, busy } = get()
+    if (!keyboard?.tapDances[index]) return false
+    if (busy) {
+      set({ notice: "The tap dance wasn't saved, because the keyboard is busy with another change. Try again." })
+      return false
+    }
+    const tapDance = { ...keyboard.tapDances[index], ...change }
+    set({ busy: true })
+    try {
+      const skipped = await writeTapDances(keyboard.tapDances.map((t, i) => (i === index ? tapDance : t)))
+      const saved = get().keyboard!.tapDances[index]
+      set({ notice: skipped ?? `Saved. Tap dance ${index + 1}: ${describeTapDance(saved, keyboard.catalog)}.` })
+      return JSON.stringify(saved) === JSON.stringify(tapDance)
+    } catch (err) {
+      set({ notice: `The tap dance wasn't saved: ${describe(err)}` })
+      return false
+    } finally {
+      set({ busy: false })
+    }
   }
 
   const writeCombos = (combos: Combo[]) =>
@@ -609,22 +642,8 @@ export const useApp = create<AppState>((set, get) => {
       }
     },
 
-    async setTapDance(index, tapDance) {
-      const { keyboard, busy } = get()
-      if (!keyboard || busy) return false
-      set({ busy: true })
-      try {
-        const skipped = await writeTapDances(keyboard.tapDances.map((t, i) => (i === index ? tapDance : t)))
-        const saved = get().keyboard?.tapDances[index]
-        if (!saved) return false
-        set({ notice: skipped ?? `Saved. Tap dance ${index + 1}: ${describeTapDance(saved, keyboard.catalog)}.` })
-        return JSON.stringify(saved) === JSON.stringify(tapDance)
-      } catch (err) {
-        set({ notice: `The tap dance wasn't saved: ${describe(err)}` })
-        return false
-      } finally {
-        set({ busy: false })
-      }
+    setTapDance(index, change) {
+      return inEntryQueue(() => applyTapDance(index, change))
     },
 
     async resetSettings() {

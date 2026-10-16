@@ -102,8 +102,7 @@ export function TapDancePanel() {
           <TermField
             key={`${current}:${td.tappingTerm}`}
             value={td.tappingTerm}
-            disabled={busy}
-            onSave={(tappingTerm) => setTapDance(current, { ...td, tappingTerm })}
+            onSave={(tappingTerm) => setTapDance(current, { tappingTerm })}
           />
 
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -118,7 +117,7 @@ export function TapDancePanel() {
               <Button
                 variant="outline"
                 disabled={busy || td[action] === 0}
-                onClick={() => setTapDance(current, { ...td, [action]: 0 })}
+                onClick={() => setTapDance(current, { [action]: 0 })}
               >
                 <X aria-hidden />
                 Clear {ACTION_TITLES[action].toLowerCase()}
@@ -127,7 +126,7 @@ export function TapDancePanel() {
                 variant="outline"
                 disabled={busy || isEmptyTapDance(td)}
                 onClick={() => {
-                  setTapDance(current, { ...EMPTY_TAP_DANCE, tappingTerm: td.tappingTerm })
+                  setTapDance(current, { onTap: 0, onHold: 0, onDoubleTap: 0, onTapHold: 0 })
                   setAction('onTap')
                 }}
               >
@@ -139,22 +138,23 @@ export function TapDancePanel() {
       </div>
 
       <p className="font-semibold">Choose what {ACTION_TITLES[action].toLowerCase()} does:</p>
-      {/* Picks wait for the previous write, so none is lost. */}
-      <div className={`flex h-[28rem] flex-col ${busy ? 'pointer-events-none opacity-70' : ''}`} inert={busy} aria-busy={busy}>
-        <KeyPicker catalog={catalog} current={td[action]} onPick={(value) => setTapDance(current, { ...td, [action]: value })} />
+      {/* Picks made while a change is being written wait their turn, so none is lost. */}
+      <div className="flex h-[28rem] flex-col" aria-busy={busy}>
+        <KeyPicker catalog={catalog} current={td[action]} onPick={(value) => setTapDance(current, { [action]: value })} />
       </div>
     </div>
   )
 }
 
 /** The tapping term. Saved when the person leaves the box or presses Enter, not on every keystroke. */
-function TermField({ value, disabled, onSave }: { value: number; disabled: boolean; onSave(ms: number): void }) {
+function TermField({ value, onSave }: { value: number; onSave(ms: number): Promise<boolean> }) {
   const [text, setText] = useState(String(value))
-  const commit = () => {
+  const commit = async () => {
     const n = Number(text)
     const next = text.trim() === '' || !Number.isFinite(n) ? value : clampTerm(n)
     setText(String(next))
-    if (next !== value) onSave(next)
+    // If it wasn't saved, show what the keyboard still has; the notice says why.
+    if (next !== value && !(await onSave(next))) setText(String(value))
   }
   return (
     <label className="flex flex-col gap-1.5">
@@ -166,7 +166,6 @@ function TermField({ value, disabled, onSave }: { value: number; disabled: boole
           min={0}
           max={MAX_TAPPING_TERM}
           value={text}
-          disabled={disabled}
           aria-label="Wait time"
           aria-describedby="tap-dance-term-help"
           onChange={(e) => setText(e.target.value)}

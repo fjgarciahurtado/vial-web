@@ -122,7 +122,7 @@ export function CombosPanel() {
       </div>
 
       <p className="font-semibold">Choose {slotName}:</p>
-      {/* Picks wait for the previous write, so none is lost. */}
+      {/* Blocked while a combo is being written, because each pick moves on to the next slot. */}
       <div className={`flex h-[28rem] flex-col ${busy ? 'pointer-events-none opacity-70' : ''}`} inert={busy} aria-busy={busy}>
         <KeyPicker catalog={catalog} current={code} onPick={put} />
       </div>
