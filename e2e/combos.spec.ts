@@ -60,5 +60,6 @@ test('a backup restores combos', async ({ page }) => {
   await expect(page.getByText(/Restored the backup/)).toBeVisible()
 
   await page.getByRole('navigation', { name: 'Sections' }).getByRole('button', { name: 'Advanced' }).click()
+  await page.getByRole('tab', { name: 'Combos' }).click()
   await expect(combos(page).getByRole('button', { name: /Combo 1/ })).toContainText('Q + W → Tab')
 })

@@ -2,8 +2,8 @@
 import { ArrowRight, Plus, X } from 'lucide-react'
 import { useState } from 'react'
 import { KeyPicker } from '@/components/KeyPicker'
+import { KeySlot } from '@/components/KeySlot'
 import { Button } from '@/components/ui/button'
-import type { KeycodeCatalog } from '@/core/keycodes/catalog'
 import { comboProblem, describeCombo, EMPTY_COMBO, isEmptyCombo, type Combo } from '@/core/combos'
 import { useApp } from '@/store'
 
@@ -90,11 +90,11 @@ export function CombosPanel() {
                     +
                   </span>
                 )}
-                <Slot catalog={catalog} label={`Key ${i + 1}`} code={k} selected={slot === i} onSelect={() => setSlot(i)} />
+                <KeySlot catalog={catalog} label={`Key ${i + 1}`} code={k} selected={slot === i} onSelect={() => setSlot(i)} />
               </span>
             ))}
             <ArrowRight aria-hidden className="mx-1 size-5 text-ink-soft" />
-            <Slot catalog={catalog} label="Result" code={combo.output} selected={slot === RESULT} onSelect={() => setSlot(RESULT)} />
+            <KeySlot catalog={catalog} label="Result" code={combo.output} selected={slot === RESULT} onSelect={() => setSlot(RESULT)} />
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -127,39 +127,5 @@ export function CombosPanel() {
         <KeyPicker catalog={catalog} current={code} onPick={put} />
       </div>
     </div>
-  )
-}
-
-function Slot({
-  catalog,
-  label,
-  code,
-  selected,
-  onSelect,
-}: {
-  catalog: KeycodeCatalog
-  label: string
-  code: number
-  selected: boolean
-  onSelect(): void
-}) {
-  const name = code ? catalog.describe(code).name : 'empty'
-  return (
-    <button
-      type="button"
-      aria-pressed={selected}
-      aria-label={`${label}: ${name}`}
-      onClick={onSelect}
-      className={`flex h-14 min-w-14 flex-col items-center justify-center rounded-lg border-b-4 px-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pick ${
-        selected
-          ? 'border-pick-skirt bg-pick text-white'
-          : code
-            ? 'border-cap-skirt bg-cap text-legend'
-            : 'border-dashed border-line bg-field text-ink-soft'
-      }`}
-    >
-      <span className="text-[10px] font-normal opacity-80">{label}</span>
-      <span>{code ? (catalog.describe(code).legend.at(-1) ?? name) : '—'}</span>
-    </button>
   )
 }

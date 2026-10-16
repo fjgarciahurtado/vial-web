@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 import { create } from 'zustand'
 import { describeCombo, writeCombo, type Combo } from './core/combos'
+import { describeTapDance, TAP_DANCE_ACTIONS, writeTapDance, type TapDance } from './core/tap-dance'
 import { createBackup, parseBackup, planRestore, type RestorePlan } from './core/backup'
 import { openDemoKeyboard, pressDemoKey } from './core/demo'
 import { serializeMacros, type Macro } from './core/macros'
@@ -116,6 +117,8 @@ interface AppState {
   resetSettings(): Promise<void>
   /** Writes one combo to the keyboard straight away, as vial-gui does. Resolves to whether it was saved. */
   setCombo(index: number, combo: Combo): Promise<boolean>
+  /** Writes one tap dance to the keyboard straight away. Resolves to whether it was saved. */
+  setTapDance(index: number, tapDance: TapDance): Promise<boolean>
 }
 
 export const useApp = create<AppState>((set, get) => {
@@ -286,37 +289,51 @@ export const useApp = create<AppState>((set, get) => {
   }
 
   /**
-   * Writes the combos that differ from the keyboard's. A combo that gives the bootloader
-   * key needs the keyboard unlocked (combo_set in protocol/combo.py); without it, that
-   * combo is skipped. Returns a note about anything skipped, or null.
+   * Writes the combos or tap dances that differ from the keyboard's. One that uses the
+   * bootloader key needs the keyboard unlocked (combo_set and tap_dance_set in vial-gui);
+   * without it, that one is skipped. Returns a note about anything skipped, or null.
    */
-  async function writeCombos(combos: Combo[]): Promise<string | null> {
+  async function writeEntries<T>(
+    kind: { field: 'combos' | 'tapDances'; name: string },
+    entries: T[],
+    usesBoot: (entry: T, boot: number | undefined) => boolean,
+    write: (client: VialClient, index: number, entry: T) => Promise<void>,
+  ): Promise<string | null> {
     const before = get()
     if (!before.keyboard || !before.client) return null
     const boot = before.keyboard.catalog.deserialize('QK_BOOT')
-    const needsUnlock = combos.some(
-      (combo, i) => combo.output === boot && JSON.stringify(combo) !== JSON.stringify(before.keyboard!.combos[i]),
-    )
+    const differs = (entry: T, i: number, kb: LoadedKeyboard) =>
+      JSON.stringify(entry) !== JSON.stringify((kb[kind.field] as unknown[])[i])
+    const needsUnlock = entries.some((e, i) => usesBoot(e, boot) && differs(e, i, before.keyboard!))
     const unlocked = !needsUnlock || (await ensureUnlocked())
     // Unlocking can take a while; the keyboard may have been unplugged or swapped meanwhile.
     const { keyboard, client } = get()
     if (!keyboard || !client || client !== before.client) return null
-    const changed = combos.flatMap((combo, i) =>
-      JSON.stringify(combo) !== JSON.stringify(keyboard.combos[i]) ? [{ i, combo }] : [],
-    )
     let skipped = false
-    for (const { i, combo } of changed) {
-      if (combo.output === boot && !unlocked) {
+    for (const [i, entry] of entries.entries()) {
+      if (!differs(entry, i, keyboard)) continue
+      if (usesBoot(entry, boot) && !unlocked) {
         skipped = true
         continue
       }
-      await writeCombo(client, i, combo)
+      await write(client, i, entry)
       const now = get().keyboard
       if (!now || get().client !== client) return null
-      set({ keyboard: { ...now, combos: now.combos.map((c, j) => (j === i ? combo : c)) } })
+      set({ keyboard: { ...now, [kind.field]: (now[kind.field] as unknown[]).map((e, j) => (j === i ? entry : e)) } })
     }
-    return skipped ? 'A combo with the bootloader key was skipped because the keyboard is still locked.' : null
+    return skipped ? `A ${kind.name} with the bootloader key was skipped because the keyboard is still locked.` : null
   }
+
+  const writeCombos = (combos: Combo[]) =>
+    writeEntries({ field: 'combos', name: 'combo' }, combos, (c, boot) => c.output === boot, writeCombo)
+
+  const writeTapDances = (tapDances: TapDance[]) =>
+    writeEntries(
+      { field: 'tapDances', name: 'tap dance' },
+      tapDances,
+      (td, boot) => TAP_DANCE_ACTIONS.some((a) => td[a] === boot),
+      writeTapDance,
+    )
 
   async function restore(plan: RestorePlan) {
     const keyboard = get().keyboard!
@@ -348,6 +365,14 @@ export const useApp = create<AppState>((set, get) => {
       if (plan.macros && JSON.stringify(plan.macros) !== JSON.stringify(get().keyboard?.macros)) {
         const result = await writeMacros(plan.macros)
         if (result && result !== 'Macros saved.') set((s) => ({ notice: `${s.notice ?? ''} ${result}`.trim() }))
+      }
+      if (plan.tapDances) {
+        try {
+          const result = await writeTapDances(plan.tapDances)
+          if (result) set((s) => ({ notice: `${s.notice ?? ''} ${result}`.trim() }))
+        } catch (err) {
+          set((s) => ({ notice: `${s.notice ?? ''} The tap dances weren't all restored: ${describe(err)}`.trim() }))
+        }
       }
       if (plan.combos) {
         try {
@@ -578,6 +603,24 @@ export const useApp = create<AppState>((set, get) => {
         return JSON.stringify(saved) === JSON.stringify(combo)
       } catch (err) {
         set({ notice: `The combo wasn't saved: ${describe(err)}` })
+        return false
+      } finally {
+        set({ busy: false })
+      }
+    },
+
+    async setTapDance(index, tapDance) {
+      const { keyboard, busy } = get()
+      if (!keyboard || busy) return false
+      set({ busy: true })
+      try {
+        const skipped = await writeTapDances(keyboard.tapDances.map((t, i) => (i === index ? tapDance : t)))
+        const saved = get().keyboard?.tapDances[index]
+        if (!saved) return false
+        set({ notice: skipped ?? `Saved. Tap dance ${index + 1}: ${describeTapDance(saved, keyboard.catalog)}.` })
+        return JSON.stringify(saved) === JSON.stringify(tapDance)
+      } catch (err) {
+        set({ notice: `The tap dance wasn't saved: ${describe(err)}` })
         return false
       } finally {
         set({ busy: false })

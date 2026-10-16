@@ -82,6 +82,12 @@ describe('KeycodeCatalog.available', () => {
     expect(available.has('TD(0)')).toBe(false)
   })
 
+  it('names tap dance keys counting from 1, like macros', () => {
+    const catalog = v6({ ...small, tapDanceCount: 2 })
+    const td1 = catalog.deserialize('TD(1)')!
+    expect(catalog.describe(td1)).toMatchObject({ name: 'Tap dance 2', legend: ['Tap dance', '2'] })
+  })
+
   it('hides keys that need a firmware feature the keyboard lacks', () => {
     expect(ids(v6()).has('QK_CAPS_WORD_TOGGLE')).toBe(false)
     expect(ids(v6({ ...small, features: new Set(['caps_word']) })).has('QK_CAPS_WORD_TOGGLE')).toBe(true)

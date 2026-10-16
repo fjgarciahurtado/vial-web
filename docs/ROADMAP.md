@@ -37,9 +37,10 @@ done, and add new ones as they come up.
   headers. Waiting for Netlify credits to redeploy. If the site was uploaded by hand,
   connect it to the repository instead (see [DEPLOY.md](DEPLOY.md)) so merges to `main`
   redeploy automatically and pull requests get preview sites.
-- [ ] **Phase 3** (below): QMK settings and combos done; tap dance, key overrides and
+- [ ] **Phase 3** (below): QMK settings, combos and tap dance done; key overrides and
   alt repeat key still to do.
-- [ ] **Test combos on real hardware.** Only tested against the demo keyboard.
+- [ ] **Test combos and tap dance on real hardware.** Only tested against the demo
+  keyboard.
 
 ## Phase 0: Foundation (done)
 
@@ -117,9 +118,9 @@ keyboards with different lighting systems.
 Hidden behind an "Advanced" section, each with a short explanation and example.
 
 Status: in progress, one feature per pull request; what changed is described in
-[PHASE-3.md](PHASE-3.md). Done: QMK settings, combos.
+[PHASE-3.md](PHASE-3.md). Done: QMK settings, combos, tap dance.
 
-- **Tap dance** (`editor/tap_dance.py`, `protocol/tap_dance.py`).
+- **Tap dance** (`editor/tap_dance.py`, `protocol/tap_dance.py`). Done.
 - **Combos** (`editor/combos.py`, `protocol/combo.py`). Done.
 - **Key overrides** (`editor/key_override.py`, `protocol/key_override.py`).
 - **Alt repeat key** (`editor/alt_repeat_key.py`,

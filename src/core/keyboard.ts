@@ -5,6 +5,7 @@ import type { EncoderKeymap } from './keymap-editor'
 import { deserializeMacros, type Macro } from './macros'
 import { lightingKind, readLighting, type LightingKind, type LightingState } from './lighting'
 import { readQmkSettings, type QmkSettings } from './qmk-settings'
+import { readTapDances, type TapDance } from './tap-dance'
 import {
   parseLayout,
   parseLayoutLabels,
@@ -58,6 +59,8 @@ export interface LoadedKeyboard {
   macros: Macro[]
   /** QMK settings the firmware lets people change (timing, key swaps...). */
   qmkSettings: QmkSettings
+  /** Tap dance slots the firmware has. */
+  tapDances: TapDance[]
   /** Combo slots the firmware has; empty slots are all zero. */
   combos: Combo[]
   catalog: KeycodeCatalog
@@ -96,6 +99,7 @@ export async function loadKeyboard(
   const qmkSettings = await readQmkSettings(client, vialProtocol)
   // Combos are optional: a keyboard that can't report them still opens, without them.
   const combos = await readCombos(client, comboCount).catch((): Combo[] => [])
+  const tapDances = await readTapDances(client, capabilities.tapDanceCount).catch((): TapDance[] => [])
   const keymap = await client.getKeymap(layers, rows, cols)
 
   const encoderCount = encoders.length ? Math.max(...encoders.map((e) => e.index)) + 1 : 0
@@ -131,6 +135,7 @@ export async function loadKeyboard(
     macros,
     qmkSettings,
     combos,
+    tapDances,
     catalog,
   }
 }
