@@ -52,6 +52,9 @@ export const RGBLIGHT_EFFECTS: { name: string; color: boolean }[] = (
     ['Gradient 2', true], ['Gradient 3', true], ['Gradient 4', true], ['Gradient 5', true], ['Gradient 6', true],
     ['Gradient 7', true], ['Gradient 8', true], ['Gradient 9', true], ['Gradient 10', true], ['RGB Test', true],
     ['Alternating', true],
+    // Not in vial-gui's list; ids follow quantum/rgblight/rgblight_modes.h in vial-qmk.
+    ['Twinkle 1', true], ['Twinkle 2', true], ['Twinkle 3', true], ['Twinkle 4', true],
+    ['Twinkle 5', true], ['Twinkle 6', true],
   ] as const
 ).map(([name, color]) => ({ name, color }))
 
