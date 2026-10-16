@@ -23,10 +23,6 @@ done, and add new ones as they come up.
   (including rev3's `vial_midi` keymap) now declare `"lighting": "qmk_rgblight"` in
   their `vial.json`, and the firmware is built (`fjgh_kb16knob_*.uf2` in vial-qmk). Flash
   them, then check the Lighting section appears.
-- [ ] **Keyboard firmware isn't backed up.** `keyboards/fjgh` in vial-qmk is untracked,
-  and the vial-qmk checkout points at the upstream repo. Consider a fork of
-  vial-kb/vial-qmk (needs `git config --global --add safe.directory
-  C:/Users/fjgar/vial-qmk` first).
 - [ ] **Light strip effect numbers assume every effect is built in.** QMK numbers
   rgblight effects only among the ones the firmware enables, so on a keyboard that
   leaves some out, names after the gap are wrong (vial-gui has the same problem). The
