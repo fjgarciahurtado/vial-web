@@ -11,6 +11,7 @@ import { MacroEditor } from '@/components/MacroEditor'
 import { LightingPanel, lightingGlow } from '@/components/LightingPanel'
 import { QmkSettingsPanel } from '@/components/QmkSettingsPanel'
 import { TapDancePanel } from '@/components/TapDancePanel'
+import { KeyOverridesPanel } from '@/components/KeyOverridesPanel'
 import { UnlockDialog } from '@/components/UnlockDialog'
 import { Button } from '@/components/ui/button'
 import { openDemoKeyboard } from '@/core/demo'
@@ -231,13 +232,14 @@ function LightingView() {
   )
 }
 
-type AdvancedTab = 'tapDance' | 'combos' | 'settings'
+type AdvancedTab = 'tapDance' | 'combos' | 'keyOverrides' | 'settings'
 
 /** The Advanced features this keyboard has. */
 function advancedTabs(keyboard: LoadedKeyboard): { id: AdvancedTab; title: string }[] {
   return [
     ...(keyboard.tapDances.length ? [{ id: 'tapDance' as const, title: 'Tap dance' }] : []),
     ...(keyboard.combos.length ? [{ id: 'combos' as const, title: 'Combos' }] : []),
+    ...(keyboard.keyOverrides.length ? [{ id: 'keyOverrides' as const, title: 'Key overrides' }] : []),
     ...(keyboard.qmkSettings.supported.length ? [{ id: 'settings' as const, title: 'Typing settings' }] : []),
   ]
 }
@@ -276,6 +278,7 @@ function AdvancedView() {
       </p>
       {tab === 'tapDance' && <TapDancePanel />}
       {tab === 'combos' && <CombosPanel />}
+      {tab === 'keyOverrides' && <KeyOverridesPanel />}
       {tab === 'settings' && (
         <>
           <p className="text-ink-soft">

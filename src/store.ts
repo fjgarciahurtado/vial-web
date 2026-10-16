@@ -2,6 +2,7 @@
 import { create } from 'zustand'
 import { describeCombo, writeCombo, type Combo } from './core/combos'
 import { describeTapDance, TAP_DANCE_ACTIONS, writeTapDance, type TapDance } from './core/tap-dance'
+import { describeKeyOverride, writeKeyOverride, type KeyOverride } from './core/key-overrides'
 import { createBackup, parseBackup, planRestore, type RestorePlan } from './core/backup'
 import { openDemoKeyboard, pressDemoKey } from './core/demo'
 import { serializeMacros, type Macro } from './core/macros'
@@ -122,6 +123,8 @@ interface AppState {
    * being written wait their turn, so none is lost. Resolves to whether it was saved.
    */
   setTapDance(index: number, change: Partial<TapDance>): Promise<boolean>
+  /** Like setTapDance, for key overrides. `change` gets the latest value of the override. */
+  setKeyOverride(index: number, change: (current: KeyOverride) => KeyOverride): Promise<boolean>
 }
 
 export const useApp = create<AppState>((set, get) => {
@@ -297,7 +300,7 @@ export const useApp = create<AppState>((set, get) => {
    * without it, that one is skipped. Returns a note about anything skipped, or null.
    */
   async function writeEntries<T>(
-    kind: { field: 'combos' | 'tapDances'; name: string },
+    kind: { field: 'combos' | 'tapDances' | 'keyOverrides'; name: string },
     entries: T[],
     usesBoot: (entry: T, boot: number | undefined) => boolean,
     write: (client: VialClient, index: number, entry: T) => Promise<void>,
@@ -335,27 +338,42 @@ export const useApp = create<AppState>((set, get) => {
     return run
   }
 
-  async function applyTapDance(index: number, change: Partial<TapDance>): Promise<boolean> {
+  /**
+   * Applies a change to one tap dance or key override, using the latest state, and writes it.
+   * Runs inside the entry queue.
+   */
+  async function applyEntry<T extends object>(
+    kind: { field: 'tapDances' | 'keyOverrides'; name: string },
+    index: number,
+    change: (current: T) => T,
+    writeAll: (entries: T[]) => Promise<string | null>,
+    describeEntry: (entry: T, keyboard: LoadedKeyboard) => string,
+  ): Promise<boolean> {
     const { keyboard, busy } = get()
-    if (!keyboard?.tapDances[index]) return false
+    const entries = keyboard?.[kind.field] as T[] | undefined
+    if (!keyboard || !entries?.[index]) return false
     if (busy) {
-      set({ notice: "The tap dance wasn't saved, because the keyboard is busy with another change. Try again." })
+      set({ notice: `The ${kind.name} wasn't saved, because the keyboard is busy with another change. Try again.` })
       return false
     }
-    const tapDance = { ...keyboard.tapDances[index], ...change }
+    const next = change(entries[index])
     set({ busy: true })
     try {
-      const skipped = await writeTapDances(keyboard.tapDances.map((t, i) => (i === index ? tapDance : t)))
-      const saved = get().keyboard!.tapDances[index]
-      set({ notice: skipped ?? `Saved. Tap dance ${index + 1}: ${describeTapDance(saved, keyboard.catalog)}.` })
-      return JSON.stringify(saved) === JSON.stringify(tapDance)
+      const skipped = await writeAll(entries.map((e, i) => (i === index ? next : e)))
+      const saved = (get().keyboard![kind.field] as T[])[index]
+      const title = kind.name.charAt(0).toUpperCase() + kind.name.slice(1)
+      set({ notice: skipped ?? `Saved. ${title} ${index + 1}: ${describeEntry(saved, keyboard)}.` })
+      return JSON.stringify(saved) === JSON.stringify(next)
     } catch (err) {
-      set({ notice: `The tap dance wasn't saved: ${describe(err)}` })
+      set({ notice: `The ${kind.name} wasn't saved: ${describe(err)}` })
       return false
     } finally {
       set({ busy: false })
     }
   }
+
+  const writeKeyOverrides = (overrides: KeyOverride[]) =>
+    writeEntries({ field: 'keyOverrides', name: 'key override' }, overrides, (k, boot) => k.replacement === boot, writeKeyOverride)
 
   const writeCombos = (combos: Combo[]) =>
     writeEntries({ field: 'combos', name: 'combo' }, combos, (c, boot) => c.output === boot, writeCombo)
@@ -405,6 +423,14 @@ export const useApp = create<AppState>((set, get) => {
           if (result) set((s) => ({ notice: `${s.notice ?? ''} ${result}`.trim() }))
         } catch (err) {
           set((s) => ({ notice: `${s.notice ?? ''} The tap dances weren't all restored: ${describe(err)}`.trim() }))
+        }
+      }
+      if (plan.keyOverrides) {
+        try {
+          const result = await writeKeyOverrides(plan.keyOverrides)
+          if (result) set((s) => ({ notice: `${s.notice ?? ''} ${result}`.trim() }))
+        } catch (err) {
+          set((s) => ({ notice: `${s.notice ?? ''} The key overrides weren't all restored: ${describe(err)}`.trim() }))
         }
       }
       if (plan.combos) {
@@ -643,7 +669,27 @@ export const useApp = create<AppState>((set, get) => {
     },
 
     setTapDance(index, change) {
-      return inEntryQueue(() => applyTapDance(index, change))
+      return inEntryQueue(() =>
+        applyEntry<TapDance>(
+          { field: 'tapDances', name: 'tap dance' },
+          index,
+          (current) => ({ ...current, ...change }),
+          writeTapDances,
+          (td, kb) => describeTapDance(td, kb.catalog),
+        ),
+      )
+    },
+
+    setKeyOverride(index, change) {
+      return inEntryQueue(() =>
+        applyEntry<KeyOverride>(
+          { field: 'keyOverrides', name: 'key override' },
+          index,
+          change,
+          writeKeyOverrides,
+          (ko, kb) => describeKeyOverride(ko, kb.catalog),
+        ),
+      )
     },
 
     async resetSettings() {

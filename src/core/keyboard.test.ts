@@ -50,6 +50,15 @@ describe('loadKeyboard', () => {
     expect(kb.tapDances).toEqual([fake.tapDances[0]])
   })
 
+  it('reads the key overrides', async () => {
+    const fake = new FakeKeyboard({ definition, layers: 1, keyOverrideCount: 1 })
+    fake.keyOverrides[0] = [0x2a, 0, 0x4c, 0, 0xff, 0xff, 0x22, 0, 0x22, 0x87]
+    const kb = await loadKeyboard(fake.transport, 'fallback', { decompress: identity })
+    expect(kb.keyOverrides).toEqual([
+      { trigger: 0x2a, replacement: 0x4c, layers: 0xffff, triggerMods: 0x22, negativeMods: 0, suppressedMods: 0x22, options: 0x87 },
+    ])
+  })
+
   it('reads the combos', async () => {
     const fake = new FakeKeyboard({ definition, layers: 1, comboCount: 2 })
     fake.combos[1] = { keys: [0x04, 0x16, 0, 0], output: 0x29 }

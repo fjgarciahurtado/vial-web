@@ -6,6 +6,7 @@ import { deserializeMacros, type Macro } from './macros'
 import { lightingKind, readLighting, type LightingKind, type LightingState } from './lighting'
 import { readQmkSettings, type QmkSettings } from './qmk-settings'
 import { readTapDances, type TapDance } from './tap-dance'
+import { readKeyOverrides, type KeyOverride } from './key-overrides'
 import {
   parseLayout,
   parseLayoutLabels,
@@ -59,6 +60,8 @@ export interface LoadedKeyboard {
   macros: Macro[]
   /** QMK settings the firmware lets people change (timing, key swaps...). */
   qmkSettings: QmkSettings
+  /** Key override slots the firmware has. */
+  keyOverrides: KeyOverride[]
   /** Tap dance slots the firmware has. */
   tapDances: TapDance[]
   /** Combo slots the firmware has; empty slots are all zero. */
@@ -88,7 +91,7 @@ export async function loadKeyboard(
   const { rows, cols } = definition.matrix
   const { keys, encoders } = parseLayout(definition.layouts.keymap)
   const layers = await client.getLayerCount()
-  const { capabilities, comboCount } = await readCapabilities(client, vialProtocol, layers, definition)
+  const { capabilities, comboCount, keyOverrideCount } = await readCapabilities(client, vialProtocol, layers, definition)
   const catalog = await loadKeycodeCatalog(vialProtocol, capabilities)
   const macroMemory = capabilities.macroCount ? await client.getMacroBufferSize() : 0
   const macros = macroMemory
@@ -100,6 +103,7 @@ export async function loadKeyboard(
   // Combos are optional: a keyboard that can't report them still opens, without them.
   const combos = await readCombos(client, comboCount).catch((): Combo[] => [])
   const tapDances = await readTapDances(client, capabilities.tapDanceCount).catch((): TapDance[] => [])
+  const keyOverrides = await readKeyOverrides(client, keyOverrideCount).catch((): KeyOverride[] => [])
   const keymap = await client.getKeymap(layers, rows, cols)
 
   const encoderCount = encoders.length ? Math.max(...encoders.map((e) => e.index)) + 1 : 0
@@ -136,6 +140,7 @@ export async function loadKeyboard(
     qmkSettings,
     combos,
     tapDances,
+    keyOverrides,
     catalog,
   }
 }
@@ -146,16 +151,18 @@ async function readCapabilities(
   vialProtocol: number,
   layers: number,
   definition: VialDefinition,
-): Promise<{ capabilities: KeyboardCapabilities; comboCount: number }> {
+): Promise<{ capabilities: KeyboardCapabilities; comboCount: number; keyOverrideCount: number }> {
   const macroCount = await client.getMacroCount()
   const features = new Set<string>()
   let tapDanceCount = 0
   let comboCount = 0
+  let keyOverrideCount = 0
 
   if (vialProtocol >= VIAL_PROTOCOL_DYNAMIC) {
     const counts = await client.getDynamicEntryCounts()
     tapDanceCount = counts.tapDance
     comboCount = counts.combo
+    keyOverrideCount = counts.keyOverride
     counts.features.forEach((f) => features.add(f))
     // Unconditionally enabled in the QMK builds that shipped this protocol version.
     if (vialProtocol >= VIAL_PROTOCOL_KEY_OVERRIDE) features.add('persistent_default_layer')
@@ -170,5 +177,5 @@ async function readCapabilities(
     midi: definition.vial?.midi ?? null,
     customKeycodes: definition.customKeycodes ?? null,
   }
-  return { capabilities, comboCount }
+  return { capabilities, comboCount, keyOverrideCount }
 }

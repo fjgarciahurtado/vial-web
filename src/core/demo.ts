@@ -55,6 +55,7 @@ export async function openDemoKeyboard(): Promise<{
     macroCount: 4,
     comboCount: 8,
     tapDanceCount: 4,
+    keyOverrideCount: 4,
     macroMemory: 512,
     featureFlags: 0b11,
     encoders: 1,
@@ -102,6 +103,8 @@ export async function openDemoKeyboard(): Promise<{
   )
   // Tap dance 1: tap for Escape, hold for Left Ctrl.
   fake.tapDances[0] = { onTap: 0x29, onHold: 0xe0, onDoubleTap: 0, onTapHold: 0, tappingTerm: 200 }
+  // Key override 1: Shift + Backspace sends Delete, on every layer.
+  fake.keyOverrides[0] = [0x2a, 0, 0x4c, 0, 0xff, 0xff, 0x22, 0, 0x22, 0x87]
   // Combo 1: press J and K together for Escape.
   fake.combos[0] = { keys: [0x0d, 0x0e, 0, 0], output: 0x29 }
   fake.vialrgb = { maxBrightness: 200, effects: [1, 2, 6, 13, 24, 29, 39], mode: 6, speed: 128, hsv: [150, 220, 160] }

@@ -4,12 +4,13 @@
  * protocol/keyboard_comm.py), so files move freely between the two apps.
  *
  * vial-web writes only what it manages: keys, knobs, layout options, macros, tap
- * dance, combos and QMK settings. vial-gui skips missing sections when restoring,
- * so a vial-web backup never clears key overrides or alt repeat keys in vial-gui.
+ * dance, combos, key overrides and QMK settings. vial-gui skips missing sections when
+ * restoring, so a vial-web backup never clears alt repeat keys in vial-gui.
  */
 import { isEmptyCombo, loadSavedCombo, saveCombo, type Combo } from './combos'
 import type { KeycodeCatalog } from './keycodes/catalog'
 import { isEmptyTapDance, loadSavedTapDance, saveTapDance, type TapDance } from './tap-dance'
+import { isEmptyKeyOverride, loadSavedKeyOverride, saveKeyOverride, type KeyOverride } from './key-overrides'
 import type { EncoderKeymap, Target } from './keymap-editor'
 import type { LayoutEncoder, LayoutKey } from './layout'
 import { loadSavedMacro, macroProblem, saveMacro, type Macro } from './macros'
@@ -33,6 +34,7 @@ export interface BackupSource {
   qmkSettings: QmkSettings
   combos: Combo[]
   tapDances: TapDance[]
+  keyOverrides: KeyOverride[]
   catalog: KeycodeCatalog
 }
 
@@ -45,6 +47,8 @@ export interface Backup {
   layoutOptions: number
   /** The "macro" section, still in .vil form, or null when the file has none. */
   macros: unknown[][] | null
+  /** The "key_override" section, still in .vil form, or null when the file has none. */
+  keyOverrides: unknown[] | null
   /** The "tap_dance" section, still in .vil form, or null when the file has none. */
   tapDances: unknown[] | null
   /** The "combo" section, still in .vil form, or null when the file has none. */
@@ -60,6 +64,8 @@ export interface RestorePlan {
   layoutOptions: number | null
   /** Every macro, ready to write, or null when the backup has no macros to restore. */
   macros: Macro[] | null
+  /** Every key override slot, as it should be after restoring, or null when the backup has none. */
+  keyOverrides: KeyOverride[] | null
   /** Every tap dance slot, as it should be after restoring, or null when the backup has none. */
   tapDances: TapDance[] | null
   /** Every combo slot, as it should be after restoring, or null when the backup has none. */
@@ -78,7 +84,6 @@ const NOT_A_BACKUP = "This file isn't a Vial keymap backup."
 
 /** Sections vial-gui saves that later phases will restore, with names people understand. */
 const OTHER_SECTIONS: [string, string][] = [
-  ['key_override', 'key overrides'],
   ['alt_repeat_key', 'alt repeat keys'],
 ]
 
@@ -102,6 +107,7 @@ export function createBackup(kb: BackupSource): string {
       ...(kb.macros.length && { macro: kb.macros.map((m) => saveMacro(m, kb.catalog)) }),
       ...(kb.tapDances.length && { tap_dance: kb.tapDances.map((t) => saveTapDance(t, kb.catalog)) }),
       ...(kb.combos.length && { combo: kb.combos.map((c) => saveCombo(c, kb.catalog)) }),
+      ...(kb.keyOverrides.length && { key_override: kb.keyOverrides.map((k) => saveKeyOverride(k, kb.catalog)) }),
       ...(Object.keys(kb.qmkSettings.values).length && { settings: kb.qmkSettings.values }),
       vial_protocol: kb.vialProtocol,
       via_protocol: kb.viaProtocol,
@@ -130,6 +136,7 @@ export function parseBackup(text: string): Backup {
     macros: Array.isArray(data.macro) ? (data.macro as unknown[]).map((m) => (Array.isArray(m) ? m : [])) : null,
     tapDances: Array.isArray(data.tap_dance) ? data.tap_dance : null,
     combos: Array.isArray(data.combo) ? data.combo : null,
+    keyOverrides: Array.isArray(data.key_override) ? data.key_override : null,
     settings: isRecord(data.settings) ? data.settings : null,
     notRestored: OTHER_SECTIONS.filter(([key]) => hasContent(data[key])).map(([, name]) => name),
   }
@@ -227,6 +234,28 @@ export function planRestore(backup: Backup, kb: BackupSource): RestorePlan {
     notes.push('This keyboard has no combos, so the combos in this backup were left out.')
   }
 
+  // Like restore_key_override in vial-gui: fill slots from the backup, keep the rest.
+  let keyOverrides: KeyOverride[] | null = null
+  const savedOverrides = backup.keyOverrides ?? []
+  const overrideInUse = (k: unknown) => {
+    const ko = loadSavedKeyOverride(k, kb.catalog, () => {})
+    return ko === null || !isEmptyKeyOverride(ko)
+  }
+  if (savedOverrides.length && kb.keyOverrides.length) {
+    // A slot with a key this app can't read keeps what the keyboard has.
+    keyOverrides = kb.keyOverrides.map((current, i) =>
+      i < savedOverrides.length ? (loadSavedKeyOverride(savedOverrides[i], kb.catalog, () => unknownKeys++) ?? current) : current,
+    )
+    const extra = savedOverrides.slice(kb.keyOverrides.length).filter(overrideInUse).length
+    if (extra) {
+      notes.push(
+        `${extra} key override${extra === 1 ? '' : 's'} in this backup didn't fit, because this keyboard has room for ${kb.keyOverrides.length}.`,
+      )
+    }
+  } else if (savedOverrides.some(overrideInUse)) {
+    notes.push('This keyboard has no key overrides, so the key overrides in this backup were left out.')
+  }
+
   // Like restore_layout in vial-gui: set each saved setting the keyboard has, leave the rest.
   let settings: QmkSettingValues | null = null
   const saved = Object.entries(backup.settings ?? {})
@@ -255,6 +284,7 @@ export function planRestore(backup: Backup, kb: BackupSource): RestorePlan {
     macros,
     tapDances,
     combos,
+    keyOverrides,
     settings,
     notes,
     layoutOptions: backup.layoutOptions !== -1 && kb.layoutOptionsValue !== -1 ? backup.layoutOptions : null,

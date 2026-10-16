@@ -6,7 +6,7 @@ request and is described here as it lands.
 
 The **Advanced** section appears in the section switcher only on keyboards that
 have at least one of these features. Inside it, tabs switch between the features
-the keyboard has: **Tap dance**, **Combos** and **Typing settings**.
+the keyboard has: **Tap dance**, **Combos**, **Key overrides** and **Typing settings**.
 
 ## QMK settings
 
@@ -131,3 +131,50 @@ numbers: tap, hold, double tap and tap-then-hold keycodes, then the wait time.
 The fallbacks shown for empty actions come from `on_dance_finished()` in
 vial-qmk `quantum/vial.c`. The store writes combos and tap dances through one
 shared helper that handles unlocking and unplugging.
+
+## Key overrides
+
+**What users see.** The **Key overrides** tab explains them with the classic
+example: Shift + Backspace can send Delete, while Backspace alone still deletes
+backwards.
+
+A list shows every slot in plain words ("Shift + Backspace → Delete", "Off: …",
+or "Not set up"), with **New key override**. The selected override shows, top to
+bottom:
+
+- **Turned on**.
+- **Hold these modifiers**: switches for Ctrl, Shift, Alt and GUI on each side.
+  With two or more, **Any one of them is enough** appears.
+- **Key → Sends instead**: two slots filled with the usual key picker.
+- **Let go of these modifiers while sending it**. It follows the modifiers held
+  unless someone changes it, so Shift + Backspace sends a plain Delete rather
+  than Shift + Delete.
+- **Don't override while holding**: modifiers that stop the override.
+- **Works on layers**: a checkbox per layer the keyboard has, and **All**.
+- **More options** (folded away): when the override starts, whether it keeps
+  going when another key is pressed, and whether the key is pressed again
+  afterwards.
+
+A new override starts on, on every layer, with QMK's default ways of starting.
+Problems are explained: turned off, nothing that starts it, no layer, or no way
+to start. Each change is written straight away and queued like tap dance, so
+fast clicks are never lost. A replacement that is the bootloader key unlocks
+the keyboard first.
+
+Backups save every slot under `key_override` as vial-gui does: trigger and
+replacement as key names, the other fields as numbers. Restoring works like
+combos and tap dance.
+
+**How it works.** `src/core/key-overrides.ts` ports `KeyOverrideEntry`,
+`reload_key_override()`, `key_override_set()`, `save_key_override()` and
+`restore_key_override()` from `protocol/key_override.py`, with
+`DYNAMIC_VIAL_KEY_OVERRIDE_GET` (0x05) and `DYNAMIC_VIAL_KEY_OVERRIDE_SET`
+(0x06). An entry is ten bytes, `"<HHHBBBB"`: trigger, replacement and layers as
+little-endian 16-bit numbers, then the held, blocking and let-go modifiers
+(MOD_BIT order: Left Ctrl, Shift, Alt, GUI, then Right) and the option bits.
+
+The option meanings come from vial-qmk
+`quantum/process_keycode/process_key_override.h`. vial-gui's labels for bits 4
+and 5 are swapped; vial-web uses the firmware's meanings: bit 4 means the key
+is not pressed again after the override ends, and bit 5 means the override keeps
+going when another key is pressed.
