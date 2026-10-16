@@ -28,6 +28,7 @@ const source: BackupSource = {
   macros: [[{ type: 'text', text: 'hi' }], []],
   qmkSettings: { supported: [2, 7, 21, 999], values: { 2: 50, 7: 200, 21: 0x80 } },
   tapDances: [{ onTap: 0x29, onHold: 0xe0, onDoubleTap: 0, onTapHold: 0, tappingTerm: 180 }],
+  keyOverrides: [{ trigger: 0x2a, replacement: 0x4c, layers: 0xffff, triggerMods: 0x22, negativeMods: 0, suppressedMods: 0x22, options: 0x87 }],
   combos: [
     { keys: [0x04, 0x16, 0, 0], output: 0x29 },
     { keys: [0, 0, 0, 0], output: 0 },
@@ -66,6 +67,12 @@ describe('createBackup', () => {
     expect(json.tap_dance).toEqual([['KC_ESCAPE', 'KC_LCTRL', 'KC_NO', 'KC_NO', 180]])
   })
 
+  it('saves every key override slot, as vial-gui does', () => {
+    expect(json.key_override).toEqual([
+      { trigger: 'KC_BSPACE', replacement: 'KC_DELETE', layers: 0xffff, trigger_mods: 0x22, negative_mod_mask: 0, suppressed_mods: 0x22, options: 0x87 },
+    ])
+  })
+
   it('saves every combo slot, as vial-gui does', () => {
     expect(json.combo).toEqual([
       ['KC_A', 'KC_S', 'KC_NO', 'KC_NO', 'KC_ESCAPE'],
@@ -74,7 +81,7 @@ describe('createBackup', () => {
   })
 
   it('leaves out sections it does not manage, so vial-gui keeps them on restore', () => {
-    for (const section of ['key_override', 'alt_repeat_key']) {
+    for (const section of ['alt_repeat_key']) {
       expect(json).not.toHaveProperty(section)
     }
   })
@@ -99,9 +106,9 @@ describe('parseBackup', () => {
 
   it('lists saved sections this app cannot restore yet', () => {
     const backup = parseBackup(
-      JSON.stringify({ version: 1, uid: 1, layout: [], macro: [[['text', 'hi']]], combo: [['KC_A', 'KC_B', 'KC_NO', 'KC_NO', 'KC_C']], key_override: [{ trigger: 'KC_A' }] }),
+      JSON.stringify({ version: 1, uid: 1, layout: [], macro: [[['text', 'hi']]], alt_repeat_key: [{ keycode: 'KC_A' }] }),
     )
-    expect(backup.notRestored).toEqual(['key overrides'])
+    expect(backup.notRestored).toEqual(['alt repeat keys'])
   })
 
   it('rejects files that are not keymap backups', () => {
@@ -198,6 +205,17 @@ describe('planRestore', () => {
     expect(plan.tapDances).toEqual([source.tapDances[0]])
     expect(plan.unknownKeys).toBe(1)
     expect(plan.notes).toEqual(["1 tap dance in this backup didn't fit, because this keyboard has room for 1."])
+  })
+
+  it('restores key overrides, keeping slots it cannot read', () => {
+    const ko = { trigger: 'KC_A', replacement: 'KC_B', layers: 1, trigger_mods: 2, negative_mod_mask: 0, suppressed_mods: 2, options: 0x87 }
+    const plan = planRestore(parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [], key_override: [ko] })), source)
+    expect(plan.keyOverrides).toEqual([
+      { trigger: 0x04, replacement: 0x05, layers: 1, triggerMods: 2, negativeMods: 0, suppressedMods: 2, options: 0x87 },
+    ])
+    const bad = planRestore(parseBackup(JSON.stringify({ version: 1, uid: 1, layout: [], key_override: [{ ...ko, trigger: 'NOPE' }] })), source)
+    expect(bad.keyOverrides).toEqual(source.keyOverrides)
+    expect(bad.unknownKeys).toBe(1)
   })
 
   it('restores combos into the slots the keyboard has', () => {
