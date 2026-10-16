@@ -43,6 +43,13 @@ describe('loadKeyboard', () => {
     expect(kb.qmkSettings).toEqual({ supported: [7, 21], values: { 7: 200, 21: 0x80 } })
   })
 
+  it('reads the tap dances', async () => {
+    const fake = new FakeKeyboard({ definition, layers: 1, tapDanceCount: 1 })
+    fake.tapDances[0] = { onTap: 0x29, onHold: 0xe0, onDoubleTap: 0, onTapHold: 0, tappingTerm: 180 }
+    const kb = await loadKeyboard(fake.transport, 'fallback', { decompress: identity })
+    expect(kb.tapDances).toEqual([fake.tapDances[0]])
+  })
+
   it('reads the combos', async () => {
     const fake = new FakeKeyboard({ definition, layers: 1, comboCount: 2 })
     fake.combos[1] = { keys: [0x04, 0x16, 0, 0], output: 0x29 }

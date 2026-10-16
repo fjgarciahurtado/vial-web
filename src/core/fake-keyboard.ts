@@ -44,6 +44,8 @@ export class FakeKeyboard {
   lightingSaved = false
   /** Macro memory: macros separated by zero bytes. */
   readonly macroBuffer: Uint8Array
+  /** Tap dance slots, as the firmware stores them. */
+  readonly tapDances: { onTap: number; onHold: number; onDoubleTap: number; onTapHold: number; tappingTerm: number }[]
   /** Combo slots: four trigger keys and a result each. */
   readonly combos: { keys: number[]; output: number }[]
   /** QMK setting values by qsid. */
@@ -68,6 +70,13 @@ export class FakeKeyboard {
     this.macroBuffer = new Uint8Array(options.macroMemory ?? 0)
     this.unlocked = options.unlocked ?? false
     this.qmkSettings = { ...options.qmkSettings }
+    this.tapDances = Array.from({ length: options.tapDanceCount ?? 0 }, () => ({
+      onTap: 0,
+      onHold: 0,
+      onDoubleTap: 0,
+      onTapHold: 0,
+      tappingTerm: 200,
+    }))
     this.combos = Array.from({ length: options.comboCount ?? 0 }, () => ({ keys: [0, 0, 0, 0], output: 0 }))
     this.transport = new FakeTransport((req) => this.handle(req))
   }
@@ -220,11 +229,25 @@ export class FakeKeyboard {
       case 0x00: {
         // DYNAMIC_VIAL_GET_NUMBER_OF_ENTRIES
         const reply = new Array(32).fill(0)
-        reply[0] = options.tapDanceCount ?? 0
+        reply[0] = this.tapDances.length
         reply[1] = this.combos.length
         reply[3] = options.altRepeatKeyCount ?? 0
         reply[31] = options.featureFlags ?? 0
         return reply
+      }
+      case 0x01: {
+        // DYNAMIC_VIAL_TAP_DANCE_GET: index
+        const td = this.tapDances[req[3]]
+        if (!td) return [1]
+        return [0, ...[td.onTap, td.onHold, td.onDoubleTap, td.onTapHold, td.tappingTerm].flatMap((v) => [v & 0xff, v >> 8])]
+      }
+      case 0x02: {
+        // DYNAMIC_VIAL_TAP_DANCE_SET: index, 4 keycodes and tapping term (little-endian)
+        if (!this.tapDances[req[3]]) return [1]
+        // vial_keycode_firewall: the bootloader key only goes in while unlocked.
+        const key = (i: number) => (word(i) === QK_BOOT && !this.unlocked ? 0 : word(i))
+        this.tapDances[req[3]] = { onTap: key(4), onHold: key(6), onDoubleTap: key(8), onTapHold: key(10), tappingTerm: word(12) }
+        return [0]
       }
       case 0x03: {
         // DYNAMIC_VIAL_COMBO_GET: index

@@ -27,6 +27,7 @@ const source: BackupSource = {
   layoutOptionsValue: -1,
   macros: [[{ type: 'text', text: 'hi' }], []],
   qmkSettings: { supported: [2, 7, 21, 999], values: { 2: 50, 7: 200, 21: 0x80 } },
+  tapDances: [{ onTap: 0x29, onHold: 0xe0, onDoubleTap: 0, onTapHold: 0, tappingTerm: 180 }],
   combos: [
     { keys: [0x04, 0x16, 0, 0], output: 0x29 },
     { keys: [0, 0, 0, 0], output: 0 },
@@ -61,6 +62,10 @@ describe('createBackup', () => {
     expect(json.settings).toEqual({ 2: 50, 7: 200, 21: 0x80 })
   })
 
+  it('saves every tap dance slot, as vial-gui does', () => {
+    expect(json.tap_dance).toEqual([['KC_ESCAPE', 'KC_LCTRL', 'KC_NO', 'KC_NO', 180]])
+  })
+
   it('saves every combo slot, as vial-gui does', () => {
     expect(json.combo).toEqual([
       ['KC_A', 'KC_S', 'KC_NO', 'KC_NO', 'KC_ESCAPE'],
@@ -69,7 +74,7 @@ describe('createBackup', () => {
   })
 
   it('leaves out sections it does not manage, so vial-gui keeps them on restore', () => {
-    for (const section of ['tap_dance', 'key_override', 'alt_repeat_key']) {
+    for (const section of ['key_override', 'alt_repeat_key']) {
       expect(json).not.toHaveProperty(section)
     }
   })
@@ -183,6 +188,16 @@ describe('planRestore', () => {
     const plan = planRestore(backup, { ...source, qmkSettings: { supported: [], values: {} } })
     expect(plan.settings).toBeNull()
     expect(plan.notes).toEqual([expect.stringMatching(/no QMK settings/)])
+  })
+
+  it('restores tap dances, keeping slots it cannot read', () => {
+    const backup = parseBackup(
+      JSON.stringify({ version: 1, uid: 1, layout: [], tap_dance: [['KC_A', 'NOPE', 'KC_NO', 'KC_NO', 200], ['KC_B', 'KC_NO', 'KC_NO', 'KC_NO', 150]] }),
+    )
+    const plan = planRestore(backup, source)
+    expect(plan.tapDances).toEqual([source.tapDances[0]])
+    expect(plan.unknownKeys).toBe(1)
+    expect(plan.notes).toEqual(["1 tap dance in this backup didn't fit, because this keyboard has room for 1."])
   })
 
   it('restores combos into the slots the keyboard has', () => {

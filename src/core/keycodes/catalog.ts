@@ -240,6 +240,7 @@ function nameOf(entry: KeycodeEntry): string {
   if (entry.group === 'user' && entry.tooltip) return entry.tooltip
   // M0, M1... are counted from 1 for people: "Macro 1".
   if (isMacroSlot(entry)) return `Macro ${entry.index! + 1}`
+  if (isTapDanceSlot(entry)) return `Tap dance ${entry.index! + 1}`
 
   const lines = entry.label.split('\n')
   if (entry.group === 'numpad') return `Numpad ${lines.join(' ')}`
@@ -250,11 +251,16 @@ function nameOf(entry: KeycodeEntry): string {
 
 function legendOf(entry: KeycodeEntry): string[] {
   if (isMacroSlot(entry)) return ['Macro', String(entry.index! + 1)]
+  if (isTapDanceSlot(entry)) return ['Tap dance', String(entry.index! + 1)]
   return layerKeyLegend(entry.id) ?? (entry.label ? entry.label.split('\n') : [])
 }
 
 function isMacroSlot(entry: KeycodeEntry): boolean {
   return entry.group === 'macro' && entry.index !== undefined
+}
+
+function isTapDanceSlot(entry: KeycodeEntry): boolean {
+  return entry.group === 'tap_dance' && entry.index !== undefined
 }
 
 function firstLine(label: string): string {

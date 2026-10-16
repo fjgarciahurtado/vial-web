@@ -6,7 +6,7 @@ request and is described here as it lands.
 
 The **Advanced** section appears in the section switcher only on keyboards that
 have at least one of these features. Inside it, tabs switch between the features
-the keyboard has: **Combos** and **Typing settings**.
+the keyboard has: **Tap dance**, **Combos** and **Typing settings**.
 
 ## QMK settings
 
@@ -94,3 +94,40 @@ feature as `getDynamicEntry()` and `setDynamicEntry()`
 
 The number of combo slots comes from `DYNAMIC_VIAL_GET_NUMBER_OF_ENTRIES`, which
 the app already read for tap dance.
+
+## Tap dance
+
+**What users see.** The **Tap dance** tab explains that a tap dance key does
+different things depending on how it is pressed, and that it goes on a key in
+Keys, under Tap dance. Tap dance keys are now called "Tap dance 1", "Tap dance 2"
+and so on everywhere, counted from 1 like macros, instead of `TD(0)`.
+
+A list shows every tap dance slot in plain words ("Tap: Escape, hold: Left
+Ctrl"), with **New tap dance**. The selected one has four slots: **Tap**,
+**Hold**, **Tap twice** and **Tap, then hold**, filled with the usual key picker.
+Under each empty slot the app says what the keyboard does instead, following
+the firmware: an empty hold holds the tap key, an empty double tap types the tap
+key twice, and an empty tap-then-hold taps then holds.
+
+**Wait time** is the tap dance's own tapping term: how long the keyboard waits
+for another tap, and how long a press must last to count as a hold. It is saved
+when the person leaves the box or presses Enter, within vial-gui's limit of 0 to
+10000 ms.
+
+The panel also says whether the tap dance is on any key yet ("On 2 keys of your
+keymap", or how to put it on one). Like keys and combos, each change is written
+to the keyboard straight away. Any action set to the bootloader key unlocks the
+keyboard first.
+
+Backups save every slot under `tap_dance` as four key names and the wait time
+as a number, as vial-gui does. Restoring works like combos: unreadable entries
+keep the keyboard's own, and extra saved tap dances are reported.
+
+**How it works.** `src/core/tap-dance.ts` ports `reload_tap_dance()`,
+`tap_dance_set()`, `save_tap_dance()` and `restore_tap_dance()` from
+`protocol/tap_dance.py`, with `DYNAMIC_VIAL_TAP_DANCE_GET` (0x01) and
+`DYNAMIC_VIAL_TAP_DANCE_SET` (0x02). An entry is five little-endian 16-bit
+numbers: tap, hold, double tap and tap-then-hold keycodes, then the wait time.
+The fallbacks shown for empty actions come from `on_dance_finished()` in
+vial-qmk `quantum/vial.c`. The store writes combos and tap dances through one
+shared helper that handles unlocking and unplugging.
