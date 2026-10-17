@@ -12,6 +12,7 @@ import { loadKeyboard, type LoadedKeyboard } from './core/keyboard'
 import { KeymapEditor, type Target } from './core/keymap-editor'
 import { packLayoutChoices, unpackLayoutChoices } from './core/layout'
 import { LightingController, type LightingState } from './core/lighting'
+import { setNoteStyle as setCoreNoteStyle, type NoteStyle } from './core/midi'
 import { readQmkSettings, withFieldValue, writeQmkSettings, type QmkSettingValues, type SettingField } from './core/qmk-settings'
 import type { HidTransport } from './core/transport'
 import { unlockKeyboard } from './core/unlock'
@@ -128,7 +129,38 @@ interface AppState {
   setKeyOverride(index: number, change: (current: KeyOverride) => KeyOverride): Promise<boolean>
   /** Like setKeyOverride, for alt repeat keys. */
   setAltRepeat(index: number, change: (current: AltRepeat) => AltRepeat): Promise<boolean>
+  /** How notes are named everywhere: C D E or Do Re Mi, and whether middle C is C4 or C3. */
+  noteStyle: NoteStyle
+  setNoteStyle(style: NoteStyle): void
 }
+
+const NOTE_STYLE_KEY = 'vial-web:note-style'
+
+/** The remembered note style. Earlier versions saved only C D E or Do Re Mi, under another name. */
+function readNoteStyle(): NoteStyle {
+  const saved = readStored<Partial<NoteStyle>>(NOTE_STYLE_KEY)
+  const names = saved?.names ?? readStored<string>('vial-web:note-names', false)
+  return {
+    names: names === 'solfege' ? 'solfege' : 'letters',
+    middleC: saved?.middleC === 'C3' ? 'C3' : 'C4',
+  }
+}
+
+/** A remembered value, or null when there is none, it is unreadable, or storage is blocked. */
+function readStored<T>(key: string, json = true): T | null {
+  try {
+    const text = localStorage.getItem(key)
+    return text === null ? null : json ? (JSON.parse(text) as T) : (text as T)
+  } catch {
+    return null
+  }
+}
+
+// Keycaps get their note names from core/midi.ts when drawn, not from this state. They
+// follow a change only because the components drawing them re-render on every store
+// change; a selector or memo around catalog.describe() would leave old names showing.
+const initialNoteStyle = readNoteStyle()
+setCoreNoteStyle(initialNoteStyle)
 
 export const useApp = create<AppState>((set, get) => {
   /** Runs one keymap change at a time and copies the result into state. */
@@ -476,6 +508,7 @@ export const useApp = create<AppState>((set, get) => {
   return {
     status: 'idle',
     error: null,
+    noteStyle: initialNoteStyle,
     view: 'keys',
     lights: null,
     demo: null,
@@ -628,6 +661,18 @@ export const useApp = create<AppState>((set, get) => {
 
     setView(view) {
       set({ view, notice: null })
+    },
+
+    setNoteStyle(noteStyle) {
+      setCoreNoteStyle(noteStyle)
+      try {
+        localStorage.setItem(NOTE_STYLE_KEY, JSON.stringify(noteStyle))
+      } catch {
+        // Private windows may refuse storage; the choice then lasts until the page closes.
+      }
+      // Keycaps and key names read the style when drawn, so changing state redraws them.
+      // The last notice may name a note the old way ("Saved. This key is now MIDI C4."), so drop it.
+      set({ noteStyle, notice: null })
     },
 
     setLighting(next) {

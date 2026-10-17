@@ -94,7 +94,7 @@ export function KeyTester() {
         catalog={keyboard.catalog}
         highlighted={down}
         passed={[...passed.values()]}
-        className="max-h-[42svh] w-full flex-none"
+        className="max-h-[42svh] w-full flex-none [@media(min-height:62rem)]:max-h-[52svh]"
       />
 
       {!supported ? (

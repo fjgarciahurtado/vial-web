@@ -16,13 +16,15 @@ done, and add new ones as they come up.
   lighting"), the key tester, and saving macros were only tested against the demo
   keyboard before being merged. Ideally test lighting on more than one lighting type
   (backlight, RGB light strip, VialRGB).
-- [ ] **Flash the kb8knob firmware with lighting turned on.** `kb8knob/midi`'s
-  `vial.json` now declares `"lighting": "qmk_rgblight"`, and the firmware is built
-  (`fjgh_kb8knob_midi_vial.uf2` in vial-qmk), but not yet flashed and tried.
 - [ ] **Flash the kb16knob firmware with lighting turned on.** rev1, rev2 and rev3
   (including rev3's `vial_midi` keymap) now declare `"lighting": "qmk_rgblight"` in
   their `vial.json`, and the firmware is built (`fjgh_kb16knob_*.uf2` in vial-qmk). Flash
   them, then check the Lighting section appears.
+- [ ] **Check the LED colour order on the other fjgh keyboards.** kb8knob/midi showed
+  red as green and green as red: its `config.h` said `WS2812_BYTE_ORDER_RGB`, and its
+  LEDs are GRB. Changing it to `WS2812_BYTE_ORDER_GRB` fixed it (tested on the
+  keyboard). kb8knob/rev1, kb16knob rev1–3 and gauntletpro rev1–2 still say `_RGB`; set
+  red in the app on each and fix the ones that show green.
 - [ ] **Light strip effect numbers assume every effect is built in.** QMK numbers
   rgblight effects only among the ones the firmware enables, so on a keyboard that
   leaves some out, names after the gap are wrong (vial-gui has the same problem). The
@@ -35,6 +37,8 @@ done, and add new ones as they come up.
   redeploy automatically and pull requests get preview sites.
 - [ ] **Phase 3** (below): all features built. QMK settings, combos, tap dance and key
   overrides tested on a real keyboard; alt repeat keys wait for newer firmware (below).
+- [ ] **Test the MIDI piano on real hardware** (Phase 3.5): kb8knob/midi, with its six
+  chord keys.
 - [ ] **Test alt repeat keys on real hardware.** The fjgh firmware is an older Vial build
   without them, so it needs a firmware update from upstream vial-qmk first.
 
@@ -126,6 +130,26 @@ keys.
 
 These all use the dynamic entry commands (`CMD_VIAL_DYNAMIC_ENTRY_OP`), so they
 share one protocol module. Each feature can ship on its own.
+
+## Phase 3.5: MIDI piano
+
+For keyboards that play music. Asked for by the project's owner, who builds MIDI pads.
+
+Status: built; what changed is described in [MIDI.md](MIDI.md).
+
+- The MIDI tab of the key picker draws a piano instead of a grid of keycaps. Clicking
+  a piano key puts that note on the selected key.
+- The keyboard's chord keys (custom keycodes whose description lists notes, such as
+  "Acorde Do Mayor (C4 - E4 - G4)") are shown as chords, with their notes lit on the
+  piano.
+- Note names as C D E or Do Re Mi.
+- The other MIDI keys (octave, transpose, velocity, channel, pedals) grouped with
+  plain names.
+- MIDI keys are named after the note they play ("MIDI C4") everywhere.
+
+Later, if wanted: making new chords from the app. QMK has no chord keycodes, so this
+needs firmware support first; today chords are written into each keyboard's
+firmware.
 
 ## Phase 4: Desktop app
 

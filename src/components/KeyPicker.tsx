@@ -2,12 +2,15 @@
 import { Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { CombinedBuilder } from '@/components/CombinedBuilder'
+import { MidiPicker } from '@/components/MidiPicker'
 import { parseCombined } from '@/core/keycodes/builders'
 import type { KeycodeCatalog, KeycodeEntry } from '@/core/keycodes/catalog'
 import { pickerCategories } from '@/core/keycodes/categories'
 
 const MAX_RESULTS = 60
 const BUILDER_TITLE = 'Shortcuts & holds'
+/** Drawn as a piano by MidiPicker instead of a grid of keys. */
+const MIDI_TITLE = 'MIDI'
 
 /** A picker tab: a list of keys, or the builder for combined keys. */
 type Tab = { title: string; entries: KeycodeEntry[]; builder?: boolean }
@@ -72,7 +75,7 @@ export function KeyPicker({ catalog, current, onPick }: Props) {
         <div
           role="tablist"
           aria-label="Key categories"
-          className="-my-1 flex min-h-0 gap-1 overflow-x-auto py-1 md:my-0 md:grid md:grid-cols-2 md:content-start md:overflow-x-visible md:overflow-y-auto"
+          className="-my-1 flex min-h-0 gap-1 overflow-x-auto py-1 md:my-0 md:grid md:auto-rows-max md:grid-cols-2 md:content-start md:overflow-x-visible md:overflow-y-auto"
         >
           {categories.map((c, i) => {
             const active = !searching && tab === i
@@ -98,6 +101,8 @@ export function KeyPicker({ catalog, current, onPick }: Props) {
 
       {!searching && categories[tab]?.builder ? (
         <CombinedBuilder catalog={catalog} current={current} onPick={onPick} />
+      ) : !searching && categories[tab]?.title === MIDI_TITLE ? (
+        <MidiPicker catalog={catalog} current={current} disabled={disabled} onPick={onPick} />
       ) : entries.length === 0 ? (
         <p className="py-6 text-center text-ink-soft">No keys match “{query}”. Try a different word.</p>
       ) : (

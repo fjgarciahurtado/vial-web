@@ -7,6 +7,7 @@
  * per-keyboard filtering, plain-language names and search.
  */
 import { KEYWORDS, NAMES, layerKeyLegend, layerKeyName, maskedKeyLegend, maskedKeyName } from './friendly'
+import { midiKeyName, noteName, noteOfKeycode } from '../midi'
 
 export type KeycodeGroup =
   | 'special'
@@ -235,7 +236,10 @@ function withCustomName(entry: KeycodeEntry, custom?: CustomKeycode[] | null): K
 }
 
 function nameOf(entry: KeycodeEntry): string {
-  const named = NAMES[entry.id] ?? layerKeyName(entry.id)
+  const named =
+    NAMES[entry.id] ??
+    layerKeyName(entry.id) ??
+    (entry.group === 'midi' || entry.group === 'midi_advanced' ? midiKeyName(entry.id, entry.code) : undefined)
   if (named) return named
   if (entry.group === 'user' && entry.tooltip) return entry.tooltip
   // M0, M1... are counted from 1 for people: "Macro 1".
@@ -252,6 +256,9 @@ function nameOf(entry: KeycodeEntry): string {
 function legendOf(entry: KeycodeEntry): string[] {
   if (isMacroSlot(entry)) return ['Macro', String(entry.index! + 1)]
   if (isTapDanceSlot(entry)) return ['Tap dance', String(entry.index! + 1)]
+  // MIDI notes show the note they play at the normal octave, as the MIDI piano does.
+  const note = entry.group === 'midi' ? noteOfKeycode(entry.code) : null
+  if (note !== null) return ['MIDI', noteName(note)]
   return layerKeyLegend(entry.id) ?? (entry.label ? entry.label.split('\n') : [])
 }
 
