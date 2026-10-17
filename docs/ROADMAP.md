@@ -12,10 +12,6 @@ to that folder.
 Things that are known and not done yet, across phases. Remove an item when it is
 done, and add new ones as they come up.
 
-- [ ] **Light strip effect numbers assume every effect is built in.** QMK numbers
-  rgblight effects only among the ones the firmware enables, so on a keyboard that
-  leaves some out, names after the gap are wrong (vial-gui has the same problem). The
-  fjgh keyboards enable all of them, including Twinkle, so they are fine.
 - [ ] **Redeploy to Netlify and check the live site.** The first deploy's security
   policy blocked WebAssembly, so keyboards couldn't be opened; fixed in PR #3 and
   confirmed with a real keyboard through `npm run preview:netlify`, which uses the same
@@ -169,6 +165,11 @@ Pick these up when there is demand:
 - **Translations.** vial-gui wraps its text in `tr()`, so the strings can be
   reused as a starting point.
 - **Shareable layouts.** Share a keymap as a link or image.
+- **Light strip effect numbers for every firmware.** The app assumes every rgblight
+  effect is built in. QMK numbers effects only among the ones the firmware enables, so
+  on a keyboard that leaves some out, names after the gap are wrong (vial-gui has the
+  same problem). The fjgh keyboards enable all of them, including Twinkle, so they are
+  fine.
 - **Lighting on the other fjgh keyboards.** Only kb8knob/midi ships with LEDs for now.
   If kb16knob or gauntletpro ship with them:
   - Flash the kb16knob firmware with lighting turned on. rev1, rev2 and rev3 (including
