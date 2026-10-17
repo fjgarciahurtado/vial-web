@@ -28,6 +28,11 @@ const WIDE = 'w-full px-4 sm:px-6 lg:px-8'
 const NARROW = 'mx-auto w-full max-w-6xl px-6'
 /** A row with its middle item centred on the page, whatever the width of the items beside it. */
 const CENTRED_ROW = 'md:grid md:grid-cols-[1fr_auto_1fr]'
+/**
+ * The page below the header scrolls, and its scrollbar narrows it. The header keeps the
+ * same space free, so the Keys toolbar stays centred under the sections.
+ */
+const SAME_GUTTER = 'overflow-y-hidden [scrollbar-gutter:stable]'
 
 export default function App() {
   const keyboard = useApp((s) => s.keyboard)
@@ -40,7 +45,7 @@ export default function App() {
       {/* The sections sit in the exact middle, so the Keys toolbar lines up under them.
           On narrow screens they move to their own row, which scrolls sideways. */}
       <header
-        className={`flex flex-none flex-wrap items-center justify-between gap-x-4 gap-y-2 ${CENTRED_ROW} ${keyboard ? `${WIDE} py-3` : `${NARROW} py-5`}`}
+        className={`flex flex-none flex-wrap items-center justify-between gap-x-4 gap-y-2 ${CENTRED_ROW} ${keyboard ? `${WIDE} ${SAME_GUTTER} py-3` : `${NARROW} py-5`}`}
       >
         <span className="flex items-center gap-2 text-lg font-bold tracking-tight">
           <KeyboardIcon className="size-5" aria-hidden />
@@ -50,7 +55,7 @@ export default function App() {
         {keyboard && <ConnectedBadge />}
       </header>
       {keyboard ? (
-        <main className="min-h-0 flex-1 overflow-y-auto">
+        <main className="min-h-0 flex-1 overflow-y-auto [scrollbar-gutter:stable]">
           <div className={`${WIDE} h-full`}>{view === 'lighting' ? (
               <LightingView />
             ) : view === 'tester' ? (
@@ -386,7 +391,8 @@ function Editor() {
       <KeyPicker catalog={keyboard.catalog} current={code} onPick={assign} />
     </section>
 
-    <aside
+    <div
+      role="group"
       aria-label="Keyboard tools"
       className="flex flex-col gap-4 pb-10 xl:min-h-0 xl:overflow-y-auto xl:pb-4"
     >
@@ -401,7 +407,7 @@ function Editor() {
         disabled={busy}
         onChange={setLayoutChoice}
       />
-    </aside>
+    </div>
     </div>
     </div>
   )
