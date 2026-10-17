@@ -12,35 +12,12 @@ to that folder.
 Things that are known and not done yet, across phases. Remove an item when it is
 done, and add new ones as they come up.
 
-- [ ] **Test Phase 2 on real hardware.** Lighting (survives a replug after "Save
-  lighting"), the key tester, and saving macros were only tested against the demo
-  keyboard before being merged. Ideally test lighting on more than one lighting type
-  (backlight, RGB light strip, VialRGB).
-- [ ] **Flash the kb16knob firmware with lighting turned on.** rev1, rev2 and rev3
-  (including rev3's `vial_midi` keymap) now declare `"lighting": "qmk_rgblight"` in
-  their `vial.json`, and the firmware is built (`fjgh_kb16knob_*.uf2` in vial-qmk). Flash
-  them, then check the Lighting section appears.
-- [ ] **Check the LED colour order on the other fjgh keyboards.** kb8knob/midi showed
-  red as green and green as red: its `config.h` said `WS2812_BYTE_ORDER_RGB`, and its
-  LEDs are GRB. Changing it to `WS2812_BYTE_ORDER_GRB` fixed it (tested on the
-  keyboard). kb8knob/rev1, kb16knob rev1–3 and gauntletpro rev1–2 still say `_RGB`; set
-  red in the app on each and fix the ones that show green.
-- [ ] **Light strip effect numbers assume every effect is built in.** QMK numbers
-  rgblight effects only among the ones the firmware enables, so on a keyboard that
-  leaves some out, names after the gap are wrong (vial-gui has the same problem). The
-  fjgh keyboards enable all of them, including Twinkle, so they are fine.
 - [ ] **Redeploy to Netlify and check the live site.** The first deploy's security
   policy blocked WebAssembly, so keyboards couldn't be opened; fixed in PR #3 and
   confirmed with a real keyboard through `npm run preview:netlify`, which uses the same
   headers. Waiting for Netlify credits to redeploy. If the site was uploaded by hand,
   connect it to the repository instead (see [DEPLOY.md](DEPLOY.md)) so merges to `main`
   redeploy automatically and pull requests get preview sites.
-- [ ] **Phase 3** (below): all features built. QMK settings, combos, tap dance and key
-  overrides tested on a real keyboard; alt repeat keys wait for newer firmware (below).
-- [ ] **Test the MIDI piano on real hardware** (Phase 3.5): kb8knob/midi, with its six
-  chord keys.
-- [ ] **Test alt repeat keys on real hardware.** The fjgh firmware is an older Vial build
-  without them, so it needs a firmware update from upstream vial-qmk first.
 
 ## Phase 0: Foundation (done)
 
@@ -93,9 +70,8 @@ see it work in a text editor, and restore a backup, without reading any docs.
 
 Features that non-experts ask for after remapping.
 
-Status: built, tested against the demo keyboard and merged to `main` (PR #1); what
-changed is described in [PHASE-2.md](PHASE-2.md). Still to do: hardware testing (see
-Open issues).
+Status: done, tested on real hardware and merged to `main` (PR #1); what changed is
+described in [PHASE-2.md](PHASE-2.md).
 
 - **Layer keys made understandable.** Friendly builders for the layer and
   modifier keycodes (MO, TG, TO, LT, mod-tap) with one-sentence explanations,
@@ -117,9 +93,8 @@ keyboards with different lighting systems.
 
 Hidden behind an "Advanced" section, each with a short explanation and example.
 
-Status: in progress, one feature per pull request; what changed is described in
-[PHASE-3.md](PHASE-3.md). Done: QMK settings, combos, tap dance, key overrides, alt repeat
-keys.
+Status: done, every feature tested on real hardware; what changed is described in
+[PHASE-3.md](PHASE-3.md).
 
 - **Tap dance** (`editor/tap_dance.py`, `protocol/tap_dance.py`). Done.
 - **Combos** (`editor/combos.py`, `protocol/combo.py`). Done.
@@ -135,7 +110,8 @@ share one protocol module. Each feature can ship on its own.
 
 For keyboards that play music. Asked for by the project's owner, who builds MIDI pads.
 
-Status: built; what changed is described in [MIDI.md](MIDI.md).
+Status: done, tested on kb8knob/midi with its six chord keys; what changed is described
+in [MIDI.md](MIDI.md).
 
 - The MIDI tab of the key picker draws a piano instead of a grid of keycaps. Clicking
   a piano key puts that note on the selected key.
@@ -189,6 +165,21 @@ Pick these up when there is demand:
 - **Translations.** vial-gui wraps its text in `tr()`, so the strings can be
   reused as a starting point.
 - **Shareable layouts.** Share a keymap as a link or image.
+- **Light strip effect numbers for every firmware.** The app assumes every rgblight
+  effect is built in. QMK numbers effects only among the ones the firmware enables, so
+  on a keyboard that leaves some out, names after the gap are wrong (vial-gui has the
+  same problem). The fjgh keyboards enable all of them, including Twinkle, so they are
+  fine.
+- **Lighting on the other fjgh keyboards.** Only kb8knob/midi ships with LEDs for now.
+  If kb16knob or gauntletpro ship with them:
+  - Flash the kb16knob firmware with lighting turned on. rev1, rev2 and rev3 (including
+    rev3's `vial_midi` keymap) already declare `"lighting": "qmk_rgblight"` in their
+    `vial.json`, and the firmware is built (`fjgh_kb16knob_*.uf2` in vial-qmk). Check
+    that the Lighting section appears.
+  - Check the LED colour order. kb8knob/midi showed red as green until its `config.h`
+    changed from `WS2812_BYTE_ORDER_RGB` to `WS2812_BYTE_ORDER_GRB`. kb8knob/rev1,
+    kb16knob rev1–3 and gauntletpro rev1–2 still say `_RGB`. Set red in the app and fix
+    any board that shows green.
 
 ## Cross-cutting rules
 

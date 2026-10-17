@@ -124,5 +124,4 @@ settings in a backup are still left untouched and reported to the user.
   simulator in `src/core/fake-keyboard.ts`.
 - 27 browser tests (Playwright) on the demo keyboard, covering each feature
   above.
-- Not yet tested on real hardware: lighting on each of the four lighting types,
-  the key tester, and saving macros.
+- Tested on real hardware: lighting, the key tester and saving macros.

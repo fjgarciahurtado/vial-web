@@ -212,6 +212,6 @@ with `DYNAMIC_VIAL_ALT_REPEAT_KEY_GET` (0x07) and `DYNAMIC_VIAL_ALT_REPEAT_KEY_S
 little-endian 16-bit numbers, then the allowed modifiers and the option bits
 (default 0, both ways 1, ignore sides 2, on 3). How the keyboard picks a pair is
 in `get_alt_repeat_key_keycode_user()` in upstream vial-qmk `quantum/vial.c`;
-the explanations in the app follow it. The fjgh keyboards' firmware predates
-this feature, so their Advanced section has no Alt Repeat tab until they are
-rebuilt on a newer vial-qmk.
+the explanations in the app follow it. Keyboards whose firmware predates this
+feature have no Alt Repeat tab until they are rebuilt on a newer vial-qmk.
+Tested on real hardware.
