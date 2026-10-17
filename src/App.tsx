@@ -20,6 +20,15 @@ import type { LoadedKeyboard } from '@/core/keyboard'
 import { isWebHidSupported } from '@/core/webhid-transport'
 import { useApp } from '@/store'
 
+/**
+ * With a keyboard open the page grows with the window, so the
+ * keyboard and the key picker use the space. The welcome page stays narrow to read well.
+ */
+const WIDE = 'w-full px-4 sm:px-6 lg:px-8'
+const NARROW = 'mx-auto w-full max-w-6xl px-6'
+/** A row with its middle item centred on the page, whatever the width of the items beside it. */
+const CENTRED_ROW = 'md:grid md:grid-cols-[1fr_auto_1fr]'
+
 export default function App() {
   const keyboard = useApp((s) => s.keyboard)
   const view = useApp((s) => s.view)
@@ -28,7 +37,11 @@ export default function App() {
     // With a keyboard open, the page fills the window exactly: the keyboard and the
     // picker share the screen and the picker scrolls inside itself.
     <div className={keyboard ? 'flex h-svh flex-col' : 'min-h-svh'}>
-      <header className={`mx-auto flex w-full max-w-6xl flex-none items-center justify-between px-6 ${keyboard ? 'py-3' : 'py-5'}`}>
+      {/* The sections sit in the exact middle, so the Keys toolbar lines up under them.
+          On narrow screens they move to their own row, which scrolls sideways. */}
+      <header
+        className={`flex flex-none flex-wrap items-center justify-between gap-x-4 gap-y-2 ${CENTRED_ROW} ${keyboard ? `${WIDE} py-3` : `${NARROW} py-5`}`}
+      >
         <span className="flex items-center gap-2 text-lg font-bold tracking-tight">
           <KeyboardIcon className="size-5" aria-hidden />
           Vial
@@ -38,7 +51,7 @@ export default function App() {
       </header>
       {keyboard ? (
         <main className="min-h-0 flex-1 overflow-y-auto">
-          <div className="mx-auto h-full max-w-6xl px-6">{view === 'lighting' ? (
+          <div className={`${WIDE} h-full`}>{view === 'lighting' ? (
               <LightingView />
             ) : view === 'tester' ? (
               <KeyTester />
@@ -51,7 +64,7 @@ export default function App() {
             )}</div>
         </main>
       ) : (
-        <main className="mx-auto max-w-6xl px-6 pb-16">
+        <main className={`${NARROW} pb-16`}>
           <Welcome />
         </main>
       )}
@@ -162,7 +175,7 @@ function useDemoPreview(): LoadedKeyboard | null {
 function ConnectedBadge() {
   const { keyboard, isDemo, disconnect, unlocked, lock } = useApp()
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-3 justify-self-end">
       {unlocked && (
         <Button variant="outline" size="sm" onClick={lock} title="The keyboard accepts risky changes until you lock it or unplug it">
           <LockOpen aria-hidden />
@@ -192,13 +205,16 @@ function ViewNav() {
   ]
   if (views.length < 2) return null
   return (
-    <nav aria-label="Sections" className="flex gap-1 rounded-xl bg-panel p-1">
+    <nav
+      aria-label="Sections"
+      className="order-last flex w-full gap-1 overflow-x-auto rounded-xl bg-panel p-1 md:order-none md:w-auto"
+    >
       {views.map((v) => (
         <button
           key={v.id}
           aria-current={view === v.id ? 'page' : undefined}
           onClick={() => setView(v.id)}
-          className={`rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-pick ${
+          className={`shrink-0 rounded-lg px-4 py-1.5 text-sm font-semibold whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-pick ${
             view === v.id ? 'bg-ink text-desk' : 'text-ink-soft hover:text-ink'
           }`}
         >
@@ -222,13 +238,16 @@ function LightingView() {
         encoderCodes={keyboard.encoderKeymap[0]}
         layoutChoices={keyboard.layoutChoices}
         catalog={keyboard.catalog}
-        className="max-h-[32svh] w-full flex-none"
+        className="max-h-[32svh] w-full flex-none [@media(min-height:62rem)]:max-h-[40svh]"
         glow={lightingGlow(keyboard.lighting)}
       />
       <p className="min-h-6 w-full" aria-live="polite">
         {notice}
       </p>
-      <LightingPanel />
+      {/* Sliders wider than this are harder to set, so the controls stop growing here. */}
+      <div className="w-full max-w-7xl">
+        <LightingPanel />
+      </div>
     </div>
   )
 }
@@ -307,9 +326,9 @@ function Editor() {
   const what = selected?.kind === 'encoder' ? `Turning the knob ${selected.direction ? 'right' : 'left'}` : 'This key'
 
   return (
-    <>
-    <section className="flex h-full min-h-[34rem] flex-col items-center gap-3 pb-4">
-      <div className="flex w-full flex-wrap items-center justify-between gap-x-6 gap-y-2">
+    <div className="flex h-full flex-col gap-3">
+      {/* The layer and undo toolbar sits right under the sections in the header. */}
+      <div className={`flex flex-none flex-wrap items-center justify-between gap-x-6 gap-y-2 ${CENTRED_ROW}`}>
         <h1 className="text-2xl font-bold tracking-tight">{keyboard.name}</h1>
         <div className="flex flex-wrap items-center gap-2">
           <div role="tablist" aria-label="Layers" className="flex gap-1 rounded-xl bg-panel p-1">
@@ -329,15 +348,19 @@ function Editor() {
           </div>
           <Button variant="outline" onClick={undo} disabled={!canUndo || busy} title="Undo (Ctrl+Z)">
             <Undo2 aria-hidden />
-            Undo change
+            <span className="max-sm:sr-only">Undo change</span>
           </Button>
           <Button variant="outline" onClick={redo} disabled={!canRedo || busy} title="Redo (Ctrl+Y)">
             <Redo2 aria-hidden />
-            Redo change
+            <span className="max-sm:sr-only">Redo change</span>
           </Button>
         </div>
       </div>
 
+    {/* Wide screens: the keyboard and picker fill the window, with layout and backup in a
+        column beside them. Narrower screens: that column moves below, one scroll away. */}
+    <div className="grid min-h-0 flex-1 grid-rows-[max(30rem,100%)_auto] gap-x-6 xl:grid-cols-[minmax(0,1fr)_20rem] xl:grid-rows-[max(30rem,100%)]">
+    <section className="flex min-h-0 min-w-0 flex-col items-center gap-3 pb-4">
       <KeyboardView
         keys={keyboard.keys}
         encoders={keyboard.encoders}
@@ -347,7 +370,7 @@ function Editor() {
         catalog={keyboard.catalog}
         selected={selected}
         onSelect={select}
-        className="max-h-[38svh] w-full flex-none"
+        className="max-h-[38svh] w-full flex-none [@media(min-height:62rem)]:max-h-[46svh]"
         glow={lightingGlow(keyboard.lighting)}
       />
 
@@ -363,7 +386,14 @@ function Editor() {
       <KeyPicker catalog={keyboard.catalog} current={code} onPick={assign} />
     </section>
 
-    <div className="flex flex-col gap-4 pb-10">
+    <aside
+      aria-label="Keyboard tools"
+      className="flex flex-col gap-4 pb-10 xl:min-h-0 xl:overflow-y-auto xl:pb-4"
+    >
+      <div className="flex w-full flex-wrap items-center justify-between gap-3 rounded-2xl bg-panel px-4 py-3 sm:px-5 xl:flex-col xl:items-start">
+        <p className="text-ink-soft">Keep a copy of your keymap, or bring back an earlier one. Files also work in Vial.</p>
+        <BackupControls />
+      </div>
 
       <LayoutOptions
         options={keyboard.layoutOptions}
@@ -371,13 +401,9 @@ function Editor() {
         disabled={busy}
         onChange={setLayoutChoice}
       />
-
-      <div className="flex w-full flex-wrap items-center justify-between gap-3 rounded-2xl bg-panel px-4 py-3 sm:px-5">
-        <p className="text-ink-soft">Keep a copy of your keymap, or bring back an earlier one. Files also work in Vial.</p>
-        <BackupControls />
-      </div>
+    </aside>
     </div>
-    </>
+    </div>
   )
 }
 
