@@ -12,10 +12,6 @@ to that folder.
 Things that are known and not done yet, across phases. Remove an item when it is
 done, and add new ones as they come up.
 
-- [ ] **Test Phase 2 on real hardware.** Lighting (survives a replug after "Save
-  lighting"), the key tester, and saving macros were only tested against the demo
-  keyboard before being merged. Ideally test lighting on more than one lighting type
-  (backlight, RGB light strip, VialRGB).
 - [ ] **Light strip effect numbers assume every effect is built in.** QMK numbers
   rgblight effects only among the ones the firmware enables, so on a keyboard that
   leaves some out, names after the gap are wrong (vial-gui has the same problem). The
@@ -26,10 +22,6 @@ done, and add new ones as they come up.
   headers. Waiting for Netlify credits to redeploy. If the site was uploaded by hand,
   connect it to the repository instead (see [DEPLOY.md](DEPLOY.md)) so merges to `main`
   redeploy automatically and pull requests get preview sites.
-- [ ] **Phase 3** (below): all features built. QMK settings, combos, tap dance and key
-  overrides tested on a real keyboard; alt repeat keys wait for newer firmware (below).
-- [ ] **Test alt repeat keys on real hardware.** The fjgh firmware is an older Vial build
-  without them, so it needs a firmware update from upstream vial-qmk first.
 
 ## Phase 0: Foundation (done)
 
@@ -82,9 +74,8 @@ see it work in a text editor, and restore a backup, without reading any docs.
 
 Features that non-experts ask for after remapping.
 
-Status: built, tested against the demo keyboard and merged to `main` (PR #1); what
-changed is described in [PHASE-2.md](PHASE-2.md). Still to do: hardware testing (see
-Open issues).
+Status: done, tested on real hardware and merged to `main` (PR #1); what changed is
+described in [PHASE-2.md](PHASE-2.md).
 
 - **Layer keys made understandable.** Friendly builders for the layer and
   modifier keycodes (MO, TG, TO, LT, mod-tap) with one-sentence explanations,
@@ -106,9 +97,8 @@ keyboards with different lighting systems.
 
 Hidden behind an "Advanced" section, each with a short explanation and example.
 
-Status: in progress, one feature per pull request; what changed is described in
-[PHASE-3.md](PHASE-3.md). Done: QMK settings, combos, tap dance, key overrides, alt repeat
-keys.
+Status: done, every feature tested on real hardware; what changed is described in
+[PHASE-3.md](PHASE-3.md).
 
 - **Tap dance** (`editor/tap_dance.py`, `protocol/tap_dance.py`). Done.
 - **Combos** (`editor/combos.py`, `protocol/combo.py`). Done.
