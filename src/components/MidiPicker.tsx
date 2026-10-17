@@ -10,10 +10,10 @@ import {
   noteOfKeycode,
   PIANO_FIRST_NOTE,
   PIANO_LAST_NOTE,
-  type NoteNames,
+  type NoteStyle,
 } from '@/core/midi'
+import { useApp } from '@/store'
 
-const NAMES_KEY = 'vial-web:note-names'
 /** Width of one white key, in rem. Black keys sit across the line between two white keys. */
 const WHITE = 2.25
 const BLACK = 1.4
@@ -31,7 +31,8 @@ interface Props {
  * keys in groups with plain names.
  */
 export function MidiPicker({ catalog, current, disabled, onPick }: Props) {
-  const [names, setNames] = useState<NoteNames>(readNames)
+  const style = useApp((s) => s.noteStyle)
+  const setStyle = useApp((s) => s.setNoteStyle)
   const [preview, setPreview] = useState<number[] | null>(null)
   const chords = useMemo(() => chordKeys(catalog), [catalog])
   const currentNote = current === null ? null : noteOfKeycode(current)
@@ -39,44 +40,37 @@ export function MidiPicker({ catalog, current, disabled, onPick }: Props) {
   const lit = new Set(preview ?? currentChord?.notes ?? [])
   const offPiano = [...lit].filter((n) => n < PIANO_FIRST_NOTE || n > PIANO_LAST_NOTE)
 
-  const chooseNames = (next: NoteNames) => {
-    setNames(next)
-    try {
-      localStorage.setItem(NAMES_KEY, next)
-    } catch {
-      // Private windows may refuse storage; the choice then lasts until the page closes.
-    }
-  }
+  const name = (note: number) => noteName(note, style)
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-1">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-ink-soft">
           {currentChord
-            ? `This key plays the chord ${currentChord.name}: ${currentChord.notes.map((n) => noteName(n, names)).join(', ')}.`
+            ? `This key plays the chord ${currentChord.name}: ${currentChord.notes.map(name).join(', ')}.`
             : currentNote !== null
-              ? `This key plays ${noteName(currentNote, names)}. Click a piano key to change it.`
+              ? `This key plays ${name(currentNote)}. Click a piano key to change it.`
               : 'Click a piano key to make this key play that note.'}
         </p>
-        <div role="group" aria-label="Note names" className="flex gap-1 rounded-lg bg-field p-0.5 text-sm">
-          {(
-            [
+        <div className="flex flex-wrap gap-2">
+          <Toggle
+            label="Note names"
+            options={[
               ['letters', 'C D E'],
               ['solfege', 'Do Re Mi'],
-            ] as const
-          ).map(([value, label]) => (
-            <button
-              key={value}
-              type="button"
-              aria-pressed={names === value}
-              onClick={() => chooseNames(value)}
-              className={`rounded-md px-2.5 py-1 font-semibold focus-visible:outline-2 focus-visible:outline-pick ${
-                names === value ? 'bg-ink text-desk' : 'text-ink-soft hover:text-ink'
-              }`}
-            >
-              {label}
-            </button>
-          ))}
+            ]}
+            value={style.names}
+            onChange={(names) => setStyle({ ...style, names })}
+          />
+          <Toggle
+            label="Middle C"
+            options={[
+              ['C4', `Middle C is ${style.names === 'solfege' ? 'Do4' : 'C4'}`],
+              ['C3', `Middle C is ${style.names === 'solfege' ? 'Do3' : 'C3'}`],
+            ]}
+            value={style.middleC}
+            onChange={(middleC) => setStyle({ ...style, middleC })}
+          />
         </div>
       </div>
 
@@ -101,7 +95,7 @@ export function MidiPicker({ catalog, current, disabled, onPick }: Props) {
                 }`}
               >
                 <span className="font-semibold">{chord.name}</span>
-                <span className="text-xs opacity-80">{chord.notes.map((n) => noteName(n, names)).join(' · ')}</span>
+                <span className="text-xs opacity-80">{chord.notes.map(name).join(' · ')}</span>
               </button>
             ))}
           </div>
@@ -114,12 +108,12 @@ export function MidiPicker({ catalog, current, disabled, onPick }: Props) {
 
       {offPiano.length > 0 && (
         <p className="text-sm font-semibold">
-          {offPiano.map((n) => noteName(n, names)).join(', ')} {offPiano.length === 1 ? 'is' : 'are'} outside the piano
-          below, which shows the notes from {noteName(PIANO_FIRST_NOTE, names)} to {noteName(PIANO_LAST_NOTE, names)}.
+          {offPiano.map(name).join(', ')} {offPiano.length === 1 ? 'is' : 'are'} outside the piano below, which shows
+          the notes from {name(PIANO_FIRST_NOTE)} to {name(PIANO_LAST_NOTE)}.
         </p>
       )}
 
-      <Piano names={names} currentNote={currentNote} lit={lit} disabled={disabled} onPick={(note) => onPick(keycodeOfNote(note))} />
+      <Piano style={style} currentNote={currentNote} lit={lit} disabled={disabled} onPick={(note) => onPick(keycodeOfNote(note))} />
 
       {MIDI_CONTROL_GROUPS.map((group) => {
         const keys = group.keys.flatMap((k) => {
@@ -155,13 +149,13 @@ export function MidiPicker({ catalog, current, disabled, onPick }: Props) {
 }
 
 function Piano({
-  names,
+  style: noteStyle,
   currentNote,
   lit,
   disabled,
   onPick,
 }: {
-  names: NoteNames
+  style: NoteStyle
   currentNote: number | null
   lit: Set<number>
   disabled: boolean
@@ -199,13 +193,13 @@ function Piano({
               data-note={note}
               disabled={disabled}
               aria-pressed={note === currentNote}
-              aria-label={`Note ${noteName(note, names)}`}
+              aria-label={`Note ${noteName(note, noteStyle)}`}
               onClick={() => onPick(note)}
               style={{ left: `${i * WHITE}rem`, width: `${WHITE}rem` }}
               className={`absolute top-0 flex h-36 flex-col items-center justify-end rounded-b-md border border-b-4 pb-1.5 text-[10px] font-semibold focus-visible:z-20 focus-visible:outline-2 focus-visible:outline-pick disabled:opacity-60 ${style(note)}`}
             >
               {/* Every key is named; C keys, the chosen note and chord notes also show the octave. */}
-              {note % 12 === 0 || note === currentNote || lit.has(note) ? noteName(note, names) : pitchName(note, names)}
+              {note % 12 === 0 || note === currentNote || lit.has(note) ? noteName(note, noteStyle) : pitchName(note, noteStyle)}
             </button>
           ))}
           {notes.filter(isBlackKey).map((note) => {
@@ -217,33 +211,56 @@ function Piano({
                 data-note={note}
                 disabled={disabled}
                 aria-pressed={note === currentNote}
-                aria-label={`Note ${noteName(note, names)}`}
+                aria-label={`Note ${noteName(note, noteStyle)}`}
                 onClick={() => onPick(note)}
                 style={{ left: `${whitesBefore * WHITE - BLACK / 2}rem`, width: `${BLACK}rem` }}
                 className={`absolute top-0 z-10 flex h-22 items-end justify-center rounded-b-md border border-b-4 pb-1 text-[9px] font-semibold focus-visible:outline-2 focus-visible:outline-pick disabled:opacity-60 ${style(note)}`}
               >
-                {pitchName(note, names)}
+                {pitchName(note, noteStyle)}
               </button>
             )
           })}
         </div>
       </div>
       <p className="text-sm text-ink-soft">
-        Notes shown at the normal octave setting. Octave and transpose keys below move every note while you play.
+        Notes shown at the normal octave setting. Octave and transpose keys below move every note while you play. If
+        your music app names notes an octave lower or higher, change where middle C is above.
       </p>
     </section>
   )
 }
 
-/** "C#" or "Do#": the note's name without its octave. */
-function pitchName(note: number, names: NoteNames): string {
-  return noteName(note, names).replace(/-?\d+$/, '')
+function Toggle<T extends string>({
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  label: string
+  options: [T, string][]
+  value: T
+  onChange(value: T): void
+}) {
+  return (
+    <div role="group" aria-label={label} className="flex gap-1 rounded-lg bg-field p-0.5 text-sm">
+      {options.map(([option, text]) => (
+        <button
+          key={option}
+          type="button"
+          aria-pressed={value === option}
+          onClick={() => onChange(option)}
+          className={`rounded-md px-2.5 py-1 font-semibold focus-visible:outline-2 focus-visible:outline-pick ${
+            value === option ? 'bg-ink text-desk' : 'text-ink-soft hover:text-ink'
+          }`}
+        >
+          {text}
+        </button>
+      ))}
+    </div>
+  )
 }
 
-function readNames(): NoteNames {
-  try {
-    return localStorage.getItem(NAMES_KEY) === 'solfege' ? 'solfege' : 'letters'
-  } catch {
-    return 'letters'
-  }
+/** "C#" or "Do#": the note's name without its octave. */
+function pitchName(note: number, style: NoteStyle): string {
+  return noteName(note, style).replace(/-?\d+$/, '')
 }

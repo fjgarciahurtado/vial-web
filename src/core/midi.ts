@@ -7,7 +7,8 @@
  *
  * QMK has no chord keycodes. Keyboards add their own as custom keycodes, and
  * vial-web finds them by the notes written in their description in vial.json,
- * for example "Acorde Do Mayor (C4 - E4 - G4)".
+ * for example "Acorde Do Mayor (C4 - E4 - G4)". Those notes are always read with 60 as
+ * C4, whatever note naming the person picked, as the fjgh keyboards write them.
  */
 import type { KeycodeCatalog } from './keycodes/catalog'
 
@@ -24,6 +25,24 @@ const SOLFEGE = ['Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La
 
 export type NoteNames = 'letters' | 'solfege'
 
+/**
+ * How notes are named. Middle C (MIDI 60) is C4 in scientific pitch notation, and C3 in
+ * Yamaha, Ableton and FL Studio, so people pick the one their music software uses.
+ */
+export interface NoteStyle {
+  names: NoteNames
+  middleC: 'C4' | 'C3'
+}
+
+export const DEFAULT_NOTE_STYLE: NoteStyle = { names: 'letters', middleC: 'C4' }
+
+let noteStyle = DEFAULT_NOTE_STYLE
+
+/** Sets how notes are named across the app, including keycaps and key names. */
+export function setNoteStyle(style: NoteStyle): void {
+  noteStyle = style
+}
+
 /** The MIDI note a note key plays at the default octave, or null for other keys. */
 export function noteOfKeycode(code: number): number | null {
   const offset = code - MI_C
@@ -34,9 +53,10 @@ export function keycodeOfNote(note: number): number {
   return MI_C + note - PIANO_FIRST_NOTE
 }
 
-/** "C4", or "Do4" in Do Re Mi. Octaves follow the usual numbering: 60 is C4. */
-export function noteName(note: number, names: NoteNames = 'letters'): string {
-  return `${(names === 'solfege' ? SOLFEGE : LETTERS)[note % 12]}${Math.floor(note / 12) - 1}`
+/** "C4", or "Do4" in Do Re Mi, for MIDI note 60 (or "C3" when middle C is C3). */
+export function noteName(note: number, style: NoteStyle = noteStyle): string {
+  const octave = Math.floor(note / 12) - (style.middleC === 'C3' ? 2 : 1)
+  return `${(style.names === 'solfege' ? SOLFEGE : LETTERS)[note % 12]}${octave}`
 }
 
 export function isBlackKey(note: number): boolean {
@@ -122,7 +142,7 @@ export function midiKeyName(id: string, code: number): string | undefined {
 export const MIDI_CONTROL_GROUPS: MidiControlGroup[] = [
   {
     title: 'Octave',
-    help: 'Moves every note key up or down by whole octaves. +2 is the normal setting, where the piano above starts at C3.',
+    help: 'Moves every note key up or down by whole octaves. +2 is the normal setting, where the piano above starts.',
     keys: [
       { id: 'MI_OCTD', label: 'Octave down' },
       { id: 'MI_OCTU', label: 'Octave up' },

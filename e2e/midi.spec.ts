@@ -55,6 +55,26 @@ test('note names in Do Re Mi', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Do Re Mi' })).toHaveAttribute('aria-pressed', 'true')
 })
 
+test('middle C can be named C3, as many music apps do', async ({ page }) => {
+  const piano = page.getByRole('group', { name: 'Notes' })
+  await piano.getByRole('button', { name: 'Note C4' }).click()
+  await expect(key(page, 'MIDI C4')).toBeVisible()
+
+  await page.getByRole('button', { name: 'Middle C is C3' }).click()
+  // The same note keeps its place but is named an octave lower, on the piano and on the keycap.
+  await expect(piano.getByRole('button', { name: 'Note C3' })).toHaveAttribute('aria-pressed', 'true')
+  await expect(key(page, 'MIDI C3')).toBeVisible()
+  // Chords still play the notes written in their description.
+  await page.getByRole('region', { name: 'Chords' }).getByRole('button', { name: /^Am/ }).hover()
+  await expect(piano.getByRole('button', { name: 'Note A2' })).toHaveText('A2')
+
+  await page.reload()
+  await page.getByRole('button', { name: 'Try a demo keyboard' }).click()
+  await key(page, 'Q').click()
+  await picker(page).getByRole('tab', { name: 'MIDI' }).click()
+  await expect(page.getByRole('button', { name: 'Middle C is C3' })).toHaveAttribute('aria-pressed', 'true')
+})
+
 test('other MIDI keys have plain names', async ({ page }) => {
   await page.getByRole('region', { name: 'Pedals and effects' }).getByRole('button', { name: 'Sustain pedal' }).click()
   await expect(page.getByText('Saved. This key is now MIDI Sustain pedal.')).toBeVisible()

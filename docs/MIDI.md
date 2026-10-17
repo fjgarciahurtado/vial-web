@@ -11,12 +11,15 @@ shows, from top to bottom:
 
 - **What the key plays now**: "This key plays C4", or "This key plays the chord
   Am: A3, C4, E4".
-- **Note names**: **C D E** or **Do Re Mi**. The choice is remembered in the
-  browser.
+- **Note names**: **C D E** or **Do Re Mi**, and **Middle C is C4** or **Middle C
+  is C3**. Music software disagrees on octave numbers: MIDI note 60 is C4 in most
+  references and C3 in Yamaha, Ableton and FL Studio, so people pick the one their
+  software uses. Both choices apply everywhere notes are named, keycaps included,
+  and are remembered in the browser.
 - **Chords on this keyboard**, when the keyboard has chord keys. Each shows its
   name and notes. Pointing at a chord (or tabbing to it) lights its notes on the
   piano in green; clicking it puts the chord on the key.
-- **The piano**: six octaves, C3 to B8, the notes the MIDI note keys play at the
+- **The piano**: six octaves, C3 to B8 (C2 to B7 when middle C is C3), the notes the MIDI note keys play at the
   normal octave setting. It scrolls sideways and opens on the key's note (or
   middle C). The key's note is blue. C keys and lit keys show their names.
   Clicking a piano key puts that note on the key.
@@ -35,14 +38,17 @@ note, so the keyboard drawing matches the piano.
 - **Notes.** QMK plays `12 × octave + offset + transpose` for a note key
   (`midi_compute_note()` in `quantum/process_keycode/process_midi.c`). The default
   octave is `MI_OCT_2`, which is octave 4, so `MI_C` is MIDI note 48 (C3) and the 72
-  note keys run to B8. Note names use the common numbering where 60 is C4 (middle C).
+  note keys run to B8. Note names use the common numbering where 60 is C4 (middle C),
+  or 60 as C3 when the person picks that. `setNoteStyle()` sets the naming for the
+  whole app; the store calls it and saves the choice.
 - **Chords.** QMK has no chord keycodes. A keyboard adds them as custom keycodes in
   its firmware, and vial-web recognises them from the description in vial.json:
   a custom keycode is a chord when its `title` has a part in brackets, or is as a
   whole, made of nothing but two or more notes, such as
   `"Acorde Do Mayor (C4 - E4 - G4)"` or `"Sol3 Si3 Re4"`. Letter names are capitals
   (C, F#, Bb), so ordinary text like "Ctrl+F1 or F2" isn't taken for a chord; Do Re
-  Mi names (Do, Fa#, Sol) may be in any case. Chord notes are absolute MIDI notes,
+  Mi names (Do, Fa#, Sol) may be in any case. Descriptions are always read with 60
+  as C4, whichever middle C the person picked. Chord notes are absolute MIDI notes,
   as the firmware sends them. Notes outside the piano are named in a line above it.
 - **Controls.** `MIDI_CONTROL_GROUPS` lists every non-note MIDI key with a plain
   name; a test checks none is missing.
@@ -63,4 +69,4 @@ To have chord keys show up as chords, write their notes in the custom keycode's
 ```
 
 The firmware still has to play those notes when the key is pressed; the title only
-tells vial-web which notes they are.
+tells vial-web which notes they are. Write them with 60 as C4 (middle C).

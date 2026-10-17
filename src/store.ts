@@ -12,6 +12,7 @@ import { loadKeyboard, type LoadedKeyboard } from './core/keyboard'
 import { KeymapEditor, type Target } from './core/keymap-editor'
 import { packLayoutChoices, unpackLayoutChoices } from './core/layout'
 import { LightingController, type LightingState } from './core/lighting'
+import { DEFAULT_NOTE_STYLE, setNoteStyle as setCoreNoteStyle, type NoteStyle } from './core/midi'
 import { readQmkSettings, withFieldValue, writeQmkSettings, type QmkSettingValues, type SettingField } from './core/qmk-settings'
 import type { HidTransport } from './core/transport'
 import { unlockKeyboard } from './core/unlock'
@@ -128,7 +129,29 @@ interface AppState {
   setKeyOverride(index: number, change: (current: KeyOverride) => KeyOverride): Promise<boolean>
   /** Like setKeyOverride, for alt repeat keys. */
   setAltRepeat(index: number, change: (current: AltRepeat) => AltRepeat): Promise<boolean>
+  /** How notes are named everywhere: C D E or Do Re Mi, and whether middle C is C4 or C3. */
+  noteStyle: NoteStyle
+  setNoteStyle(style: NoteStyle): void
 }
+
+const NOTE_STYLE_KEY = 'vial-web:note-style'
+
+/** The remembered note style. Earlier versions saved only C D E or Do Re Mi, under another name. */
+function readNoteStyle(): NoteStyle {
+  try {
+    const saved = JSON.parse(localStorage.getItem(NOTE_STYLE_KEY) ?? 'null') as Partial<NoteStyle> | null
+    const names = saved?.names ?? localStorage.getItem('vial-web:note-names')
+    return {
+      names: names === 'solfege' ? 'solfege' : 'letters',
+      middleC: saved?.middleC === 'C3' ? 'C3' : 'C4',
+    }
+  } catch {
+    return DEFAULT_NOTE_STYLE
+  }
+}
+
+const initialNoteStyle = readNoteStyle()
+setCoreNoteStyle(initialNoteStyle)
 
 export const useApp = create<AppState>((set, get) => {
   /** Runs one keymap change at a time and copies the result into state. */
@@ -476,6 +499,7 @@ export const useApp = create<AppState>((set, get) => {
   return {
     status: 'idle',
     error: null,
+    noteStyle: initialNoteStyle,
     view: 'keys',
     lights: null,
     demo: null,
@@ -628,6 +652,17 @@ export const useApp = create<AppState>((set, get) => {
 
     setView(view) {
       set({ view, notice: null })
+    },
+
+    setNoteStyle(noteStyle) {
+      setCoreNoteStyle(noteStyle)
+      try {
+        localStorage.setItem(NOTE_STYLE_KEY, JSON.stringify(noteStyle))
+      } catch {
+        // Private windows may refuse storage; the choice then lasts until the page closes.
+      }
+      // Keycaps and key names read the style when drawn, so changing state redraws them.
+      set({ noteStyle })
     },
 
     setLighting(next) {

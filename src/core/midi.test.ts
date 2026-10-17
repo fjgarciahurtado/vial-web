@@ -4,6 +4,7 @@ import v6Data from './keycodes/data/keycodes-v6.json'
 import { KeycodeCatalog, type KeycodeData } from './keycodes/catalog'
 import {
   chordKeys,
+  DEFAULT_NOTE_STYLE,
   isBlackKey,
   keycodeOfNote,
   MIDI_CONTROL_GROUPS,
@@ -12,6 +13,7 @@ import {
   parseChordNotes,
   PIANO_FIRST_NOTE,
   PIANO_LAST_NOTE,
+  setNoteStyle,
 } from './midi'
 
 const caps = {
@@ -43,10 +45,28 @@ describe('MIDI note keys (process_midi.c)', () => {
   it('names notes with letters or Do Re Mi', () => {
     expect(noteName(60)).toBe('C4')
     expect(noteName(61)).toBe('C#4')
-    expect(noteName(57, 'solfege')).toBe('La3')
-    expect(noteName(66, 'solfege')).toBe('Fa#4')
+    expect(noteName(57, { names: 'solfege', middleC: 'C4' })).toBe('La3')
+    expect(noteName(66, { names: 'solfege', middleC: 'C4' })).toBe('Fa#4')
     expect(isBlackKey(61)).toBe(true)
     expect(isBlackKey(64)).toBe(false)
+  })
+
+  it('names middle C (60) C3 when asked, as Yamaha, Ableton and FL Studio do', () => {
+    expect(noteName(60, { names: 'letters', middleC: 'C3' })).toBe('C3')
+    expect(noteName(48, { names: 'letters', middleC: 'C3' })).toBe('C2')
+    expect(noteName(57, { names: 'solfege', middleC: 'C3' })).toBe('La2')
+  })
+
+  it('names notes everywhere in the chosen style', () => {
+    setNoteStyle({ names: 'solfege', middleC: 'C3' })
+    try {
+      expect(noteName(60)).toBe('Do3')
+      expect(catalog.describe(catalog.deserialize('MI_C_1')!)).toMatchObject({ name: 'MIDI Do3', legend: ['MIDI', 'Do3'] })
+      // Chord descriptions are read the usual way, whatever the style: 60 is C4.
+      expect(parseChordNotes('(C4 - E4 - G4)')).toEqual([60, 64, 67])
+    } finally {
+      setNoteStyle(DEFAULT_NOTE_STYLE)
+    }
   })
 })
 
