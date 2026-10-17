@@ -37,8 +37,6 @@ done, and add new ones as they come up.
   redeploy automatically and pull requests get preview sites.
 - [ ] **Phase 3** (below): all features built. QMK settings, combos, tap dance and key
   overrides tested on a real keyboard; alt repeat keys wait for newer firmware (below).
-- [ ] **Test the MIDI piano on real hardware** (Phase 3.5): kb8knob/midi, with its six
-  chord keys.
 - [ ] **Test alt repeat keys on real hardware.** The fjgh firmware is an older Vial build
   without them, so it needs a firmware update from upstream vial-qmk first.
 
@@ -135,7 +133,8 @@ share one protocol module. Each feature can ship on its own.
 
 For keyboards that play music. Asked for by the project's owner, who builds MIDI pads.
 
-Status: built; what changed is described in [MIDI.md](MIDI.md).
+Status: done, tested on kb8knob/midi with its six chord keys; what changed is described
+in [MIDI.md](MIDI.md).
 
 - The MIDI tab of the key picker draws a piano instead of a grid of keycaps. Clicking
   a piano key puts that note on the selected key.
