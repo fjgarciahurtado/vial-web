@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /**
- * Modes: how much of the app people see. Easy keeps to everyday keys, layers, macros
- * and lighting; Advanced shows everything; Musician is for MIDI keyboards and puts
+ * Modes: how much of the app people see. Easy keeps to everyday keys, layers, macros,
+ * lighting and the key tester; Advanced shows everything; Musician is for MIDI keyboards and puts
  * notes, chords and layers first.
  */
 import type { KeycodeCatalog } from './keycodes/catalog'
@@ -20,7 +20,7 @@ export const PROFILE_TITLES: Record<Profile, string> = {
 
 /** The sections each mode shows, in order. Sections the keyboard doesn't have are left out later. */
 export const PROFILE_SECTIONS: Record<Profile, Section[]> = {
-  easy: ['keys', 'lighting', 'macros'],
+  easy: ['keys', 'lighting', 'macros', 'tester'],
   advanced: ['keys', 'lighting', 'macros', 'tester', 'advanced'],
   musician: ['keys', 'lighting', 'macros'],
 }

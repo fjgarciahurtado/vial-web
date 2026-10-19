@@ -30,7 +30,7 @@ describe('modes', () => {
   })
 
   it('shows only the sections each mode is for', () => {
-    expect(PROFILE_SECTIONS.easy).toEqual(['keys', 'lighting', 'macros'])
+    expect(PROFILE_SECTIONS.easy).toEqual(['keys', 'lighting', 'macros', 'tester'])
     expect(PROFILE_SECTIONS.musician).toEqual(['keys', 'lighting', 'macros'])
     expect(PROFILE_SECTIONS.advanced).toEqual(['keys', 'lighting', 'macros', 'tester', 'advanced'])
   })
