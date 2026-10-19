@@ -14,6 +14,7 @@ Desktop wrapper (Tauri 2 + Rust `hidapi`) is planned, not started.
 - End-to-end tests: `npm run test:e2e` (Playwright, uses the demo keyboard)
 - Content-Security-Policy check: `npm run test:csp` (production build under the policy in `netlify.toml`)
 - Built site as Netlify serves it, for testing with a real keyboard: `npm run preview:netlify`
+- Learn section pictures: `npm run learn:shots` (retake them after UI changes; see `docs/LEARN.md`)
 - Lint: `npm run lint` (oxlint; warnings in `src/components/ui` are generated shadcn code)
 - Build: `npm run build`
 
@@ -38,6 +39,7 @@ Desktop wrapper (Tauri 2 + Rust `hidapi`) is planned, not started.
   - `profiles.ts` — Easy, Advanced and Musician modes: which sections and key picker tabs each shows.
     `phrases.ts` — Musician mode's macros, as phrases of notes, chords and rests.
   - `fake-keyboard.ts` — firmware simulator for tests. `demo.ts` uses it for "Try a demo keyboard".
+- `src/learn/lessons.ts` — the Learn section's lessons; pictures in `public/learn/`.
 - `src/store.ts` — app state. `src/components/` — UI.
 
 ## Porting rules
