@@ -8,6 +8,7 @@ import { KeyTester } from '@/components/KeyTester'
 import { KeyboardView } from '@/components/KeyboardView'
 import { LayoutOptions } from '@/components/LayoutOptions'
 import { MacroEditor } from '@/components/MacroEditor'
+import { MusicianMacros } from '@/components/MusicianMacros'
 import { MusicianPicker } from '@/components/MusicianPicker'
 import { LightingPanel, lightingGlow } from '@/components/LightingPanel'
 import { QmkSettingsPanel } from '@/components/QmkSettingsPanel'
@@ -41,6 +42,7 @@ const SAME_GUTTER = 'overflow-y-hidden [scrollbar-gutter:stable]'
 export default function App() {
   const keyboard = useApp((s) => s.keyboard)
   const view = useApp((s) => s.view)
+  const profile = useApp((s) => s.profile)
 
   return (
     // With a keyboard open, the page fills the window exactly: the keyboard and the
@@ -68,7 +70,7 @@ export default function App() {
             ) : view === 'tester' ? (
               <KeyTester />
             ) : view === 'macros' ? (
-              <MacroEditor />
+              profile === 'musician' ? <MusicianMacros /> : <MacroEditor />
             ) : view === 'advanced' ? (
               <AdvancedView />
             ) : (

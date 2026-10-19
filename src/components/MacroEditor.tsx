@@ -28,16 +28,12 @@ const STEP_LABELS: Record<MacroAction['type'], string> = {
  * until saved; saving unlocks the keyboard first, as vial-gui does.
  */
 export function MacroEditor() {
-  const { keyboard, macroDrafts, setMacroDraft, discardMacroDrafts, saveMacros, notice, busy } = useApp()
+  const { keyboard, macroDrafts, setMacroDraft } = useApp()
   const [current, setCurrent] = useState(0)
   if (!keyboard) return null
 
-  const { catalog, macroMemory, vialProtocol } = keyboard
+  const { catalog, vialProtocol } = keyboard
   const macro = macroDrafts[current] ?? []
-  const changed = JSON.stringify(macroDrafts) !== JSON.stringify(keyboard.macros)
-  const used = macroSize(macroDrafts, vialProtocol)
-  const tooBig = used > macroMemory
-  const textProblem = macroDrafts.flat().map((a) => (a.type === 'text' ? macroTextProblem(a.text) : null)).find(Boolean)
   const canDelay = vialProtocol >= 2
 
   const update = (steps: Macro) => setMacroDraft(current, steps)
@@ -117,6 +113,21 @@ export function MacroEditor() {
         </section>
       </div>
 
+      <MacroSaveBar />
+    </div>
+  )
+}
+
+/** How much macro memory the drafts use, and the buttons to save or discard them. */
+export function MacroSaveBar() {
+  const { keyboard, macroDrafts, discardMacroDrafts, saveMacros, notice, busy } = useApp()
+  if (!keyboard) return null
+  const { macroMemory, vialProtocol } = keyboard
+  const changed = JSON.stringify(macroDrafts) !== JSON.stringify(keyboard.macros)
+  const used = macroSize(macroDrafts, vialProtocol)
+  const tooBig = used > macroMemory
+  const textProblem = macroDrafts.flat().map((a) => (a.type === 'text' ? macroTextProblem(a.text) : null)).find(Boolean)
+  return (
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-panel p-4">
         <div className="flex min-w-60 flex-1 flex-col gap-1.5">
           <p className={tooBig ? 'font-semibold text-alert' : 'text-ink-soft'}>
@@ -137,7 +148,6 @@ export function MacroEditor() {
           </Button>
         </div>
       </div>
-    </div>
   )
 }
 

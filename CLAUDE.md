@@ -35,6 +35,8 @@ Desktop wrapper (Tauri 2 + Rust `hidapi`) is planned, not started.
     `combos.ts`, `tap-dance.ts`, `key-overrides.ts` and `alt-repeat.ts` (read and written through the dynamic entry commands in `vial-client.ts`).
   - `midi.ts` — MIDI notes, chord keys (read from custom keycode descriptions) and plain names for
     MIDI keys; drawn as a piano by `components/MidiPicker.tsx`.
+  - `profiles.ts` — Easy, Advanced and Musician modes: which sections and key picker tabs each shows.
+    `phrases.ts` — Musician mode's macros, as phrases of notes, chords and rests.
   - `fake-keyboard.ts` — firmware simulator for tests. `demo.ts` uses it for "Try a demo keyboard".
 - `src/store.ts` — app state. `src/components/` — UI.
 
