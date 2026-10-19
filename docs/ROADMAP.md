@@ -141,6 +141,18 @@ a pad) and merged to `main`. What changed is described in [MODES.md](MODES.md).
   which pad plays each note, and macros written as phrases of notes, chords and rests
   with the piano.
 
+## Phase 3.7: Learn
+
+Training for the three modes, inside the app. Asked for by the project's owner.
+
+Status: built; described in [LEARN.md](LEARN.md).
+
+- Short lessons, one task each, grouped by mode, with steps, a picture, how to check
+  it worked, and a **Try it** button that opens the demo keyboard in that mode and
+  section.
+- Pictures are taken from the demo keyboard by `npm run learn:shots`, so they can be
+  remade whenever the UI changes.
+
 ## Phase 4: Desktop app
 
 For Firefox and Safari users (no WebHID) and for offline use.

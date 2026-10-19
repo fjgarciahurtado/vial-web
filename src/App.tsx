@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-import { Keyboard as KeyboardIcon, Loader2, LockOpen, Redo2, Undo2, Unplug } from 'lucide-react'
+import { GraduationCap, Keyboard as KeyboardIcon, Loader2, LockOpen, Redo2, Undo2, Unplug } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { BackupControls, RestoreConfirmation } from '@/components/BackupControls'
 import { CombosPanel } from '@/components/CombosPanel'
@@ -7,6 +7,7 @@ import { KeyPicker } from '@/components/KeyPicker'
 import { KeyTester } from '@/components/KeyTester'
 import { KeyboardView } from '@/components/KeyboardView'
 import { LayoutOptions } from '@/components/LayoutOptions'
+import { LearnView } from '@/components/LearnView'
 import { MacroEditor } from '@/components/MacroEditor'
 import { MusicianMacros } from '@/components/MusicianMacros'
 import { MusicianPicker } from '@/components/MusicianPicker'
@@ -18,11 +19,13 @@ import { AltRepeatPanel } from '@/components/AltRepeatPanel'
 import { UnlockDialog } from '@/components/UnlockDialog'
 import { Button } from '@/components/ui/button'
 import { openDemoKeyboard } from '@/core/demo'
-import { PROFILE_SECTIONS, PROFILE_TITLES, profilesFor, type Profile } from '@/core/profiles'
+import { PROFILE_TITLES, profilesFor, type Profile } from '@/core/profiles'
 import type { LoadedKeyboard } from '@/core/keyboard'
 import { numberKeys } from '@/core/layout'
 import { noteOfKeycode } from '@/core/midi'
 import { isWebHidSupported } from '@/core/webhid-transport'
+import { closeLearn, openLearn, useLearnRoute } from '@/lib/learn-route'
+import { advancedTabs, sectionsFor, type AdvancedTab } from '@/lib/sections'
 import { useApp } from '@/store'
 
 /**
@@ -43,6 +46,7 @@ export default function App() {
   const keyboard = useApp((s) => s.keyboard)
   const view = useApp((s) => s.view)
   const profile = useApp((s) => s.profile)
+  const learn = useLearnRoute()
 
   return (
     // With a keyboard open, the page fills the window exactly: the keyboard and the
@@ -61,9 +65,15 @@ export default function App() {
           {keyboard && <ModeSwitch />}
         </div>
         {keyboard && <ViewNav />}
-        {keyboard && <ConnectedBadge />}
+        {keyboard ? <ConnectedBadge /> : <LearnButton />}
       </header>
-      {keyboard ? (
+      {learn !== null ? (
+        <main className={keyboard ? 'min-h-0 flex-1 overflow-y-auto [scrollbar-gutter:stable]' : `${NARROW} pb-16`}>
+          <div className={keyboard ? WIDE : ''}>
+            <LearnView route={learn} />
+          </div>
+        </main>
+      ) : keyboard ? (
         <main className="min-h-0 flex-1 overflow-y-auto [scrollbar-gutter:stable]">
           <div className={`${WIDE} h-full`}>{view === 'lighting' ? (
               <LightingView />
@@ -158,6 +168,13 @@ function Welcome() {
           </p>
         )}
       </div>
+      <p className="-mt-8 self-center text-ink-soft">
+        New here?{' '}
+        <button className="font-semibold text-ink underline underline-offset-4 hover:text-pick" onClick={() => openLearn()}>
+          Learn how it works
+        </button>
+        , a few minutes for each mode.
+      </p>
       <div className="w-full max-w-4xl opacity-90">
         {preview && (
           <KeyboardView
@@ -191,18 +208,37 @@ function ConnectedBadge() {
   const { keyboard, isDemo, disconnect, unlocked, lock } = useApp()
   return (
     <div className="flex items-center gap-3 justify-self-end">
+      <LearnButton />
       {unlocked && (
         <Button variant="outline" size="sm" onClick={lock} title="The keyboard accepts risky changes until you lock it or unplug it">
           <LockOpen aria-hidden />
           Unlocked. Lock now
         </Button>
       )}
-      <span className="text-sm text-ink-soft">{isDemo ? 'Demo mode' : `Connected to ${keyboard?.name}`}</span>
+      <span className="text-sm whitespace-nowrap text-ink-soft">{isDemo ? 'Demo mode' : `Connected to ${keyboard?.name}`}</span>
       <Button variant="outline" size="sm" onClick={disconnect}>
         <Unplug aria-hidden />
         {isDemo ? 'Leave demo' : 'Disconnect'}
       </Button>
     </div>
+  )
+}
+
+/** Opens the lessons, or closes them when open. */
+function LearnButton() {
+  const open = useLearnRoute() !== null
+  return (
+    <Button
+      variant={open ? 'default' : 'ghost'}
+      size="sm"
+      className="justify-self-end md:col-start-3"
+      aria-pressed={open}
+      onClick={() => (open ? closeLearn() : openLearn())}
+      title="Short lessons for each mode"
+    >
+      <GraduationCap aria-hidden />
+      Learn
+    </Button>
   )
 }
 
@@ -240,21 +276,12 @@ function ModeSwitch() {
   )
 }
 
-/**
- * Switches between the app's sections. The mode decides which sections show, and
- * Lighting, Macros and Advanced show only on keyboards that have them.
- */
+/** Switches between the app's sections, which depend on the mode and the keyboard. */
 function ViewNav() {
   const { keyboard, view, setView, profile } = useApp()
+  const learning = useLearnRoute() !== null
   if (!keyboard) return null
-  const { backlight, rgblight, vialrgb } = keyboard.lightingKind
-  const views = [
-    { id: 'keys' as const, title: 'Keys' },
-    ...(backlight || rgblight || vialrgb ? [{ id: 'lighting' as const, title: 'Lighting' }] : []),
-    ...(keyboard.macros.length ? [{ id: 'macros' as const, title: 'Macros' }] : []),
-    { id: 'tester' as const, title: 'Key tester' },
-    ...(advancedTabs(keyboard).length ? [{ id: 'advanced' as const, title: 'Advanced' }] : []),
-  ].filter((v) => PROFILE_SECTIONS[profile].includes(v.id))
+  const views = sectionsFor(keyboard, profile)
   if (views.length < 2) return null
   return (
     <nav
@@ -264,10 +291,13 @@ function ViewNav() {
       {views.map((v) => (
         <button
           key={v.id}
-          aria-current={view === v.id ? 'page' : undefined}
-          onClick={() => setView(v.id)}
+          aria-current={view === v.id && !learning ? 'page' : undefined}
+          onClick={() => {
+            setView(v.id)
+            closeLearn()
+          }}
           className={`shrink-0 rounded-lg px-4 py-1.5 text-sm font-semibold whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-pick ${
-            view === v.id ? 'bg-ink text-desk' : 'text-ink-soft hover:text-ink'
+            view === v.id && !learning ? 'bg-ink text-desk' : 'text-ink-soft hover:text-ink'
           }`}
         >
           {v.title}
@@ -317,19 +347,6 @@ function LightingView() {
       </div>
     </div>
   )
-}
-
-type AdvancedTab = 'tapDance' | 'combos' | 'keyOverrides' | 'altRepeat' | 'settings'
-
-/** The Advanced features this keyboard has. */
-function advancedTabs(keyboard: LoadedKeyboard): { id: AdvancedTab; title: string }[] {
-  return [
-    ...(keyboard.tapDances.length ? [{ id: 'tapDance' as const, title: 'Tap dance' }] : []),
-    ...(keyboard.combos.length ? [{ id: 'combos' as const, title: 'Combos' }] : []),
-    ...(keyboard.keyOverrides.length ? [{ id: 'keyOverrides' as const, title: 'Key overrides' }] : []),
-    ...(keyboard.altRepeats.length ? [{ id: 'altRepeat' as const, title: 'Alt Repeat' }] : []),
-    ...(keyboard.qmkSettings.supported.length ? [{ id: 'settings' as const, title: 'Typing settings' }] : []),
-  ]
 }
 
 /** Features most people never need, each explained in plain words. */
