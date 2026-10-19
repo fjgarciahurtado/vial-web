@@ -83,5 +83,4 @@ other macro, with the same memory meter and the same unlock step.
 - Unit tests: `profiles.test.ts`, `phrases.test.ts` (including a round trip through
   the keyboard's byte format) and `numberKeys` in `layout.test.ts`.
 - Browser tests on the demo keyboard: `e2e/modes.spec.ts` and `e2e/phrases.spec.ts`.
-- Not yet tested on real hardware: a phrase saved to kb8knob/midi and played from a
-  pad.
+- Tested on real hardware: a phrase saved to kb8knob/midi and played from a pad.

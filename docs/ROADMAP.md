@@ -12,9 +12,6 @@ to that folder.
 Things that are known and not done yet, across phases. Remove an item when it is
 done, and add new ones as they come up.
 
-- [ ] **Play a phrase on real hardware** (Phase 3.6): write a phrase in Musician mode,
-  save it to kb8knob/midi, put it on a pad and check the music app hears every note,
-  with the right lengths.
 - [ ] **Redeploy to Netlify and check the live site.** The first deploy's security
   policy blocked WebAssembly, so keyboards couldn't be opened; fixed in PR #3 and
   confirmed with a real keyboard through `npm run preview:netlify`, which uses the same
@@ -135,8 +132,8 @@ firmware.
 Easy, Advanced and Musician modes, so people see only what they need. Asked for by the
 project's owner.
 
-Status: built; what changed is described in [MODES.md](MODES.md). Still to do: play a
-phrase saved to kb8knob/midi (see Open issues).
+Status: done, tested on real hardware (a phrase saved to kb8knob/midi and played from
+a pad) and merged to `main`. What changed is described in [MODES.md](MODES.md).
 
 - **Easy**: everyday keys, layers, macros and lighting.
 - **Advanced**: everything.
