@@ -207,7 +207,7 @@ function ConnectedBadge() {
 }
 
 const PROFILE_HELP: Record<Profile, string> = {
-  easy: 'Everyday keys, layers, macros and lighting',
+  easy: 'Everyday keys, layers, macros, lighting and the key tester',
   advanced: 'Everything, including the key tester, tap dance, combos and typing settings',
   musician: 'Notes, chords, layers, macros and lighting, for playing music',
 }

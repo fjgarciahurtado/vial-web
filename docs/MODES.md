@@ -9,7 +9,7 @@ shortcuts. Modes show each of them only what they need.
 A **Mode** switch sits in the header, beside the app's name. It is remembered for each
 keyboard, in the browser.
 
-- **Easy**: the Keys, Lighting and Macros sections. The key picker offers everyday
+- **Easy**: the Keys, Lighting, Macros and Key tester sections. The key picker offers everyday
   keys (letters and numbers, modifiers, symbols, navigation, numpad, media and mouse,
   international), the builder for shortcuts and hold keys, layers, lighting keys and
   macros. Search finds only those keys.

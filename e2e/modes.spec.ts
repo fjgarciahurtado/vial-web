@@ -17,11 +17,11 @@ test('the demo starts in Advanced, with every section', async ({ page }) => {
   await expect(sections(page)).toHaveText(['Keys', 'Lighting', 'Macros', 'Key tester', 'Advanced'])
 })
 
-test('Easy keeps to everyday keys, layers, macros and lighting', async ({ page }) => {
+test('Easy keeps to everyday keys, layers, macros, lighting and the key tester', async ({ page }) => {
   await page.getByRole('navigation', { name: 'Sections' }).getByRole('button', { name: 'Advanced' }).click()
   await mode(page, 'Easy').click()
   // The Advanced section isn't part of Easy, so the app goes back to Keys.
-  await expect(sections(page)).toHaveText(['Keys', 'Lighting', 'Macros'])
+  await expect(sections(page)).toHaveText(['Keys', 'Lighting', 'Macros', 'Key tester'])
   await expect(page.getByRole('navigation', { name: 'Sections' }).getByRole('button', { name: 'Keys' })).toHaveAttribute(
     'aria-current',
     'page',
