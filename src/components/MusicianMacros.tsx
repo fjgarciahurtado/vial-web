@@ -63,9 +63,16 @@ export function MusicianMacros() {
   const macro = macroDrafts[current] ?? []
   const phrase = macroToPhrase(macro)
   const name = (n: number) => noteName(n, noteStyle)
-  const setPhrase = (next: Phrase) => setMacroDraft(current, phraseToMacro(next))
-  const setTempo = (next: number) => {
-    const t = Math.max(MIN_TEMPO, Math.min(MAX_TEMPO, Math.round(next) || DEFAULT_TEMPO))
+  const setPhrase = (next: Phrase) => {
+    // The preview would go on playing the old phrase.
+    stopPlaying.current?.()
+    setMacroDraft(current, phraseToMacro(next))
+  }
+  /** Applies a typed tempo. An empty or unreadable one is ignored, and the field shows the tempo in use. */
+  const setTempo = (input: HTMLInputElement) => {
+    const typed = Math.round(Number(input.value))
+    const t = input.value.trim() && Number.isFinite(typed) ? Math.max(MIN_TEMPO, Math.min(MAX_TEMPO, typed)) : tempo
+    input.value = String(t)
     if (t === tempo) return
     if (phrase) setPhrase(retime(phrase, tempo, t))
     setTempoState(t)
@@ -156,8 +163,8 @@ export function MusicianMacros() {
                     min={MIN_TEMPO}
                     max={MAX_TEMPO}
                     defaultValue={tempo}
-                    onBlur={(e) => setTempo(Number(e.target.value))}
-                    onKeyDown={(e) => e.key === 'Enter' && setTempo(Number(e.currentTarget.value))}
+                    onBlur={(e) => setTempo(e.target)}
+                    onKeyDown={(e) => e.key === 'Enter' && setTempo(e.currentTarget)}
                     className="h-9 w-20 rounded-lg border border-line bg-desk px-3 focus-visible:outline-2 focus-visible:outline-pick"
                   />
                   <span className="text-sm text-ink-soft">beats a minute</span>

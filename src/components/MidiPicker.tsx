@@ -242,6 +242,8 @@ export function Piano({
     'aria-pressed': note === currentNote,
     'aria-label': `Note ${noteName(note, noteStyle)}${padsText(pads?.get(note))}`,
     onClick: () => onPick(note),
+    // A tap on a touch screen has no pointer leaving afterwards, so the lit pads go out at once.
+    onPointerUp: (e: React.PointerEvent) => e.pointerType !== 'mouse' && onPoint?.(null),
     onMouseEnter: () => onPoint?.(note),
     onFocus: () => onPoint?.(note),
     onBlur: () => onPoint?.(null),

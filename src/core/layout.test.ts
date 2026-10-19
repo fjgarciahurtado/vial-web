@@ -87,6 +87,12 @@ describe('numberKeys', () => {
     ])
   })
 
+  it('keeps staggered columns in one row', () => {
+    // Column stagger, as on split keyboards: the second and third keys sit a little lower.
+    const { keys } = parseLayout([['0,0', { y: 0.25 }, '0,1', { y: 0.25 }, '0,2'], [{ y: -0.5 }, '1,0', '1,1', '1,2']])
+    expect([...numberKeys(keys, []).keys()]).toEqual(['0,0', '0,1', '0,2', '1,0', '1,1', '1,2'])
+  })
+
   it('numbers only the keys of the chosen layout option', () => {
     const { keys } = parseLayout([['0,0', opt('0,1', '0,0'), opt('0,2', '0,1')]])
     expect([...numberKeys(keys, [1]).keys()]).toEqual(['0,0', '0,2'])

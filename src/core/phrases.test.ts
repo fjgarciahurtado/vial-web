@@ -53,5 +53,8 @@ describe('phrases', () => {
 
   it('changes the tempo of a whole phrase', () => {
     expect(retime(phrase, 120, 60).map((s) => s.ms)).toEqual([1000, 500, 500])
+    // Back and forth through tempos that don't divide evenly, the note lengths stay exact.
+    const there = [97, 143, 71, 120].reduce((p, t, i, all) => retime(p, i ? all[i - 1] : 120, t), phrase)
+    expect(there).toEqual(phrase)
   })
 })

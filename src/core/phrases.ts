@@ -44,9 +44,17 @@ export function lengthName(ms: number, tempo: number): string | null {
   return LENGTHS.find((l) => Math.abs(msFor(l.beats, tempo) - ms) <= 1)?.name ?? null
 }
 
-/** The same phrase at another tempo: every step keeps its note length. */
+/**
+ * The same phrase at another tempo: every step keeps its note length. Steps that match a
+ * note length are worked out again from it, so changing the tempo back and forth never
+ * drifts; other steps are scaled.
+ */
 export function retime(phrase: Phrase, from: number, to: number): Phrase {
-  return phrase.map((s) => ({ ...s, ms: Math.min(MAX_DELAY_MS, Math.max(1, Math.round((s.ms * from) / to))) }))
+  return phrase.map((s) => {
+    const length = LENGTHS.find((l) => l.name === lengthName(s.ms, from))
+    const ms = length ? msFor(length.beats, to) : Math.round((s.ms * from) / to)
+    return { ...s, ms: Math.min(MAX_DELAY_MS, Math.max(1, ms)) }
+  })
 }
 
 export function phraseToMacro(phrase: Phrase): Macro {

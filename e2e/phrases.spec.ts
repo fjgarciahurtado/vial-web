@@ -38,6 +38,14 @@ test('write a phrase with the piano and save it', async ({ page }) => {
   await phrase(page).getByRole('spinbutton', { name: 'Tempo' }).fill('240')
   await phrase(page).getByRole('spinbutton', { name: 'Tempo' }).press('Enter')
   await expect(steps.getByRole('combobox', { name: 'Length of step 1' })).toHaveValue('2')
+  // An emptied or too-fast tempo isn't applied; the field shows the tempo in use.
+  await phrase(page).getByRole('spinbutton', { name: 'Tempo' }).fill('')
+  await phrase(page).getByRole('spinbutton', { name: 'Tempo' }).blur()
+  await expect(phrase(page).getByRole('spinbutton', { name: 'Tempo' })).toHaveValue('240')
+  await phrase(page).getByRole('spinbutton', { name: 'Tempo' }).fill('1000')
+  await phrase(page).getByRole('spinbutton', { name: 'Tempo' }).press('Enter')
+  await expect(phrase(page).getByRole('spinbutton', { name: 'Tempo' })).toHaveValue('300')
+  await expect(steps.getByRole('combobox', { name: 'Length of step 1' })).toHaveValue('2')
 
   await page.getByRole('button', { name: 'Save macros' }).click()
   await expect(page.getByText('Macros saved.')).toBeVisible({ timeout: 10_000 })
