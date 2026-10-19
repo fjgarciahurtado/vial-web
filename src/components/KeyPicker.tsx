@@ -135,7 +135,7 @@ export function KeyPicker({ catalog, current, onPick, profile = 'advanced' }: Pr
   )
 }
 
-function PickerKey({
+export function PickerKey({
   entry,
   catalog,
   isCurrent,

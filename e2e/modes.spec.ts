@@ -36,13 +36,39 @@ test('Easy keeps to everyday keys, layers, macros and lighting', async ({ page }
   await expect(page.getByRole('region', { name: 'Choose what the key does' }).getByRole('button', { name: /Sustain/ })).toHaveCount(0)
 })
 
-test('Musician puts notes first and leaves out typing keys, and the mode is remembered', async ({ page }) => {
+const pad = (page: Page, name: RegExp) => page.getByRole('group', { name: 'Keyboard layout' }).getByRole('button', { name })
+
+test('Musician numbers the pads and shows on the piano which pad plays each note', async ({ page }) => {
   await mode(page, 'Musician').click()
   await expect(sections(page)).toHaveText(['Keys', 'Lighting', 'Macros'])
-  await key(page, 'Q').click()
-  await expect(tabs(page)).toHaveText(['MIDI', 'Layers', 'Macros', 'Lighting', 'Blank'])
-  await expect(page.getByRole('group', { name: 'Notes' })).toBeVisible()
+  await pad(page, /^Pad 16: Q$/).click()
+  await expect(page.getByText('Pad 16 is Q. Choose what it should do instead.')).toBeVisible()
+  await expect(tabs(page)).toHaveText(['Notes', 'Chords', 'Octave, pedals and more', 'Layers', 'Macros', 'Lighting', 'Blank'])
 
+  const piano = page.getByRole('group', { name: 'Notes' })
+  await piano.getByRole('button', { name: 'Note E4', exact: true }).click()
+  await expect(pad(page, /^Pad 16: MIDI E4$/)).toBeVisible()
+  await expect(piano.getByRole('button', { name: 'Note E4, on pad 16' })).toHaveAttribute('aria-pressed', 'true')
+
+  // Pointing at a note lights the pads that play it.
+  await pad(page, /^Pad 17: W$/).click()
+  await piano.getByRole('button', { name: 'Note E4, on pad 16' }).hover()
+  await expect(pad(page, /^Pad 16: MIDI E4$/)).toHaveAttribute('aria-pressed', 'true')
+
+  // Picking a pad with a chord opens the chords.
+  await page.getByRole('tab', { name: 'Chords' }).click()
+  await page.getByRole('region', { name: 'Chords' }).getByRole('button', { name: /^Am/ }).click()
+  await pad(page, /^Pad 16/).click()
+  await pad(page, /^Pad 17/).click()
+  await expect(page.getByRole('tab', { name: 'Chords' })).toHaveAttribute('aria-selected', 'true')
+
+  // Typing keys aren't offered, but blank keys are.
+  await page.getByRole('tab', { name: 'Blank' }).click()
+  await expect(page.getByRole('list', { name: 'Keys' }).getByRole('button')).toHaveCount(2)
+})
+
+test('the mode is remembered for the keyboard', async ({ page }) => {
+  await mode(page, 'Musician').click()
   await page.reload()
   await page.getByRole('button', { name: 'Try a demo keyboard' }).click()
   await expect(mode(page, 'Musician')).toHaveAttribute('aria-pressed', 'true')

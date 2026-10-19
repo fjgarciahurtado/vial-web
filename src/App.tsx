@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 import { Keyboard as KeyboardIcon, Loader2, LockOpen, Redo2, Undo2, Unplug } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { BackupControls, RestoreConfirmation } from '@/components/BackupControls'
 import { CombosPanel } from '@/components/CombosPanel'
 import { KeyPicker } from '@/components/KeyPicker'
@@ -8,6 +8,7 @@ import { KeyTester } from '@/components/KeyTester'
 import { KeyboardView } from '@/components/KeyboardView'
 import { LayoutOptions } from '@/components/LayoutOptions'
 import { MacroEditor } from '@/components/MacroEditor'
+import { MusicianPicker } from '@/components/MusicianPicker'
 import { LightingPanel, lightingGlow } from '@/components/LightingPanel'
 import { QmkSettingsPanel } from '@/components/QmkSettingsPanel'
 import { TapDancePanel } from '@/components/TapDancePanel'
@@ -18,6 +19,8 @@ import { Button } from '@/components/ui/button'
 import { openDemoKeyboard } from '@/core/demo'
 import { PROFILE_SECTIONS, PROFILE_TITLES, profilesFor, type Profile } from '@/core/profiles'
 import type { LoadedKeyboard } from '@/core/keyboard'
+import { numberKeys } from '@/core/layout'
+import { noteOfKeycode } from '@/core/midi'
 import { isWebHidSupported } from '@/core/webhid-transport'
 import { useApp } from '@/store'
 
@@ -363,13 +366,31 @@ function Editor() {
   const { keyboard, layer, setLayer, selected, select, assign, undo, redo, canUndo, canRedo, notice, busy, setLayoutChoice, profile } =
     useApp()
   useUndoShortcuts()
+  const musician = profile === 'musician'
+  // Musician mode calls keys pads and numbers them, so the piano can show which pad plays each note.
+  const padNumbers = useMemo(
+    () => (musician && keyboard ? numberKeys(keyboard.keys, keyboard.layoutChoices) : undefined),
+    [musician, keyboard],
+  )
+  const [pointedNote, setPointedNote] = useState<number | null>(null)
   if (!keyboard) return null
+  const pads = new Map<number, number[]>()
+  const padsPlaying: { row: number; col: number }[] = []
+  for (const k of keyboard.keys) {
+    const pad = padNumbers?.get(`${k.row},${k.col}`)
+    const note = noteOfKeycode(keyboard.keymap[layer][k.row]?.[k.col] ?? 0)
+    if (pad === undefined || note === null) continue
+    pads.set(note, [...(pads.get(note) ?? []), pad].sort((a, b) => a - b))
+    if (note === pointedNote) padsPlaying.push(k)
+  }
   const code = !selected
     ? null
     : selected.kind === 'key'
       ? keyboard.keymap[layer][selected.row][selected.col]
       : keyboard.encoderKeymap[layer][selected.index][selected.direction]
-  const what = selected?.kind === 'encoder' ? `Turning the knob ${selected.direction ? 'right' : 'left'}` : 'This key'
+  const pad = selected?.kind === 'key' ? padNumbers?.get(`${selected.row},${selected.col}`) : undefined
+  const what =
+    selected?.kind === 'encoder' ? `Turning the knob ${selected.direction ? 'right' : 'left'}` : pad ? `Pad ${pad}` : 'This key'
 
   return (
     <div className="flex h-full flex-col gap-3">
@@ -418,6 +439,8 @@ function Editor() {
         onSelect={select}
         className="max-h-[38svh] w-full flex-none [@media(min-height:62rem)]:max-h-[46svh]"
         glow={lightingGlow(keyboard.lighting)}
+        padNumbers={padNumbers}
+        highlighted={padsPlaying}
       />
 
       <RestoreConfirmation />
@@ -426,11 +449,17 @@ function Editor() {
         {notice ??
           (selected && code !== null
             ? `${what} is ${keyboard.catalog.describe(code).name}. Choose what it should do instead.`
-            : 'Pick a key or knob on the keyboard, then choose what it should do below.')}
+            : musician
+              ? 'Pick a pad or knob on the keyboard, then choose what it plays below.'
+              : 'Pick a key or knob on the keyboard, then choose what it should do below.')}
       </p>
 
       {/* A new mode offers other tabs, so the picker starts again at the first one. */}
-      <KeyPicker key={profile} catalog={keyboard.catalog} current={code} onPick={assign} profile={profile} />
+      {musician ? (
+        <MusicianPicker catalog={keyboard.catalog} current={code} onPick={assign} pads={pads} onPoint={setPointedNote} />
+      ) : (
+        <KeyPicker key={profile} catalog={keyboard.catalog} current={code} onPick={assign} profile={profile} />
+      )}
     </section>
 
     <div

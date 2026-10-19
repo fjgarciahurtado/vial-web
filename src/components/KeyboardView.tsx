@@ -28,6 +28,8 @@ interface Props {
   className?: string
   /** Light around the case, like underglow: a CSS colour, or "rainbow". */
   glow?: string
+  /** Pad numbers, keyed "row,col". Numbered keys are named "Pad 3" instead of "Key". */
+  padNumbers?: Map<string, number>
 }
 
 const TONES = {
@@ -60,6 +62,7 @@ export function KeyboardView({
   onSelect,
   className = 'w-full max-w-5xl',
   glow,
+  padNumbers,
 }: Props) {
   const placed = placeKeys<LayoutKey | LayoutEncoder>([...keys, ...encoders], layoutChoices)
   const width = Math.max(...placed.map((k) => k.x + k.w)) * U + PAD * 2
@@ -87,7 +90,8 @@ export function KeyboardView({
         const hasPassed = isKey && passed.some((p) => p.row === item.row && p.col === item.col)
         const tone = TONES[isSelected ? 'pick' : hasPassed ? 'ok' : isTyping ? 'cap' : 'mod']
         const turn = isKey ? null : TURNS[item.direction]
-        const label = turn ? `Knob ${turn.name.toLowerCase()}: ${name}` : `Key ${name}`
+        const pad = isKey ? padNumbers?.get(`${item.row},${item.col}`) : undefined
+        const label = turn ? `Knob ${turn.name.toLowerCase()}: ${name}` : pad ? `Pad ${pad}: ${name}` : `Key ${name}`
 
         const x = PAD + item.x * U + GAP / 2
         const y = PAD + item.y * U + GAP / 2
@@ -118,7 +122,7 @@ export function KeyboardView({
               },
             })}
           >
-            <title>{turn ? `${turn.name}: ${name}` : name}</title>
+            <title>{turn ? `${turn.name}: ${name}` : pad ? `Pad ${pad}: ${name}` : name}</title>
             {turn ? (
               <>
                 <circle cx={x + w / 2} cy={y + h / 2} r={radius} className={`${tone.skirt} transition-colors`} />
@@ -158,6 +162,16 @@ export function KeyboardView({
                     </tspan>
                   ))}
                 </text>
+                {pad && (
+                  <text
+                    x={x + w - 10}
+                    y={y + h - 14}
+                    textAnchor="end"
+                    className={`pointer-events-none select-none font-sans text-[11px] font-bold opacity-60 ${tone.text}`}
+                  >
+                    {pad}
+                  </text>
+                )}
               </>
             )}
           </g>
