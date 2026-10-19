@@ -5,7 +5,7 @@ import { CombinedBuilder } from '@/components/CombinedBuilder'
 import { MidiPicker } from '@/components/MidiPicker'
 import { parseCombined } from '@/core/keycodes/builders'
 import type { KeycodeCatalog, KeycodeEntry } from '@/core/keycodes/catalog'
-import { pickerCategories } from '@/core/keycodes/categories'
+import { profileCategories, profileHasBuilder, type Profile } from '@/core/profiles'
 
 const MAX_RESULTS = 60
 const BUILDER_TITLE = 'Shortcuts & holds'
@@ -20,15 +20,23 @@ interface Props {
   /** Code on the selected key, highlighted in the grid. Null when no key is selected. */
   current: number | null
   onPick(code: number): void
+  /** The mode decides which kinds of keys are offered. The Advanced section's pickers offer all of them. */
+  profile?: Profile
 }
 
 /** Lets people choose what the selected key does, by browsing categories or searching in plain words. */
-export function KeyPicker({ catalog, current, onPick }: Props) {
+export function KeyPicker({ catalog, current, onPick, profile = 'advanced' }: Props) {
   const categories = useMemo<Tab[]>(() => {
-    const lists = pickerCategories(catalog)
+    const lists = profileCategories(catalog, profile)
+    if (!profileHasBuilder(profile)) return lists
     const at = lists.findIndex((c) => c.title === 'Modifiers') + 1
     return [...lists.slice(0, at), { title: BUILDER_TITLE, entries: [], builder: true }, ...lists.slice(at)]
-  }, [catalog])
+  }, [catalog, profile])
+  // Search finds only the keys the mode offers; Advanced finds every key.
+  const offered = useMemo(
+    () => (profile === 'advanced' ? null : new Set(categories.flatMap((c) => c.entries.map((e) => e.code)))),
+    [categories, profile],
+  )
   const builderTab = categories.findIndex((c) => c.builder)
   const [tab, setTab] = useState(0)
   const [query, setQuery] = useState('')
@@ -38,7 +46,7 @@ export function KeyPicker({ catalog, current, onPick }: Props) {
   // A key that already combines two things opens in the builder, ready to edit.
   if (current !== lastCurrent) {
     setLastCurrent(current)
-    if (current !== null && parseCombined(catalog, current)) {
+    if (current !== null && builderTab >= 0 && parseCombined(catalog, current)) {
       setTab(builderTab)
       setQuery('')
     }
@@ -48,7 +56,7 @@ export function KeyPicker({ catalog, current, onPick }: Props) {
   const entries = searching
     ? catalog
         .search(query)
-        .filter((e) => !e.masked)
+        .filter((e) => !e.masked && (!offered || offered.has(e.code)))
         .slice(0, MAX_RESULTS)
     : (categories[tab]?.entries ?? [])
 
@@ -127,7 +135,7 @@ export function KeyPicker({ catalog, current, onPick }: Props) {
   )
 }
 
-function PickerKey({
+export function PickerKey({
   entry,
   catalog,
   isCurrent,

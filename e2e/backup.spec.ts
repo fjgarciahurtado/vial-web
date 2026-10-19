@@ -53,3 +53,15 @@ test('explain when a file is not a backup', async ({ page }) => {
   await restoreFile(page, 'notes.vil', 'hello')
   await expect(page.getByText("This file isn't a Vial keymap backup.")).toBeVisible()
 })
+
+test('the backup buttons stay at the bottom of every section', async ({ page }) => {
+  const nav = page.getByRole('navigation', { name: 'Sections' })
+  for (const section of ['Keys', 'Lighting', 'Macros', 'Key tester', 'Advanced']) {
+    await nav.getByRole('button', { name: section }).click()
+    const save = page.getByRole('contentinfo').getByRole('button', { name: 'Save backup' })
+    await expect(save).toBeInViewport()
+    await expect(page.getByRole('contentinfo').getByRole('button', { name: 'Restore backup' })).toBeInViewport()
+    const box = await save.boundingBox()
+    expect(box!.y + box!.height).toBeGreaterThan(page.viewportSize()!.height - 60)
+  }
+})

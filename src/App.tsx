@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 import { Keyboard as KeyboardIcon, Loader2, LockOpen, Redo2, Undo2, Unplug } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { BackupControls, RestoreConfirmation } from '@/components/BackupControls'
 import { CombosPanel } from '@/components/CombosPanel'
 import { KeyPicker } from '@/components/KeyPicker'
@@ -8,6 +8,8 @@ import { KeyTester } from '@/components/KeyTester'
 import { KeyboardView } from '@/components/KeyboardView'
 import { LayoutOptions } from '@/components/LayoutOptions'
 import { MacroEditor } from '@/components/MacroEditor'
+import { MusicianMacros } from '@/components/MusicianMacros'
+import { MusicianPicker } from '@/components/MusicianPicker'
 import { LightingPanel, lightingGlow } from '@/components/LightingPanel'
 import { QmkSettingsPanel } from '@/components/QmkSettingsPanel'
 import { TapDancePanel } from '@/components/TapDancePanel'
@@ -16,7 +18,10 @@ import { AltRepeatPanel } from '@/components/AltRepeatPanel'
 import { UnlockDialog } from '@/components/UnlockDialog'
 import { Button } from '@/components/ui/button'
 import { openDemoKeyboard } from '@/core/demo'
+import { PROFILE_SECTIONS, PROFILE_TITLES, profilesFor, type Profile } from '@/core/profiles'
 import type { LoadedKeyboard } from '@/core/keyboard'
+import { numberKeys } from '@/core/layout'
+import { noteOfKeycode } from '@/core/midi'
 import { isWebHidSupported } from '@/core/webhid-transport'
 import { useApp } from '@/store'
 
@@ -37,6 +42,7 @@ const SAME_GUTTER = 'overflow-y-hidden [scrollbar-gutter:stable]'
 export default function App() {
   const keyboard = useApp((s) => s.keyboard)
   const view = useApp((s) => s.view)
+  const profile = useApp((s) => s.profile)
 
   return (
     // With a keyboard open, the page fills the window exactly: the keyboard and the
@@ -47,10 +53,13 @@ export default function App() {
       <header
         className={`flex flex-none flex-wrap items-center justify-between gap-x-4 gap-y-2 ${CENTRED_ROW} ${keyboard ? `${WIDE} ${SAME_GUTTER} py-3` : `${NARROW} py-5`}`}
       >
-        <span className="flex items-center gap-2 text-lg font-bold tracking-tight">
-          <KeyboardIcon className="size-5" aria-hidden />
-          Vial
-        </span>
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <span className="flex items-center gap-2 text-lg font-bold tracking-tight">
+            <KeyboardIcon className="size-5" aria-hidden />
+            Vial
+          </span>
+          {keyboard && <ModeSwitch />}
+        </div>
         {keyboard && <ViewNav />}
         {keyboard && <ConnectedBadge />}
       </header>
@@ -61,7 +70,7 @@ export default function App() {
             ) : view === 'tester' ? (
               <KeyTester />
             ) : view === 'macros' ? (
-              <MacroEditor />
+              profile === 'musician' ? <MusicianMacros /> : <MacroEditor />
             ) : view === 'advanced' ? (
               <AdvancedView />
             ) : (
@@ -73,6 +82,7 @@ export default function App() {
           <Welcome />
         </main>
       )}
+      {keyboard && <BackupBar />}
       <UnlockDialog />
     </div>
   )
@@ -196,9 +206,46 @@ function ConnectedBadge() {
   )
 }
 
-/** Switches between the app's sections. Lighting, Macros and Advanced show only on keyboards that have them. */
+const PROFILE_HELP: Record<Profile, string> = {
+  easy: 'Everyday keys, layers, macros and lighting',
+  advanced: 'Everything, including the key tester, tap dance, combos and typing settings',
+  musician: 'Notes, chords, layers, macros and lighting, for playing music',
+}
+
+/** Easy, Advanced or Musician: how much of the app shows. Musician shows only on keyboards that play MIDI. */
+function ModeSwitch() {
+  const { keyboard, profile, setProfile } = useApp()
+  if (!keyboard) return null
+  return (
+    <div role="group" aria-label="Mode" className="flex items-center gap-2">
+      <span className="text-sm text-ink-soft max-sm:sr-only" aria-hidden>
+        Mode
+      </span>
+      <div className="flex gap-1 rounded-xl bg-panel p-1">
+        {profilesFor(keyboard.catalog).map((p) => (
+          <button
+            key={p}
+            aria-pressed={profile === p}
+            onClick={() => setProfile(p)}
+            title={PROFILE_HELP[p]}
+            className={`rounded-lg px-3 py-1 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-pick ${
+              profile === p ? 'bg-pick text-desk' : 'text-ink-soft hover:text-ink'
+            }`}
+          >
+            {PROFILE_TITLES[p]}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Switches between the app's sections. The mode decides which sections show, and
+ * Lighting, Macros and Advanced show only on keyboards that have them.
+ */
 function ViewNav() {
-  const { keyboard, view, setView } = useApp()
+  const { keyboard, view, setView, profile } = useApp()
   if (!keyboard) return null
   const { backlight, rgblight, vialrgb } = keyboard.lightingKind
   const views = [
@@ -207,7 +254,7 @@ function ViewNav() {
     ...(keyboard.macros.length ? [{ id: 'macros' as const, title: 'Macros' }] : []),
     { id: 'tester' as const, title: 'Key tester' },
     ...(advancedTabs(keyboard).length ? [{ id: 'advanced' as const, title: 'Advanced' }] : []),
-  ]
+  ].filter((v) => PROFILE_SECTIONS[profile].includes(v.id))
   if (views.length < 2) return null
   return (
     <nav
@@ -227,6 +274,21 @@ function ViewNav() {
         </button>
       ))}
     </nav>
+  )
+}
+
+/** Saving and restoring a backup, always at the bottom of the window whatever the section. */
+function BackupBar() {
+  return (
+    <footer className={`flex flex-none flex-col gap-2 border-t border-line bg-panel py-2 ${WIDE} ${SAME_GUTTER}`}>
+      <RestoreConfirmation />
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+        <p className="text-sm text-ink-soft max-sm:sr-only">
+          Keep a copy of your keymap, or bring back an earlier one. Files also work in Vial.
+        </p>
+        <BackupControls />
+      </div>
+    </footer>
   )
 }
 
@@ -319,16 +381,34 @@ function AdvancedView() {
 }
 
 function Editor() {
-  const { keyboard, layer, setLayer, selected, select, assign, undo, redo, canUndo, canRedo, notice, busy, setLayoutChoice } =
+  const { keyboard, layer, setLayer, selected, select, assign, undo, redo, canUndo, canRedo, notice, busy, setLayoutChoice, profile } =
     useApp()
   useUndoShortcuts()
+  const musician = profile === 'musician'
+  // Musician mode calls keys pads and numbers them, so the piano can show which pad plays each note.
+  const padNumbers = useMemo(
+    () => (musician && keyboard ? numberKeys(keyboard.keys, keyboard.layoutChoices) : undefined),
+    [musician, keyboard],
+  )
+  const [pointedNote, setPointedNote] = useState<number | null>(null)
   if (!keyboard) return null
+  const pads = new Map<number, number[]>()
+  const padsPlaying: { row: number; col: number }[] = []
+  for (const k of keyboard.keys) {
+    const pad = padNumbers?.get(`${k.row},${k.col}`)
+    const note = noteOfKeycode(keyboard.keymap[layer][k.row]?.[k.col] ?? 0)
+    if (pad === undefined || note === null) continue
+    pads.set(note, [...(pads.get(note) ?? []), pad].sort((a, b) => a - b))
+    if (note === pointedNote) padsPlaying.push(k)
+  }
   const code = !selected
     ? null
     : selected.kind === 'key'
       ? keyboard.keymap[layer][selected.row][selected.col]
       : keyboard.encoderKeymap[layer][selected.index][selected.direction]
-  const what = selected?.kind === 'encoder' ? `Turning the knob ${selected.direction ? 'right' : 'left'}` : 'This key'
+  const pad = selected?.kind === 'key' ? padNumbers?.get(`${selected.row},${selected.col}`) : undefined
+  const what =
+    selected?.kind === 'encoder' ? `Turning the knob ${selected.direction ? 'right' : 'left'}` : pad ? `Pad ${pad}` : 'This key'
 
   return (
     <div className="flex h-full flex-col gap-3">
@@ -362,9 +442,13 @@ function Editor() {
         </div>
       </div>
 
-    {/* Wide screens: the keyboard and picker fill the window, with layout and backup in a
+    {/* Wide screens: the keyboard and picker fill the window, with the layout options in a
         column beside them. Narrower screens: that column moves below, one scroll away. */}
-    <div className="grid min-h-0 flex-1 grid-rows-[max(30rem,100%)_auto] gap-x-6 xl:grid-cols-[minmax(0,1fr)_20rem] xl:grid-rows-[max(30rem,100%)]">
+    <div
+      className={`grid min-h-0 flex-1 grid-rows-[max(30rem,100%)_auto] gap-x-6 xl:grid-rows-[max(30rem,100%)] ${
+        keyboard.layoutOptions.length ? 'xl:grid-cols-[minmax(0,1fr)_20rem]' : ''
+      }`}
+    >
     <section className="flex min-h-0 min-w-0 flex-col items-center gap-3 pb-4">
       <KeyboardView
         keys={keyboard.keys}
@@ -377,30 +461,32 @@ function Editor() {
         onSelect={select}
         className="max-h-[38svh] w-full flex-none [@media(min-height:62rem)]:max-h-[46svh]"
         glow={lightingGlow(keyboard.lighting)}
+        padNumbers={padNumbers}
+        highlighted={padsPlaying}
       />
-
-      <RestoreConfirmation />
 
       <p className="min-h-6 w-full text-ink" aria-live="polite">
         {notice ??
           (selected && code !== null
             ? `${what} is ${keyboard.catalog.describe(code).name}. Choose what it should do instead.`
-            : 'Pick a key or knob on the keyboard, then choose what it should do below.')}
+            : musician
+              ? 'Pick a pad or knob on the keyboard, then choose what it plays below.'
+              : 'Pick a key or knob on the keyboard, then choose what it should do below.')}
       </p>
 
-      <KeyPicker catalog={keyboard.catalog} current={code} onPick={assign} />
+      {/* A new mode offers other tabs, so the picker starts again at the first one. */}
+      {musician ? (
+        <MusicianPicker catalog={keyboard.catalog} current={code} onPick={assign} pads={pads} onPoint={setPointedNote} />
+      ) : (
+        <KeyPicker key={profile} catalog={keyboard.catalog} current={code} onPick={assign} profile={profile} />
+      )}
     </section>
 
     <div
       role="group"
       aria-label="Keyboard tools"
-      className="flex flex-col gap-4 pb-10 xl:min-h-0 xl:overflow-y-auto xl:pb-4"
+      className="flex flex-col gap-4 pb-6 empty:hidden xl:min-h-0 xl:overflow-y-auto xl:pb-4"
     >
-      <div className="flex w-full flex-wrap items-center justify-between gap-3 rounded-2xl bg-panel px-4 py-3 sm:px-5 xl:flex-col xl:items-start">
-        <p className="text-ink-soft">Keep a copy of your keymap, or bring back an earlier one. Files also work in Vial.</p>
-        <BackupControls />
-      </div>
-
       <LayoutOptions
         options={keyboard.layoutOptions}
         choices={keyboard.layoutChoices}

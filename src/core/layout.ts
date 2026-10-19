@@ -96,6 +96,24 @@ export function placeKeys<T extends Placed>(items: T[], choices: number[]): T[] 
   return visible.map((item) => shift(item, -left, -top))
 }
 
+/**
+ * Numbers the keys 1, 2, 3… in reading order: rows from the top, each row from the left.
+ * MIDI pads are called "Pad 3" after these numbers. Keyed by "row,col".
+ */
+export function numberKeys(keys: LayoutKey[], choices: number[]): Map<string, number> {
+  // A key less than half a key lower than the one before it stays in its row, so
+  // staggered columns don't split it.
+  const byHeight = placeKeys(keys, choices).sort((a, b) => a.y - b.y)
+  const rows: LayoutKey[][] = []
+  for (const key of byHeight) {
+    const row = rows.at(-1)
+    if (row && key.y - row.at(-1)!.y < 0.5) row.push(key)
+    else rows.push([key])
+  }
+  const ordered = rows.flatMap((row) => row.sort((a, b) => a.x - b.x))
+  return new Map(ordered.map((k, i) => [`${k.row},${k.col}`, i + 1]))
+}
+
 function shift<T extends Placed>(item: T, dx: number, dy: number): T {
   if (!dx && !dy) return item
   const { rotation } = item

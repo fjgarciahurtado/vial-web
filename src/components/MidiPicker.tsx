@@ -10,11 +10,12 @@ import {
   noteOfKeycode,
   PIANO_FIRST_NOTE,
   PIANO_LAST_NOTE,
+  type ChordKey,
   type NoteStyle,
 } from '@/core/midi'
 import { useApp } from '@/store'
 
-/** Width of one white key, in rem. Black keys sit across the line between two white keys. */
+/** Smallest width of one white key, in rem. Black keys sit across the line between two white keys. */
 const WHITE = 2.25
 const BLACK = 1.4
 
@@ -32,13 +33,11 @@ interface Props {
  */
 export function MidiPicker({ catalog, current, disabled, onPick }: Props) {
   const style = useApp((s) => s.noteStyle)
-  const setStyle = useApp((s) => s.setNoteStyle)
   const [preview, setPreview] = useState<number[] | null>(null)
   const chords = useMemo(() => chordKeys(catalog), [catalog])
   const currentNote = current === null ? null : noteOfKeycode(current)
   const currentChord = chords.find((c) => c.code === current)
   const lit = new Set(preview ?? currentChord?.notes ?? [])
-  const offPiano = [...lit].filter((n) => n < PIANO_FIRST_NOTE || n > PIANO_LAST_NOTE)
 
   const name = (note: number) => noteName(note, style)
 
@@ -52,69 +51,113 @@ export function MidiPicker({ catalog, current, disabled, onPick }: Props) {
               ? `This key plays ${name(currentNote)}. Click a piano key to change it.`
               : 'Click a piano key to make this key play that note.'}
         </p>
-        <div className="flex flex-wrap gap-2">
-          <Toggle
-            label="Note names"
-            options={[
-              ['letters', 'C D E'],
-              ['solfege', 'Do Re Mi'],
-            ]}
-            value={style.names}
-            onChange={(names) => setStyle({ ...style, names })}
-          />
-          <Toggle
-            label="Middle C"
-            options={[
-              ['C4', `Middle C is ${style.names === 'solfege' ? 'Do4' : 'C4'}`],
-              ['C3', `Middle C is ${style.names === 'solfege' ? 'Do3' : 'C3'}`],
-            ]}
-            value={style.middleC}
-            onChange={(middleC) => setStyle({ ...style, middleC })}
-          />
-        </div>
+        <NoteStyleToggles />
       </div>
 
-      {chords.length > 0 && (
-        <section aria-label="Chords" className="flex flex-col gap-2">
-          <h3 className="font-semibold">Chords on this keyboard</h3>
-          <div className="flex flex-wrap gap-2">
-            {chords.map((chord) => (
-              <button
-                key={chord.code}
-                type="button"
-                disabled={disabled}
-                aria-pressed={chord.code === current}
-                title={chord.title}
-                onClick={() => onPick(chord.code)}
-                onMouseEnter={() => setPreview(chord.notes)}
-                onMouseLeave={() => setPreview(null)}
-                onFocus={() => setPreview(chord.notes)}
-                onBlur={() => setPreview(null)}
-                className={`flex flex-col items-start rounded-lg border-b-4 px-3 py-1.5 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pick disabled:opacity-50 ${
-                  chord.code === current ? 'border-pick-skirt bg-pick text-white' : 'border-ok-skirt bg-ok text-legend'
-                }`}
-              >
-                <span className="font-semibold">{chord.name}</span>
-                <span className="text-xs opacity-80">{chord.notes.map(name).join(' · ')}</span>
-              </button>
-            ))}
-          </div>
-          <p className="text-sm text-ink-soft">
-            Point at a chord to see its notes on the piano. Chords are built into the keyboard's firmware; their notes
-            come from each chord's description.
-          </p>
-        </section>
-      )}
-
-      {offPiano.length > 0 && (
-        <p className="text-sm font-semibold">
-          {offPiano.map(name).join(', ')} {offPiano.length === 1 ? 'is' : 'are'} outside the piano below, which shows
-          the notes from {name(PIANO_FIRST_NOTE)} to {name(PIANO_LAST_NOTE)}.
-        </p>
-      )}
-
+      <ChordList chords={chords} current={current} disabled={disabled} onPick={onPick} onPreview={setPreview} />
+      <OffPianoNotes notes={lit} />
       <Piano style={style} currentNote={currentNote} lit={lit} disabled={disabled} onPick={(note) => onPick(keycodeOfNote(note))} />
+      <MidiControls catalog={catalog} current={current} disabled={disabled} onPick={onPick} />
+    </div>
+  )
+}
 
+/** C D E or Do Re Mi, and whether middle C is called C4 or C3. Remembered for next time. */
+export function NoteStyleToggles() {
+  const style = useApp((s) => s.noteStyle)
+  const setStyle = useApp((s) => s.setNoteStyle)
+  return (
+    <div className="flex flex-wrap gap-2">
+      <Toggle
+        label="Note names"
+        options={[
+          ['letters', 'C D E'],
+          ['solfege', 'Do Re Mi'],
+        ]}
+        value={style.names}
+        onChange={(names) => setStyle({ ...style, names })}
+      />
+      <Toggle
+        label="Middle C"
+        options={[
+          ['C4', `Middle C is ${style.names === 'solfege' ? 'Do4' : 'C4'}`],
+          ['C3', `Middle C is ${style.names === 'solfege' ? 'Do3' : 'C3'}`],
+        ]}
+        value={style.middleC}
+        onChange={(middleC) => setStyle({ ...style, middleC })}
+      />
+    </div>
+  )
+}
+
+/** The keyboard's chord keys. Pointing at one passes its notes to onPreview. */
+export function ChordList({
+  chords,
+  current,
+  disabled,
+  onPick,
+  onPreview,
+}: {
+  chords: ChordKey[]
+  current: number | null
+  disabled: boolean
+  onPick(code: number): void
+  onPreview(notes: number[] | null): void
+}) {
+  const style = useApp((s) => s.noteStyle)
+  const name = (note: number) => noteName(note, style)
+  if (!chords.length) return null
+  return (
+    <section aria-label="Chords" className="flex flex-col gap-2">
+      <h3 className="font-semibold">Chords on this keyboard</h3>
+      <div className="flex flex-wrap gap-2">
+        {chords.map((chord) => (
+          <button
+            key={chord.code}
+            type="button"
+            disabled={disabled}
+            aria-pressed={chord.code === current}
+            title={chord.title}
+            onClick={() => onPick(chord.code)}
+            onMouseEnter={() => onPreview(chord.notes)}
+            onMouseLeave={() => onPreview(null)}
+            onFocus={() => onPreview(chord.notes)}
+            onBlur={() => onPreview(null)}
+            className={`flex flex-col items-start rounded-lg border-b-4 px-3 py-1.5 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pick disabled:opacity-50 ${
+              chord.code === current ? 'border-pick-skirt bg-pick text-white' : 'border-ok-skirt bg-ok text-legend'
+            }`}
+          >
+            <span className="font-semibold">{chord.name}</span>
+            <span className="text-xs opacity-80">{chord.notes.map(name).join(' · ')}</span>
+          </button>
+        ))}
+      </div>
+      <p className="text-sm text-ink-soft">
+        Point at a chord to see its notes on the piano. Chords are built into the keyboard's firmware; their notes come
+        from each chord's description.
+      </p>
+    </section>
+  )
+}
+
+/** Says which lit notes fall outside the piano, so they aren't missed. */
+export function OffPianoNotes({ notes }: { notes: Set<number> }) {
+  const style = useApp((s) => s.noteStyle)
+  const offPiano = [...notes].filter((n) => n < PIANO_FIRST_NOTE || n > PIANO_LAST_NOTE)
+  if (!offPiano.length) return null
+  const name = (note: number) => noteName(note, style)
+  return (
+    <p className="text-sm font-semibold">
+      {offPiano.map(name).join(', ')} {offPiano.length === 1 ? 'is' : 'are'} outside the piano below, which shows the
+      notes from {name(PIANO_FIRST_NOTE)} to {name(PIANO_LAST_NOTE)}.
+    </p>
+  )
+}
+
+/** The MIDI keys that aren't notes: octave, transpose, velocity, channel and pedals. */
+export function MidiControls({ catalog, current, disabled, onPick }: Props) {
+  return (
+    <>
       {MIDI_CONTROL_GROUPS.map((group) => {
         const keys = group.keys.flatMap((k) => {
           const code = catalog.deserialize(k.id)
@@ -144,22 +187,32 @@ export function MidiPicker({ catalog, current, disabled, onPick }: Props) {
           </section>
         )
       })}
-    </div>
+    </>
   )
 }
 
-function Piano({
+/**
+ * The notes from MI_C to MI_B_5 as piano keys. The piano fills the width it is given,
+ * and scrolls sideways when that is too narrow.
+ */
+export function Piano({
   style: noteStyle,
   currentNote,
   lit,
   disabled,
   onPick,
+  pads,
+  onPoint,
 }: {
   style: NoteStyle
   currentNote: number | null
   lit: Set<number>
   disabled: boolean
   onPick(note: number): void
+  /** The pads that play each note, shown on its piano key. */
+  pads?: Map<number, number[]>
+  /** Called with the note pointed at, and with null when the pointer leaves it. */
+  onPoint?(note: number | null): void
 }) {
   const scroller = useRef<HTMLDivElement>(null)
   const notes = Array.from({ length: PIANO_LAST_NOTE - PIANO_FIRST_NOTE + 1 }, (_, i) => PIANO_FIRST_NOTE + i)
@@ -167,7 +220,7 @@ function Piano({
   // Only the key's own note moves the piano; pointing at chords must not yank it around.
   const focusNote = currentNote ?? 60
 
-  // Show the chosen note (or middle C) when the piano opens, since it is wider than the screen.
+  // Show the chosen note (or middle C) when the piano opens, since it may be wider than the screen.
   useEffect(() => {
     const el = scroller.current?.querySelector<HTMLElement>(`[data-note="${focusNote}"]`)
     if (el && scroller.current) scroller.current.scrollLeft = el.offsetLeft - scroller.current.clientWidth / 2
@@ -182,22 +235,38 @@ function Piano({
           ? 'bg-case text-white border-case'
           : 'bg-cap text-legend border-cap-skirt'
 
+  const key = (note: number) => ({
+    type: 'button' as const,
+    'data-note': note,
+    disabled,
+    'aria-pressed': note === currentNote,
+    'aria-label': `Note ${noteName(note, noteStyle)}${padsText(pads?.get(note))}`,
+    onClick: () => onPick(note),
+    // A tap on a touch screen has no pointer leaving afterwards, so the lit pads go out at once.
+    onPointerUp: (e: React.PointerEvent) => e.pointerType !== 'mouse' && onPoint?.(null),
+    onMouseEnter: () => onPoint?.(note),
+    onFocus: () => onPoint?.(note),
+    onBlur: () => onPoint?.(null),
+  })
+
   return (
     <section aria-label="Piano" className="flex flex-col gap-1">
       <div ref={scroller} className="overflow-x-auto pb-2">
-        <div role="group" aria-label="Notes" className="relative h-36" style={{ width: `${whites.length * WHITE}rem` }}>
+        <div
+          role="group"
+          aria-label="Notes"
+          className="relative h-36"
+          style={{ minWidth: `${whites.length * WHITE}rem` }}
+          onMouseLeave={() => onPoint?.(null)}
+        >
           {whites.map((note, i) => (
             <button
               key={note}
-              type="button"
-              data-note={note}
-              disabled={disabled}
-              aria-pressed={note === currentNote}
-              aria-label={`Note ${noteName(note, noteStyle)}`}
-              onClick={() => onPick(note)}
-              style={{ left: `${i * WHITE}rem`, width: `${WHITE}rem` }}
-              className={`absolute top-0 flex h-36 flex-col items-center justify-end rounded-b-md border border-b-4 pb-1.5 text-[10px] font-semibold focus-visible:z-20 focus-visible:outline-2 focus-visible:outline-pick disabled:opacity-60 ${style(note)}`}
+              {...key(note)}
+              style={{ left: `${(i / whites.length) * 100}%`, width: `${100 / whites.length}%` }}
+              className={`absolute top-0 flex h-36 flex-col items-center justify-end gap-1 rounded-b-md border border-b-4 pb-1.5 text-[10px] font-semibold focus-visible:z-20 focus-visible:outline-2 focus-visible:outline-pick disabled:opacity-60 ${style(note)}`}
             >
+              <PadMarks pads={pads?.get(note)} />
               {/* Every key is named; C keys, the chosen note and chord notes also show the octave. */}
               {note % 12 === 0 || note === currentNote || lit.has(note) ? noteName(note, noteStyle) : pitchName(note, noteStyle)}
             </button>
@@ -207,15 +276,11 @@ function Piano({
             return (
               <button
                 key={note}
-                type="button"
-                data-note={note}
-                disabled={disabled}
-                aria-pressed={note === currentNote}
-                aria-label={`Note ${noteName(note, noteStyle)}`}
-                onClick={() => onPick(note)}
-                style={{ left: `${whitesBefore * WHITE - BLACK / 2}rem`, width: `${BLACK}rem` }}
-                className={`absolute top-0 z-10 flex h-22 items-end justify-center rounded-b-md border border-b-4 pb-1 text-[9px] font-semibold focus-visible:outline-2 focus-visible:outline-pick disabled:opacity-60 ${style(note)}`}
+                {...key(note)}
+                style={{ left: `calc(${(whitesBefore / whites.length) * 100}% - ${BLACK / 2}rem)`, width: `${BLACK}rem` }}
+                className={`absolute top-0 z-10 flex h-22 flex-col items-center justify-end gap-1 rounded-b-md border border-b-4 pb-1 text-[9px] font-semibold focus-visible:outline-2 focus-visible:outline-pick disabled:opacity-60 ${style(note)}`}
               >
+                <PadMarks pads={pads?.get(note)} />
                 {pitchName(note, noteStyle)}
               </button>
             )
@@ -223,11 +288,33 @@ function Piano({
         </div>
       </div>
       <p className="text-sm text-ink-soft">
-        Notes shown at the normal octave setting. Octave and transpose keys below move every note while you play. If
-        your music app names notes an octave lower or higher, change where middle C is above.
+        Notes shown at the normal octave setting. Octave and transpose keys move every note while you play. If your
+        music app names notes an octave lower or higher, change where middle C is above.
       </p>
     </section>
   )
+}
+
+/** The numbers of the pads that play a note, drawn on its piano key. */
+function PadMarks({ pads }: { pads?: number[] }) {
+  if (!pads?.length) return null
+  return (
+    <span className="flex flex-col items-center gap-0.5" aria-hidden>
+      {pads.slice(0, 3).map((pad) => (
+        <span key={pad} className="min-w-4 rounded-full bg-pick px-1 text-center text-[10px] leading-4 font-bold text-white">
+          {pad}
+        </span>
+      ))}
+      {pads.length > 3 && <span className="text-[10px] leading-3">+{pads.length - 3}</span>}
+    </span>
+  )
+}
+
+/** ", on pad 2" or ", on pads 2 and 5", added to the piano key's name. */
+function padsText(pads?: number[]): string {
+  if (!pads?.length) return ''
+  if (pads.length === 1) return `, on pad ${pads[0]}`
+  return `, on pads ${pads.slice(0, -1).join(', ')} and ${pads.at(-1)}`
 }
 
 function Toggle<T extends string>({
