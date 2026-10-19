@@ -13,6 +13,7 @@ import { KeymapEditor, type Target } from './core/keymap-editor'
 import { packLayoutChoices, unpackLayoutChoices } from './core/layout'
 import { LightingController, type LightingState } from './core/lighting'
 import { setNoteStyle as setCoreNoteStyle, type NoteStyle } from './core/midi'
+import { PROFILE_SECTIONS, usableProfile, type Profile, type Section } from './core/profiles'
 import { readQmkSettings, withFieldValue, writeQmkSettings, type QmkSettingValues, type SettingField } from './core/qmk-settings'
 import type { HidTransport } from './core/transport'
 import { unlockKeyboard } from './core/unlock'
@@ -22,7 +23,7 @@ import { isWebHidSupported, WebHidTransport } from './core/webhid-transport'
 type Status = 'idle' | 'connecting' | 'ready' | 'error'
 
 /** The main areas of the app once a keyboard is open. */
-export type View = 'keys' | 'lighting' | 'tester' | 'macros' | 'advanced'
+export type View = Section
 
 /** The key or knob direction being edited, on the current layer. */
 export type Selection = { kind: 'key'; row: number; col: number } | { kind: 'encoder'; index: number; direction: number }
@@ -129,12 +130,16 @@ interface AppState {
   setKeyOverride(index: number, change: (current: KeyOverride) => KeyOverride): Promise<boolean>
   /** Like setKeyOverride, for alt repeat keys. */
   setAltRepeat(index: number, change: (current: AltRepeat) => AltRepeat): Promise<boolean>
+  /** How much of the app shows: Easy, Advanced or Musician. Remembered for each keyboard. */
+  profile: Profile
+  setProfile(profile: Profile): void
   /** How notes are named everywhere: C D E or Do Re Mi, and whether middle C is C4 or C3. */
   noteStyle: NoteStyle
   setNoteStyle(style: NoteStyle): void
 }
 
 const NOTE_STYLE_KEY = 'vial-web:note-style'
+const profileKey = (keyboard: LoadedKeyboard) => `vial-web:mode:${keyboard.keyboardId}`
 
 /** The remembered note style. Earlier versions saved only C D E or Do Re Mi, under another name. */
 function readNoteStyle(): NoteStyle {
@@ -226,6 +231,8 @@ export const useApp = create<AppState>((set, get) => {
       macroDrafts: keyboard.macros,
       settingsDraft: keyboard.qmkSettings.values,
       view: 'keys',
+      // The demo shows everything the app can do unless a mode was picked for it.
+      profile: usableProfile(keyboard.catalog, readStored<string>(profileKey(keyboard), false) ?? (isDemo ? 'advanced' : null)),
       canUndo: false,
       canRedo: false,
       notice: keyboard.unreadable.length
@@ -509,6 +516,7 @@ export const useApp = create<AppState>((set, get) => {
     status: 'idle',
     error: null,
     noteStyle: initialNoteStyle,
+    profile: 'easy',
     view: 'keys',
     lights: null,
     demo: null,
@@ -661,6 +669,17 @@ export const useApp = create<AppState>((set, get) => {
 
     setView(view) {
       set({ view, notice: null })
+    },
+
+    setProfile(profile) {
+      const { keyboard, view } = get()
+      if (!keyboard) return
+      try {
+        localStorage.setItem(profileKey(keyboard), profile)
+      } catch {
+        // Private windows may refuse storage; the mode then lasts until the keyboard is closed.
+      }
+      set({ profile, notice: null, ...(!PROFILE_SECTIONS[profile].includes(view) && { view: 'keys' }) })
     },
 
     setNoteStyle(noteStyle) {

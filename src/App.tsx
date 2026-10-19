@@ -16,6 +16,7 @@ import { AltRepeatPanel } from '@/components/AltRepeatPanel'
 import { UnlockDialog } from '@/components/UnlockDialog'
 import { Button } from '@/components/ui/button'
 import { openDemoKeyboard } from '@/core/demo'
+import { PROFILE_SECTIONS, PROFILE_TITLES, profilesFor, type Profile } from '@/core/profiles'
 import type { LoadedKeyboard } from '@/core/keyboard'
 import { isWebHidSupported } from '@/core/webhid-transport'
 import { useApp } from '@/store'
@@ -47,10 +48,13 @@ export default function App() {
       <header
         className={`flex flex-none flex-wrap items-center justify-between gap-x-4 gap-y-2 ${CENTRED_ROW} ${keyboard ? `${WIDE} ${SAME_GUTTER} py-3` : `${NARROW} py-5`}`}
       >
-        <span className="flex items-center gap-2 text-lg font-bold tracking-tight">
-          <KeyboardIcon className="size-5" aria-hidden />
-          Vial
-        </span>
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <span className="flex items-center gap-2 text-lg font-bold tracking-tight">
+            <KeyboardIcon className="size-5" aria-hidden />
+            Vial
+          </span>
+          {keyboard && <ModeSwitch />}
+        </div>
         {keyboard && <ViewNav />}
         {keyboard && <ConnectedBadge />}
       </header>
@@ -196,9 +200,46 @@ function ConnectedBadge() {
   )
 }
 
-/** Switches between the app's sections. Lighting, Macros and Advanced show only on keyboards that have them. */
+const PROFILE_HELP: Record<Profile, string> = {
+  easy: 'Everyday keys, layers, macros and lighting',
+  advanced: 'Everything, including the key tester, tap dance, combos and typing settings',
+  musician: 'Notes, chords, layers, macros and lighting, for playing music',
+}
+
+/** Easy, Advanced or Musician: how much of the app shows. Musician shows only on keyboards that play MIDI. */
+function ModeSwitch() {
+  const { keyboard, profile, setProfile } = useApp()
+  if (!keyboard) return null
+  return (
+    <div role="group" aria-label="Mode" className="flex items-center gap-2">
+      <span className="text-sm text-ink-soft max-sm:sr-only" aria-hidden>
+        Mode
+      </span>
+      <div className="flex gap-1 rounded-xl bg-panel p-1">
+        {profilesFor(keyboard.catalog).map((p) => (
+          <button
+            key={p}
+            aria-pressed={profile === p}
+            onClick={() => setProfile(p)}
+            title={PROFILE_HELP[p]}
+            className={`rounded-lg px-3 py-1 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-pick ${
+              profile === p ? 'bg-pick text-desk' : 'text-ink-soft hover:text-ink'
+            }`}
+          >
+            {PROFILE_TITLES[p]}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Switches between the app's sections. The mode decides which sections show, and
+ * Lighting, Macros and Advanced show only on keyboards that have them.
+ */
 function ViewNav() {
-  const { keyboard, view, setView } = useApp()
+  const { keyboard, view, setView, profile } = useApp()
   if (!keyboard) return null
   const { backlight, rgblight, vialrgb } = keyboard.lightingKind
   const views = [
@@ -207,7 +248,7 @@ function ViewNav() {
     ...(keyboard.macros.length ? [{ id: 'macros' as const, title: 'Macros' }] : []),
     { id: 'tester' as const, title: 'Key tester' },
     ...(advancedTabs(keyboard).length ? [{ id: 'advanced' as const, title: 'Advanced' }] : []),
-  ]
+  ].filter((v) => PROFILE_SECTIONS[profile].includes(v.id))
   if (views.length < 2) return null
   return (
     <nav
@@ -319,7 +360,7 @@ function AdvancedView() {
 }
 
 function Editor() {
-  const { keyboard, layer, setLayer, selected, select, assign, undo, redo, canUndo, canRedo, notice, busy, setLayoutChoice } =
+  const { keyboard, layer, setLayer, selected, select, assign, undo, redo, canUndo, canRedo, notice, busy, setLayoutChoice, profile } =
     useApp()
   useUndoShortcuts()
   if (!keyboard) return null
@@ -388,7 +429,8 @@ function Editor() {
             : 'Pick a key or knob on the keyboard, then choose what it should do below.')}
       </p>
 
-      <KeyPicker catalog={keyboard.catalog} current={code} onPick={assign} />
+      {/* A new mode offers other tabs, so the picker starts again at the first one. */}
+      <KeyPicker key={profile} catalog={keyboard.catalog} current={code} onPick={assign} profile={profile} />
     </section>
 
     <div
