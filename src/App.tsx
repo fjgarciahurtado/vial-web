@@ -82,6 +82,7 @@ export default function App() {
           <Welcome />
         </main>
       )}
+      {keyboard && <BackupBar />}
       <UnlockDialog />
     </div>
   )
@@ -276,6 +277,21 @@ function ViewNav() {
   )
 }
 
+/** Saving and restoring a backup, always at the bottom of the window whatever the section. */
+function BackupBar() {
+  return (
+    <footer className={`flex flex-none flex-col gap-2 border-t border-line bg-panel py-2 ${WIDE} ${SAME_GUTTER}`}>
+      <RestoreConfirmation />
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+        <p className="text-sm text-ink-soft max-sm:sr-only">
+          Keep a copy of your keymap, or bring back an earlier one. Files also work in Vial.
+        </p>
+        <BackupControls />
+      </div>
+    </footer>
+  )
+}
+
 function LightingView() {
   const { keyboard, notice } = useApp()
   if (!keyboard) return null
@@ -426,9 +442,13 @@ function Editor() {
         </div>
       </div>
 
-    {/* Wide screens: the keyboard and picker fill the window, with layout and backup in a
+    {/* Wide screens: the keyboard and picker fill the window, with the layout options in a
         column beside them. Narrower screens: that column moves below, one scroll away. */}
-    <div className="grid min-h-0 flex-1 grid-rows-[max(30rem,100%)_auto] gap-x-6 xl:grid-cols-[minmax(0,1fr)_20rem] xl:grid-rows-[max(30rem,100%)]">
+    <div
+      className={`grid min-h-0 flex-1 grid-rows-[max(30rem,100%)_auto] gap-x-6 xl:grid-rows-[max(30rem,100%)] ${
+        keyboard.layoutOptions.length ? 'xl:grid-cols-[minmax(0,1fr)_20rem]' : ''
+      }`}
+    >
     <section className="flex min-h-0 min-w-0 flex-col items-center gap-3 pb-4">
       <KeyboardView
         keys={keyboard.keys}
@@ -444,8 +464,6 @@ function Editor() {
         padNumbers={padNumbers}
         highlighted={padsPlaying}
       />
-
-      <RestoreConfirmation />
 
       <p className="min-h-6 w-full text-ink" aria-live="polite">
         {notice ??
@@ -467,13 +485,8 @@ function Editor() {
     <div
       role="group"
       aria-label="Keyboard tools"
-      className="flex flex-col gap-4 pb-10 xl:min-h-0 xl:overflow-y-auto xl:pb-4"
+      className="flex flex-col gap-4 pb-6 empty:hidden xl:min-h-0 xl:overflow-y-auto xl:pb-4"
     >
-      <div className="flex w-full flex-wrap items-center justify-between gap-3 rounded-2xl bg-panel px-4 py-3 sm:px-5 xl:flex-col xl:items-start">
-        <p className="text-ink-soft">Keep a copy of your keymap, or bring back an earlier one. Files also work in Vial.</p>
-        <BackupControls />
-      </div>
-
       <LayoutOptions
         options={keyboard.layoutOptions}
         choices={keyboard.layoutChoices}
