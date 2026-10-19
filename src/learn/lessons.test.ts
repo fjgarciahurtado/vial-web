@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 import { describe, expect, it } from 'vitest'
 import { PROFILE_SECTIONS } from '@/core/profiles'
-import { boldParts, findLesson, LEARN_MODES, LESSONS, lessonsFor } from './lessons'
+import { boldParts, findLesson, LEARN_MODES, LESSONS, lessonsFor, parseLearnPath } from './lessons'
 
 describe('lessons', () => {
   it('have unique ids that are safe in an address', () => {
@@ -44,6 +44,27 @@ describe('lessons', () => {
     expect(findLesson('write-a-phrase')?.modes).toEqual(['musician'])
     expect(findLesson('nonsense')).toBeUndefined()
     expect(findLesson(null)).toBeUndefined()
+  })
+})
+
+describe('parseLearnPath', () => {
+  it('reads a mode and a lesson', () => {
+    const { mode, lesson, path } = parseLearnPath('musician/lighting', 'easy')
+    expect([mode, lesson.id, path]).toEqual(['musician', 'lighting', 'musician/lighting'])
+  })
+
+  it('finds the mode of a lesson given alone', () => {
+    expect(parseLearnPath('combos', 'easy').path).toBe('advanced/combos')
+  })
+
+  it('opens the first lesson of a mode given alone, or of the fallback mode', () => {
+    expect(parseLearnPath('musician', 'easy').path).toBe('musician/pads-and-piano')
+    expect(parseLearnPath('', 'advanced').path).toBe('advanced/tap-dance')
+  })
+
+  it('ignores unknown lessons and lessons of another mode', () => {
+    expect(parseLearnPath('nonsense', 'easy').path).toBe('easy/change-a-key')
+    expect(parseLearnPath('advanced/write-a-phrase', 'easy').path).toBe('advanced/tap-dance')
   })
 })
 

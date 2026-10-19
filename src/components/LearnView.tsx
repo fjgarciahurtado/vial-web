@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 import { ArrowLeft, ArrowRight, CircleCheck, Lightbulb, Play, X } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { PROFILE_TITLES, profilesFor, type Profile } from '@/core/profiles'
-import { boldParts, findLesson, LEARN_MODES, lessonsFor, type Lesson } from '@/learn/lessons'
+import { boldParts, LEARN_MODES, lessonsFor, parseLearnPath, type Lesson } from '@/learn/lessons'
 import { closeLearn, openLearn } from '@/lib/learn-route'
-import { sectionsFor } from '@/lib/sections'
+import { SECTION_TITLES, sectionsFor } from '@/lib/sections'
 import { useApp } from '@/store'
 
 /** Text with **bold** parts, as the lessons write the names of buttons and tabs. */
@@ -32,21 +32,30 @@ function Rich({ text }: { text: string }) {
 export function LearnView({ route }: { route: string }) {
   const profile = useApp((s) => s.profile)
   const keyboard = useApp((s) => s.keyboard)
-  const routed = findLesson(route)
-  const [chosenMode, setChosenMode] = useState<Profile>(() => routed?.modes[0] ?? (keyboard ? profile : 'easy'))
-  // A link to a lesson of another mode shows that mode's lessons.
-  const mode = routed && !routed.modes.includes(chosenMode) ? routed.modes[0] : chosenMode
+  // The address says where Learn is; before a keyboard is open it starts on Easy.
+  const { mode, lesson, path } = parseLearnPath(route, keyboard ? profile : 'easy')
   const lessons = lessonsFor(mode)
-  const lesson = routed && routed.modes.includes(mode) ? routed : lessons[0]
   const at = lessons.indexOf(lesson)
+  const top = useRef<HTMLDivElement>(null)
+  const opened = useRef(false)
 
-  const chooseMode = (m: Profile) => {
-    setChosenMode(m)
-    openLearn(lessonsFor(m)[0].id)
-  }
+  // Show the full address for what is on screen, so a copied link opens the same page.
+  useEffect(() => {
+    if (route !== path) openLearn(path)
+  }, [route, path])
+
+  // A new lesson starts at its top, with focus on its title for keyboards and screen readers.
+  useEffect(() => {
+    if (!opened.current) {
+      opened.current = true
+      return
+    }
+    top.current?.scrollIntoView({ block: 'start' })
+    document.getElementById('lesson-title')?.focus({ preventScroll: true })
+  }, [path])
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 pt-4 pb-12">
+    <div ref={top} className="mx-auto flex w-full max-w-6xl scroll-mt-4 flex-col gap-6 pt-4 pb-12">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex max-w-2xl flex-col gap-2">
           <h1 className="text-3xl font-bold tracking-tight">Learn</h1>
@@ -62,13 +71,12 @@ export function LearnView({ route }: { route: string }) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <div role="tablist" aria-label="Modes" className="flex w-fit gap-1 rounded-xl bg-panel p-1">
+        <div role="group" aria-label="Modes" className="flex w-fit gap-1 rounded-xl bg-panel p-1">
           {LEARN_MODES.map(({ mode: m }) => (
             <button
               key={m}
-              role="tab"
-              aria-selected={mode === m}
-              onClick={() => chooseMode(m)}
+              aria-pressed={mode === m}
+              onClick={() => openLearn(m)}
               className={`rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-pick ${
                 mode === m ? 'bg-pick text-desk' : 'text-ink-soft hover:text-ink'
               }`}
@@ -88,7 +96,7 @@ export function LearnView({ route }: { route: string }) {
               <li key={l.id}>
                 <button
                   aria-current={l === lesson ? 'page' : undefined}
-                  onClick={() => openLearn(l.id)}
+                  onClick={() => openLearn(`${mode}/${l.id}`)}
                   className={`flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors focus-visible:outline-2 focus-visible:outline-pick ${
                     l === lesson ? 'bg-ink font-semibold text-desk' : 'text-ink-soft hover:bg-panel hover:text-ink'
                   }`}
@@ -135,7 +143,7 @@ function LessonPage({
         <p className="text-sm font-semibold text-ink-soft">
           {PROFILE_TITLES[mode]} · Lesson {number}
         </p>
-        <h2 id="lesson-title" className="text-2xl font-bold tracking-tight">
+        <h2 id="lesson-title" tabIndex={-1} className="text-2xl font-bold tracking-tight outline-none">
           {lesson.title}
         </h2>
         <p className="text-lg text-ink-soft">{lesson.goal}</p>
@@ -195,7 +203,7 @@ function LessonPage({
 
       <div className="flex flex-wrap justify-between gap-3 border-t border-line pt-4">
         {previous ? (
-          <Button variant="ghost" onClick={() => openLearn(previous.id)}>
+          <Button variant="ghost" onClick={() => openLearn(`${mode}/${previous.id}`)}>
             <ArrowLeft aria-hidden />
             {previous.title}
           </Button>
@@ -203,7 +211,7 @@ function LessonPage({
           <span />
         )}
         {next && (
-          <Button variant="ghost" onClick={() => openLearn(next.id)}>
+          <Button variant="ghost" onClick={() => openLearn(`${mode}/${next.id}`)}>
             Next: {next.title}
             <ArrowRight aria-hidden />
           </Button>
@@ -215,12 +223,12 @@ function LessonPage({
 
 /**
  * Opens the lesson's section in its mode: on the open keyboard, or on the demo keyboard
- * when none is open.
+ * when none is open. On a real keyboard it says when the mode changes, and explains
+ * when the keyboard can't follow the lesson.
  */
 function TryIt({ lesson, mode }: { lesson: Lesson; mode: Profile }) {
-  const { keyboard, isDemo, openDemo, setProfile, setView } = useApp()
+  const { keyboard, isDemo, profile, openDemo, setProfile, setView } = useApp()
   const [opening, setOpening] = useState(false)
-  const fits = !keyboard || profilesFor(keyboard.catalog).includes(mode)
 
   const go = async () => {
     if (!useApp.getState().keyboard) {
@@ -231,26 +239,41 @@ function TryIt({ lesson, mode }: { lesson: Lesson; mode: Profile }) {
         setOpening(false)
       }
     }
-    const kb = useApp.getState().keyboard
+    const { keyboard: kb, profile: was, isDemo: demo } = useApp.getState()
     if (!kb) return
     setProfile(mode)
-    const shown = sectionsFor(kb, mode).some((s) => s.id === lesson.section)
-    setView(shown ? lesson.section : 'keys')
+    setView(lesson.section)
+    if (!demo && was !== mode) {
+      useApp.setState({
+        notice: `Switched to ${PROFILE_TITLES[mode]} mode for this lesson. The Mode switch at the top changes it back.`,
+      })
+    }
     closeLearn()
   }
 
-  if (!fits) {
-    return (
-      <p className="rounded-xl bg-panel p-4 text-ink-soft">
-        {PROFILE_TITLES[mode]} mode needs a keyboard that plays music, and {keyboard?.name} doesn’t. Disconnect it and try
-        the demo keyboard to follow this lesson.
-      </p>
-    )
+  if (keyboard && !isDemo) {
+    const problem = !profilesFor(keyboard.catalog).includes(mode)
+      ? `${PROFILE_TITLES[mode]} mode needs a keyboard that plays music, and ${keyboard.name} doesn’t.`
+      : !sectionsFor(keyboard, mode).some((s) => s.id === lesson.section)
+        ? `${keyboard.name} has no ${SECTION_TITLES[lesson.section]} section, so this lesson doesn’t apply to it.`
+        : null
+    if (problem) {
+      return (
+        <p className="rounded-xl bg-panel p-4 text-ink-soft">
+          {problem} Disconnect it and try the demo keyboard to follow this lesson.
+        </p>
+      )
+    }
   }
   return (
-    <Button size="lg" className="h-12 w-fit bg-pick px-6 text-base hover:bg-pick-skirt" onClick={go} disabled={opening}>
-      <Play aria-hidden />
-      {!keyboard || isDemo ? 'Try it on the demo keyboard' : `Try it on ${keyboard.name}`}
-    </Button>
+    <div className="flex flex-col gap-2">
+      <Button size="lg" className="h-12 w-fit bg-pick px-6 text-base hover:bg-pick-skirt" onClick={go} disabled={opening}>
+        <Play aria-hidden />
+        {!keyboard || isDemo ? 'Try it on the demo keyboard' : `Try it on ${keyboard.name}`}
+      </Button>
+      {keyboard && !isDemo && profile !== mode && (
+        <p className="text-sm text-ink-soft">This switches {keyboard.name} to {PROFILE_TITLES[mode]} mode.</p>
+      )}
+    </div>
   )
 }

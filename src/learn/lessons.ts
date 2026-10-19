@@ -357,6 +357,27 @@ export const lessonsFor = (mode: Profile) =>
 
 export const findLesson = (id: string | null) => LESSONS.find((l) => l.id === id)
 
+const isMode = (s: string | undefined): s is Profile => LEARN_MODES.some((m) => m.mode === s)
+
+/**
+ * Reads where Learn is from its address: "<mode>/<lesson id>", "<mode>", "<lesson id>"
+ * or nothing. Anything unknown falls back to the first lesson of the mode.
+ */
+export function parseLearnPath(path: string, fallbackMode: Profile): { mode: Profile; lesson: Lesson; path: string } {
+  const [first, second] = path.split('/')
+  let mode: Profile
+  let lesson: Lesson | undefined
+  if (isMode(first)) {
+    mode = first
+    lesson = findLesson(second ?? null)
+  } else {
+    lesson = findLesson(first)
+    mode = lesson?.modes[0] ?? fallbackMode
+  }
+  if (!lesson || !lesson.modes.includes(mode)) lesson = lessonsFor(mode)[0]
+  return { mode, lesson, path: `${mode}/${lesson.id}` }
+}
+
 /** Splits "a **bold** b" into plain and bold parts. */
 export function boldParts(text: string): { text: string; bold: boolean }[] {
   return text

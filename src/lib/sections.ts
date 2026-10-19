@@ -2,6 +2,14 @@
 import type { LoadedKeyboard } from '@/core/keyboard'
 import { PROFILE_SECTIONS, type Profile, type Section } from '@/core/profiles'
 
+export const SECTION_TITLES: Record<Section, string> = {
+  keys: 'Keys',
+  lighting: 'Lighting',
+  macros: 'Macros',
+  tester: 'Key tester',
+  advanced: 'Advanced',
+}
+
 export type AdvancedTab = 'tapDance' | 'combos' | 'keyOverrides' | 'altRepeat' | 'settings'
 
 /** The Advanced features this keyboard has. */
@@ -21,11 +29,12 @@ export function advancedTabs(keyboard: LoadedKeyboard): { id: AdvancedTab; title
  */
 export function sectionsFor(keyboard: LoadedKeyboard, profile: Profile): { id: Section; title: string }[] {
   const { backlight, rgblight, vialrgb } = keyboard.lightingKind
-  return [
-    { id: 'keys' as const, title: 'Keys' },
-    ...(backlight || rgblight || vialrgb ? [{ id: 'lighting' as const, title: 'Lighting' }] : []),
-    ...(keyboard.macros.length ? [{ id: 'macros' as const, title: 'Macros' }] : []),
-    { id: 'tester' as const, title: 'Key tester' },
-    ...(advancedTabs(keyboard).length ? [{ id: 'advanced' as const, title: 'Advanced' }] : []),
-  ].filter((v) => PROFILE_SECTIONS[profile].includes(v.id))
+  const shown: Section[] = [
+    'keys',
+    ...(backlight || rgblight || vialrgb ? ['lighting' as const] : []),
+    ...(keyboard.macros.length ? ['macros' as const] : []),
+    'tester',
+    ...(advancedTabs(keyboard).length ? ['advanced' as const] : []),
+  ]
+  return shown.filter((id) => PROFILE_SECTIONS[profile].includes(id)).map((id) => ({ id, title: SECTION_TITLES[id] }))
 }

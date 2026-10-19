@@ -21,9 +21,17 @@ it works". Learn replaces the page's content until it is closed; the header stay
   Musician lessons on a keyboard without MIDI explain how to reach the demo.
 - **Next** and the previous lesson's name move through the list.
 
-Learn lives in the address (`#learn`, `#learn/<lesson id>`), so lessons can be linked
-to and the browser's Back button closes them. Choosing a section in the header closes
-Learn too.
+Learn lives in the address (`#learn/<mode>/<lesson id>`), so lessons can be linked to.
+`#learn/<lesson id>` and `#learn/<mode>` work too, and unknown or broken addresses
+open the first lesson; the address is then rewritten in full. Opening Learn adds one
+history entry and moving between lessons replaces it, so Back leaves Learn in one step,
+and Close Learn goes back the same way. Choosing a section in the header closes Learn
+too. A new lesson opens at its top, with focus on its title.
+
+On a real keyboard, Try it says beforehand when it will switch the keyboard's mode, and
+the app says so again afterwards. Lessons the keyboard can't follow (Musician on a
+keyboard without MIDI, or a section the keyboard doesn't have) explain why instead of
+showing the button.
 
 ## Lessons
 
@@ -61,5 +69,7 @@ Learn too.
 ## Testing
 
 - Unit tests: `src/learn/lessons.test.ts` (ids, order, sections, pictures, bold marks).
+- Unit tests also cover `parseLearnPath` (how addresses are read).
 - Browser tests: `e2e/learn.spec.ts` (welcome page to a lesson and Try it, a Musician
-  lesson, links and Back, closing from the header).
+  lesson, shared lessons, links, Back and Close, broken addresses, closing from the
+  header).
