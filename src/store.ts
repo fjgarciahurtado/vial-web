@@ -10,7 +10,7 @@ import { serializeMacros, type Macro } from './core/macros'
 import type { FakeKeyboard } from './core/fake-keyboard'
 import { loadKeyboard, type LoadedKeyboard } from './core/keyboard'
 import { KeymapEditor, type Target } from './core/keymap-editor'
-import { packLayoutChoices, unpackLayoutChoices } from './core/layout'
+import { nextKey, packLayoutChoices, unpackLayoutChoices } from './core/layout'
 import { LightingController, type LightingState } from './core/lighting'
 import { setNoteStyle as setCoreNoteStyle, type NoteStyle } from './core/midi'
 import { PROFILE_SECTIONS, usableProfile, type Profile, type Section } from './core/profiles'
@@ -622,13 +622,21 @@ export const useApp = create<AppState>((set, get) => {
       if (!selected || !keyboard) return
       // vial-gui unlocks before setting the bootloader key (set_key in keyboard_comm.py).
       if (code === keyboard.catalog.deserialize('QK_BOOT') && !(await ensureUnlocked())) return
+      let saved = false
       await change(async (editor) => {
         await editor.set({ layer, ...selected }, code)
+        saved = true
         const name = keyboard.catalog.describe(code).name
         return selected.kind === 'key'
           ? `Saved. This key is now ${name}.`
           : `Saved. ${KNOB_TURNS[selected.direction]} is now ${name}.`
       })
+      // Move on to the next key in reading order, so a row can be mapped without clicking each key.
+      // Only if the selection is still the key just saved; the last key stays selected.
+      if (saved && selected.kind === 'key' && get().selected === selected) {
+        const next = nextKey(keyboard.keys, keyboard.layoutChoices, selected)
+        if (next) set({ selected: next })
+      }
     },
 
     async undo() {

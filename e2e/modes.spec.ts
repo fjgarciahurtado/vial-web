@@ -48,6 +48,8 @@ test('Musician numbers the pads and shows on the piano which pad plays each note
   const piano = page.getByRole('group', { name: 'Notes' })
   await piano.getByRole('button', { name: 'Note E4', exact: true }).click()
   await expect(pad(page, /^Pad 16: MIDI E4$/)).toBeVisible()
+  // The next pad is now selected; go back to check this one.
+  await pad(page, /^Pad 16: MIDI E4$/).click()
   await expect(piano.getByRole('button', { name: 'Note E4, on pad 16' })).toHaveAttribute('aria-pressed', 'true')
 
   // Pointing at a note lights the pads that play it.
