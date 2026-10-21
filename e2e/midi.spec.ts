@@ -20,9 +20,12 @@ test('pick a note on the piano', async ({ page }) => {
   await expect(piano.getByRole('button', { name: 'Note G#4' })).toHaveText('G#')
   await piano.getByRole('button', { name: 'Note E4' }).click()
   await expect(page.getByText('Saved. This key is now MIDI E4.')).toBeVisible()
-  await expect(piano.getByRole('button', { name: 'Note E4' })).toHaveAttribute('aria-pressed', 'true')
-  // The keycap shows the note it plays.
+  // The keycap shows the note it plays, and the next key is selected.
   await expect(key(page, 'MIDI E4')).toBeVisible()
+  await expect(piano.getByRole('button', { name: 'Note E4' })).toHaveAttribute('aria-pressed', 'false')
+  await key(page, 'MIDI E4').click()
+  await expect(piano.getByRole('button', { name: 'Note E4' })).toHaveAttribute('aria-pressed', 'true')
+  await key(page, 'W').click()
 
   await piano.getByRole('button', { name: 'Note F#4' }).click()
   await expect(page.getByText('Saved. This key is now MIDI F#4.')).toBeVisible()
@@ -41,6 +44,7 @@ test('chords light their notes and can be put on a key', async ({ page }) => {
 
   await chords.getByRole('button', { name: /^Am/ }).click()
   await expect(page.getByText('Saved. This key is now A minor chord (A3 - C4 - E4).')).toBeVisible()
+  await page.getByRole('group', { name: 'Keyboard layout' }).getByRole('button', { name: /^Key .*chord/ }).click()
   await expect(page.getByText('This key plays the chord Am: A3, C4, E4.')).toBeVisible()
 })
 
@@ -62,8 +66,9 @@ test('middle C can be named C3, as many music apps do', async ({ page }) => {
 
   await page.getByRole('button', { name: 'Middle C is C3' }).click()
   // The same note keeps its place but is named an octave lower, on the piano and on the keycap.
-  await expect(piano.getByRole('button', { name: 'Note C3' })).toHaveAttribute('aria-pressed', 'true')
   await expect(key(page, 'MIDI C3')).toBeVisible()
+  await key(page, 'MIDI C3').click()
+  await expect(piano.getByRole('button', { name: 'Note C3' })).toHaveAttribute('aria-pressed', 'true')
   // Chords still play the notes written in their description.
   await page.getByRole('region', { name: 'Chords' }).getByRole('button', { name: /^Am/ }).hover()
   await expect(piano.getByRole('button', { name: 'Note A2' })).toHaveText('A2')

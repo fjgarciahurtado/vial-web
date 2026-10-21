@@ -96,6 +96,23 @@ export function placeKeys<T extends Placed>(items: T[], choices: number[]): T[] 
   return visible.map((item) => shift(item, -left, -top))
 }
 
+/** The key after `from` in reading order (left to right, top to bottom), or null after the last one. */
+export function nextKey(
+  keys: LayoutKey[],
+  choices: number[],
+  from: { row: number; col: number },
+): { kind: 'key'; row: number; col: number } | null {
+  const order = numberKeys(keys, choices)
+  const here = order.get(`${from.row},${from.col}`)
+  if (here === undefined) return null
+  for (const [id, n] of order) {
+    if (n !== here + 1) continue
+    const [row, col] = id.split(',').map(Number)
+    return { kind: 'key', row, col }
+  }
+  return null
+}
+
 /**
  * Numbers the keys 1, 2, 3… in reading order: rows from the top, each row from the left.
  * MIDI pads are called "Pad 3" after these numbers. Keyed by "row,col".
